@@ -9,6 +9,10 @@
 #include "dir_relocs.hpp"
 #include "dir_tls.hpp"
 
+// TODO:
+// - Implement load configuration, security and resource directories
+// - Add helpers for each directory
+
 namespace win
 {
 	// Image wrapper
