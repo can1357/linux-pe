@@ -1,6 +1,14 @@
 #pragma once
 #include "nt_headers.hpp"
 
+#include "dir_debug.hpp"
+#include "dir_exceptions.hpp"
+#include "dir_export.hpp"
+#include "dir_iat.hpp"
+#include "dir_import.hpp"
+#include "dir_relocs.hpp"
+#include "dir_tls.hpp"
+
 namespace win
 {
 	// Image wrapper
