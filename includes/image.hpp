@@ -12,6 +12,7 @@
 // TODO:
 // - Implement load configuration, security and resource directories
 // - Add helpers for each directory
+// - Test each directory
 
 namespace win
 {
@@ -53,6 +54,34 @@ namespace win
 
 			// Return result
 			return ( uint32_t ) partial_sum + file_len;
+		}
+
+		inline data_directory_t* get_directory( directory_id id )
+		{
+			auto nt_hdrs = get_nt_headers();
+			if ( nt_hdrs->optional_header.num_data_directories <= id ) return nullptr;
+			data_directory_t* dir = &nt_hdrs->optional_header.data_directories.entries[ id ];
+			return dir->present() ? dir : nullptr;
+		}
+
+		template<typename T = void>
+		inline T* rva_to_ptr( uint32_t rva )
+		{
+			auto nt_hdrs = get_nt_headers();
+			if ( nt_hdrs->optional_header.size_image <= rva ) return nullptr;
+			
+			uint8_t* output = rva + ( uint8_t* ) &dos_header;
+			for ( int i = 0; i < nt_hdrs->file_header.num_sections; i++ )
+			{
+				auto section = nt_hdrs->get_section( i );
+				if ( section->virtual_address <= rva && rva < ( section->virtual_address + section->virtual_size ) )
+				{
+					output = output - section->virtual_address + section->ptr_raw_data;
+					break;
+				}
+			}
+
+			return ( T* ) output;
 		}
 	};
 	using image_x64_t = image_t<true>;
