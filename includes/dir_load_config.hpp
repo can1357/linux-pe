@@ -1,9 +1,137 @@
 #pragma once
 #include "nt_headers.hpp"
+#include "dir_relocs.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
 {
+    // TODO:
+    // - Implement enclave configuration
+
+    // Dynamic relocations
+    //
+    enum class dynamic_reloc_entry_id
+    {
+        guard_rf_prologue =                 1,
+        guard_rf_epilogue =                 2,
+        guard_import_control_transfer =     3,
+        guard_indir_control_transfer =      4,
+        guard_switch_table_branch =         5,
+    };
+
+    struct dynamic_reloc_guard_rf_prologue_t
+    {
+        uint8_t                     prologue_size;
+        uint8_t                     prologue_bytes[ 1 ];                // Variable length array
+    };
+
+    struct dynamic_reloc_guard_rf_epilogue_t
+    {
+        uint32_t                    epilogue_count;
+        uint8_t                     epilogue_size;
+        uint8_t                     branch_descriptor_element_size;
+        uint16_t                    branch_descriptor_count;
+        uint8_t                     branch_descriptors[ 1 ];            // Variable length array
+
+        inline uint8_t* get_branch_descriptor_bit_map() { return branch_descriptors + branch_descriptor_count * branch_descriptor_element_size; }
+    };
+
+    struct dynamic_reloc_import_control_transfer_t
+    {
+        uint32_t page_relative_offset       : 12;
+        uint32_t indirect_call              : 1;
+        uint32_t iat_index                  : 19;
+    };
+
+    struct dynamic_reloc_indir_control_transfer_t
+    {
+        uint16_t page_relative_offset       : 12;
+        uint16_t indirect_call              : 1;
+        uint16_t rex_w_prefix               : 1;
+        uint16_t cfg_check                  : 1;
+        uint16_t _pad0                      : 1;
+    };
+
+    struct dynamic_reloc_guard_switch_table_branch_t
+    {
+        uint16_t page_relative_offset       : 12;
+        uint16_t register_number            : 4;
+    };
+
+    struct dynamic_reloc_x86_t
+    {
+        uint32_t                    symbol;
+        uint32_t                    size;
+        reloc_block_t               blocks[ 1 ];                        // Variable length array
+    };
+
+    struct dynamic_reloc_x64_t
+    {
+        uint64_t                    symbol;
+        uint32_t                    size;
+        reloc_block_t               blocks[ 1 ];                        // Variable length array
+    };
+
+    struct dynamic_reloc_v2_x86_t
+    {
+        uint32_t                    header_size;
+        uint32_t                    fixup_info_size;
+        uint32_t                    symbol;
+        uint32_t                    symbol_group;
+        uint32_t                    flags;
+        uint8_t                     fixup_info[ 1 ];                    // Variable length array
+    };
+
+    struct dynamic_reloc_v2_x64_t
+    {
+        uint32_t                    header_size;
+        uint32_t                    fixup_info_size;
+        uint64_t                    symbol;
+        uint32_t                    symbol_group;
+        uint32_t                    flags;
+        uint8_t                     fixup_info[ 1 ];                    // Variable length array
+    };
+
+    struct dynamic_reloc_table_t
+    {
+        uint32_t                    version;
+        uint32_t                    size;
+        template<typename T> inline T* get_relocs() { return ( T* ) ( this + 1 ); }
+    };
+
+    // Hot patch information
+    //
+    struct hotpatch_base_t
+    {
+        uint32_t                    sequence_number;
+        uint32_t                    flags;
+        uint32_t                    orginal_timedate_stamp;
+        uint32_t                    orginal_checksum;
+        uint32_t                    code_integrity_info;
+        uint32_t                    code_integrity_size;
+        uint32_t                    path_table;
+        uint32_t                    buffer_offset;
+    };
+
+    struct hotpatch_info_t
+    {
+        uint32_t                    version;
+        uint32_t                    size;
+        uint32_t                    sequence_number;
+        uint32_t                    base_image_list;
+        uint32_t                    base_image_count;
+        uint32_t                    buffer_offset; 
+        uint32_t                    extra_patch_size;
+    };
+    
+    struct hotpatch_hashes_t
+    {
+        uint8_t                     sha256[ 32 ];
+        uint8_t                     sha1[ 20 ];
+    };
+
+    // Code integrity information
+    //
     struct load_config_ci_t
     {
         uint16_t                    flags;                              // Flags to indicate if CI information is available, etc.
