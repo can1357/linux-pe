@@ -8,9 +8,10 @@
 #include "dir_import.hpp"
 #include "dir_relocs.hpp"
 #include "dir_tls.hpp"
+#include "dir_load_config.hpp"
 
 // TODO:
-// - Implement load configuration, security and resource directories
+// - Implement security and resource directories
 // - Add helpers for each directory
 // - Test each directory
 

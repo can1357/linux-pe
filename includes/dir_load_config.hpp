@@ -12,13 +12,13 @@ namespace win
         uint32_t                    _pad0;                              // Additional bitmask to be defined later
     };
 
-    struct load_config_directory_t
+    struct load_config_directory_x64_t
     {
         uint32_t                    size;
         uint32_t                    timedate_stamp;
         ex_version_t                version;
-        uint32_t                    global_flags_Clear;
-        uint32_t                    global_flags_Set;
+        uint32_t                    global_flags_clear;
+        uint32_t                    global_flags_set;
         uint32_t                    critical_section_default_timeout;
         uint64_t                    decommit_free_block_threshold;
         uint64_t                    decommit_total_free_threshold;
@@ -56,5 +56,35 @@ namespace win
         uint64_t                    enclave_configuration_ptr;
         uint64_t                    volatile_metadata_ptr;
     };
+
+    struct load_config_directory_x86_t
+    {
+        uint32_t                    size;
+        uint32_t                    timedate_stamp;
+        ex_version_t                version;
+        uint32_t                    global_flags_clear;
+        uint32_t                    global_flags_set;
+        uint32_t                    critical_section_default_timeout;
+        uint32_t                    decommit_free_block_threshold;
+        uint32_t                    decommit_total_free_threshold;
+        uint32_t                    lock_prefix_table;
+        uint32_t                    maximum_allocation_size;
+        uint32_t                    virtual_memory_threshold;
+        uint32_t                    process_heap_flags;
+        uint32_t                    process_affinity_mask;
+        uint16_t                    csd_version;
+        uint16_t                    _pad0;
+        uint32_t                    edit_list;
+        uint32_t                    security_cookie;
+        uint32_t                    se_handler_table;
+        uint32_t                    se_handler_count;
+    };
+
+    template<bool x64 = IS_DEF_AMD64,
+        typename base_type = typename std::conditional<x64, load_config_directory_x64_t, load_config_directory_x86_t>::type>
+        struct load_config_directory_t : base_type {};
+    static_assert( sizeof( load_config_directory_t<false> ) == sizeof( load_config_directory_x86_t ) &&
+                   sizeof( load_config_directory_t<true> ) == sizeof( load_config_directory_x64_t ),
+                   "Empty structure influenced structure size." );
 };
 #pragma pack(pop)
