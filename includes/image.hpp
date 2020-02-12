@@ -12,10 +12,8 @@
 #include "dir_resource.hpp"
 
 // TODO:
-// - Implement security and resource directories
-// - Add helpers for each directory
-// - Test each directory
-
+// - Implement security directory
+// - Implement parsing helpers
 namespace win
 {
 	// Image wrapper

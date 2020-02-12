@@ -1,9 +1,6 @@
 #pragma once
 #include "common.hpp"
 
-// TODO:
-// - Implement rva_t and add bunch of helpers
-
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
 {
