@@ -9,6 +9,7 @@
 #include "dir_relocs.hpp"
 #include "dir_tls.hpp"
 #include "dir_load_config.hpp"
+#include "dir_resource.hpp"
 
 // TODO:
 // - Implement security and resource directories
