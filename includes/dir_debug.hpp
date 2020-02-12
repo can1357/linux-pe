@@ -32,8 +32,8 @@ namespace win
         ex_version_t                version;
         debug_directory_type_id     type;
         uint32_t                    size_raw_data;
-        uint32_t                    ptr_raw_data;
         uint32_t                    rva_raw_data;
+        uint32_t                    ptr_raw_data;
     };
 };
 #pragma pack(pop)

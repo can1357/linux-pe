@@ -22,13 +22,20 @@ namespace win
         uint16_t                    type    : 4;
     };
 
+    struct reloc_block_t
+    {
+        uint32_t                    base_rva;
+        uint32_t                    size_block;
+        reloc_entry_t               entries[ 1 ];   // Variable length array
+
+
+        inline reloc_block_t* get_next() { return ( reloc_block_t* ) ( ( char* ) this + this->size_block ); }
+        inline uint32_t num_entries() { return ( reloc_entry_t* ) get_next() - &entries[ 0 ]; }
+    };
+
     struct reloc_directory_t
     {
-        uint32_t                    rva;
-        uint32_t                    size_block;
-
-        inline reloc_entry_t* get_entries() { return ( reloc_entry_t* ) ( this + 1 ); }
-        inline uint32_t num_entries() { return ( size_block - sizeof( reloc_directory_t ) ) / sizeof( reloc_entry_t ); }
+        reloc_block_t               first_block;
     };
 };
 #pragma pack(pop)
