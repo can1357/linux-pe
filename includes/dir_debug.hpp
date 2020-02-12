@@ -25,7 +25,7 @@ namespace win
         repro =         0x00000010,
     };
 
-    struct debug_directory_t
+    struct debug_directory_entry_t
     {
         uint32_t                    characteristics;
         uint32_t					timedate_stamp;
@@ -34,6 +34,11 @@ namespace win
         uint32_t                    size_raw_data;
         uint32_t                    rva_raw_data;
         uint32_t                    ptr_raw_data;
+    };
+
+    struct debug_directory_t
+    {
+        debug_directory_entry_t     entries[ 1 ];       // Variable length array
     };
 };
 #pragma pack(pop)
