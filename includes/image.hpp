@@ -24,7 +24,7 @@ namespace win
 		dos_header_t				dos_header;
 		
 		inline operator dos_header_t&() { return dos_header; }
-		inline dos_header_t& get_dos_headers() { return &dos_header; }
+		inline dos_header_t& get_dos_headers() { return dos_header; }
 
 		inline nt_headers_t<x64>* get_nt_headers() { return dos_header.get_nt_headers<x64>(); }
 
