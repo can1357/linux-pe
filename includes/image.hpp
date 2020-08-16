@@ -69,7 +69,7 @@ namespace win
 		{
 			auto nt_hdrs = get_nt_headers();
 			if ( !rva || nt_hdrs->optional_header.size_image <= rva ) return nullptr;
-			
+
 			uint8_t* output = rva + ( uint8_t* ) &dos_header;
 			for ( int i = 0; i < nt_hdrs->file_header.num_sections; i++ )
 			{
@@ -82,6 +82,24 @@ namespace win
 			}
 
 			return ( T* ) output;
+		}
+
+		inline section_header_t* rva_to_section( uint32_t rva )
+		{
+			auto nt_hdrs = get_nt_headers();
+			if ( !rva || nt_hdrs->optional_header.size_image <= rva ) return nullptr;
+
+			uint8_t* output = rva + ( uint8_t* ) &dos_header;
+			for ( int i = 0; i < nt_hdrs->file_header.num_sections; i++ )
+			{
+				auto section = nt_hdrs->get_section( i );
+				if ( section->virtual_address <= rva && rva < ( section->virtual_address + section->virtual_size ) )
+				{
+					return section;
+				}
+			}
+
+			return nullptr;
 		}
 	};
 	using image_x64_t = image_t<true>;
