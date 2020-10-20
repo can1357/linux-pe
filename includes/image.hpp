@@ -88,7 +88,7 @@ namespace win
 		{
 			auto nt_hdrs = get_nt_headers();
 			if ( !rva || nt_hdrs->optional_header.size_image <= rva ) return nullptr;
-			
+
 			uint8_t* output = rva + ( uint8_t* ) &dos_header;
 			for ( int i = 0; i < nt_hdrs->file_header.num_sections; i++ )
 			{
