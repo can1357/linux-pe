@@ -34,6 +34,7 @@ namespace win
         uint8_t                     branch_descriptors[ 1 ];            // Variable length array
 
         inline uint8_t* get_branch_descriptor_bit_map() { return branch_descriptors + branch_descriptor_count * branch_descriptor_element_size; }
+        inline const uint8_t* get_branch_descriptor_bit_map() const { return const_cast< dynamic_reloc_guard_rf_epilogue_t* >( this )->get_branch_descriptor_bit_map(); }
     };
 
     struct dynamic_reloc_import_control_transfer_t
@@ -97,6 +98,7 @@ namespace win
         uint32_t                    version;
         uint32_t                    size;
         template<typename T> inline T* get_relocs() { return ( T* ) ( this + 1 ); }
+        template<typename T> inline const T* get_relocs() const { return ( const T* ) ( this + 1 ); }
     };
 
     // Hot patch information

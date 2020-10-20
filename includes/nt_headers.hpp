@@ -6,12 +6,11 @@ namespace win
 {
 	// Magic constants
 	//
+	static constexpr bool     IS_DEF_AMD64 =			sizeof( void* ) == 8;
 	static constexpr uint16_t DOS_HDR_MAGIC =			0x5A4D;			// "MZ"
 	static constexpr uint32_t NT_HDR_MAGIC =			0x00004550;		// "PE\x0\x0"
 	static constexpr uint16_t OPT_HDR32_MAGIC =			0x010B;
 	static constexpr uint16_t OPT_HDR64_MAGIC =			0x020B;
-	static constexpr bool IS_DEF_AMD64 =				sizeof( void* ) == 8;
-	
 	static constexpr uint32_t NUM_DATA_DIRECTORIES =	16;
 	static constexpr uint32_t LEN_SECTION_NAME =		8;
 
@@ -178,9 +177,8 @@ namespace win
 			uint32_t mem_read							: 1;			// Section is readable.
 			uint32_t mem_write							: 1;			// Section is writeable.
 		};
-		
-		inline uint32_t get_alignment() { return alignment ? 1 << ( alignment - 1 ) : 0x10; }
-		inline void set_alignment( uint32_t a ) { alignment = a == 0x10 ? 0x0 : __builtin_ctz( a ) + 1; }
+
+		inline uint32_t get_alignment() const { return alignment ? 1 << ( alignment - 1 ) : 0x10; }
 	};
 
 	// NT versioning
@@ -225,7 +223,7 @@ namespace win
 		uint32_t					rva;
 		uint32_t					size;
 
-		inline bool present() { return size; }
+		inline bool present() const { return size; }
 	};
 
 	struct data_directories_x86_t
@@ -373,8 +371,8 @@ namespace win
 		uint32_t					num_data_directories;
 		data_directories_x86_t		data_directories;
 
-		inline bool has_directory( data_directory_t* dir ) { return &data_directories.entries[ num_data_directories ] < dir && dir->present(); }
-		inline bool has_directory( directory_id id ) { return has_directory( &data_directories.entries[ id ] ); }
+		inline bool has_directory( const data_directory_t* dir ) const { return &data_directories.entries[ num_data_directories ] < dir && dir->present(); }
+		inline bool has_directory( directory_id id ) const { return has_directory( &data_directories.entries[ id ] ); }
 	};
 
 	template<bool x64 = IS_DEF_AMD64, 
@@ -418,7 +416,9 @@ namespace win
 		optional_header_t<x64>		optional_header;
 
 		inline section_header_t* get_sections() { return ( section_header_t* ) ( ( uint8_t* ) &optional_header + file_header.size_optional_header ); }
+		inline const section_header_t* get_sections() const { return const_cast< nt_headers_t* >( this )->get_sections(); }
 		inline section_header_t* get_section( int n ) { return get_sections() + n; }
+		inline const section_header_t* get_section( int n ) const { return get_sections() + n; }
 	};
 	using nt_headers_x64_t = nt_headers_t<true>;
 	using nt_headers_x86_t = nt_headers_t<false>;
@@ -447,7 +447,8 @@ namespace win
 		uint16_t					e_res2[ 10 ];
 		uint32_t					e_lfanew;
 
-		template<bool x64 = IS_DEF_AMD64> inline auto get_nt_headers() { return ( nt_headers_t<x64>* ) ( ( uint8_t* ) this + e_lfanew ); }
+		template<bool x64 = IS_DEF_AMD64> inline nt_headers_t<x64>* get_nt_headers() { return ( nt_headers_t<x64>* ) ( ( uint8_t* ) this + e_lfanew ); }
+		template<bool x64 = IS_DEF_AMD64> inline const nt_headers_t<x64>* get_nt_headers() const { return const_cast< dos_header_t* >( this )->template get_nt_headers<x64>(); }
 	};
 };
 #pragma pack(pop)

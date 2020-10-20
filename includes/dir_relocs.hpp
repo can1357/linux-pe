@@ -30,7 +30,9 @@ namespace win
 
 
         inline reloc_block_t* get_next() { return ( reloc_block_t* ) ( ( char* ) this + this->size_block ); }
-        inline uint32_t num_entries() { return ( reloc_entry_t* ) get_next() - &entries[ 0 ]; }
+        inline const reloc_block_t* get_next() const { return const_cast< reloc_block_t* >( this )->get_next(); }
+        inline uint32_t num_entries() const { return ( reloc_entry_t* ) get_next() - &entries[ 0 ]; }
+
     };
 
     struct reloc_directory_t

@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{63426bd1-477a-4f24-8d95-e4d74f1e88cc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="includes\common.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\debug.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\dir_debug.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\dir_exceptions.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\dir_export.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\dir_iat.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\dir_import.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\dir_load_config.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\dir_relocs.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\dir_resource.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\dir_tls.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\image.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\nt_headers.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="linuxpe" />
+  </ItemGroup>
+</Project>

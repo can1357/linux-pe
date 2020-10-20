@@ -1,4 +1,6 @@
 #pragma once
+#include <type_traits>
+#include <string_view>
 #include "nt_headers.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
@@ -29,13 +31,11 @@ namespace win
         manifest =                  24,
     };
 
-    template<bool unicode = true> 
+    template<typename C = wchar_t>
     struct resource_directory_string_t
     {
-        using char_t = typename std::conditional<unicode, wchar_t, char>::type;
-
         uint16_t                    length;
-        char_t                      name[ 1 ];              // Variable length array
+        C                           name[ 1 ];              // Variable length array
     };
 
     struct resource_directory_data_t
@@ -70,19 +70,34 @@ namespace win
         uint16_t                    num_id_entries;
         resource_directory_entry_t  entries[ 1 ];           // Variable length array
 
-        inline uint32_t num_entries() { return num_named_entries + num_id_entries; }
+        inline uint32_t num_entries() const { return num_named_entries + num_id_entries; }
     };
 
     // Contains { Type -> Name -> Lang } directory, nested
     struct resource_directory_t
     {
+
         resource_directory_desc_t   type_directory;
 
         template<typename T> inline T* resolve_offset( uint32_t offset ) { return ( T* ) ( ( char* ) this + offset ); }
-        inline resource_directory_desc_t* resolve_directory( const resource_directory_entry_t& entry ) { return entry.is_directory ? resolve_offset<resource_directory_desc_t>( entry.offset ) : nullptr; }
+        template<typename T> inline const T* resolve_offset( uint32_t offset ) const { return ( T* ) ( ( char* ) this + offset ); }
+
         inline resource_directory_data_t* resolve_data( const resource_directory_entry_t& entry ) { return !entry.is_directory ? resolve_offset<resource_directory_data_t>( entry.offset ) : nullptr; }
-        inline resource_directory_string_t<true>* resolve_ustring( const resource_directory_entry_t& entry ) { return entry.is_named ? resolve_offset<resource_directory_string_t<true>>( entry.offset_name ) : nullptr; }
-        inline resource_directory_string_t<false>* resolve_string( const resource_directory_entry_t& entry ) { return entry.is_named ? resolve_offset<resource_directory_string_t<false>>( entry.offset_name ) : nullptr; }
+        inline resource_directory_desc_t* resolve_directory( const resource_directory_entry_t& entry ) { return entry.is_directory ? resolve_offset<resource_directory_desc_t>( entry.offset ) : nullptr; }
+        inline resource_directory_data_t* resolve_data( const resource_directory_entry_t& entry ) const { return const_cast< resource_directory_t* >( this )->resolve_data( entry ); }
+        inline resource_directory_desc_t* resolve_directory( const resource_directory_entry_t& entry ) const { return const_cast< resource_directory_t* >( this )->resolve_directory( entry ); }
+
+        template<typename C = wchar_t> inline resource_directory_string_t<C>* resolve_name_entry( const resource_directory_entry_t& entry ) { return entry.is_named ? resolve_offset<resource_directory_string_t<C>>( entry.offset_name ) : nullptr; }
+        template<typename C = wchar_t> inline const resource_directory_string_t<C>* resolve_name_entry( const resource_directory_entry_t& entry ) const { return const_cast< resource_directory_t* >( this )->template resolve_name_entry<C>( entry ); }
+
+        template<typename C = wchar_t>
+        inline std::basic_string_view<C> resolve_name( const resource_directory_entry_t& entry ) const
+        {
+            if ( auto* str = resolve_name_entry<C>( entry ) )
+                return { ( const C* ) str->name, str->length / sizeof( C ) };
+            else
+                return ( const C* ) L"";
+        }
     };
 };
 #pragma pack(pop)
