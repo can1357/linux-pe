@@ -185,6 +185,8 @@ namespace win
         uint32_t                    _pad1;
         uint64_t                    enclave_configuration_ptr;
         uint64_t                    volatile_metadata_ptr;
+        uint64_t                    guard_eh_continuation_table;
+        uint64_t                    guard_eh_continuation_table_count;
     };
 
     struct load_config_directory_x86_t
@@ -210,11 +212,11 @@ namespace win
         uint32_t                    se_handler_count;
     };
 
-    template<bool x64 = IS_DEF_AMD64,
-        typename base_type = typename std::conditional<x64, load_config_directory_x64_t, load_config_directory_x86_t>::type>
-        struct load_config_directory_t : base_type {};
-    static_assert( sizeof( load_config_directory_t<false> ) == sizeof( load_config_directory_x86_t ) &&
-                   sizeof( load_config_directory_t<true> ) == sizeof( load_config_directory_x64_t ),
-                   "Empty structure influenced structure size." );
+    template<bool x64 = IS_DEF_AMD64>
+    using load_config_directory_t = std::conditional_t<x64, load_config_directory_x64_t, load_config_directory_x86_t>;
+    template<bool x64 = IS_DEF_AMD64>
+    using dynamic_reloc_v2_t =      std::conditional_t<x64, dynamic_reloc_v2_x64_t, dynamic_reloc_v2_x86_t>;
+    template<bool x64 = IS_DEF_AMD64>
+    using dynamic_reloc_t =         std::conditional_t<x64, dynamic_reloc_x64_t, dynamic_reloc_x86_t>;
 };
 #pragma pack(pop)
