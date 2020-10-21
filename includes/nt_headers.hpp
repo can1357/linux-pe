@@ -279,13 +279,8 @@ namespace win
 			data_directory_t		entries[ NUM_DATA_DIRECTORIES ];
 		};
 	};
-
-	template<bool x64 = IS_DEF_AMD64, 
-		typename base_type = typename std::conditional<x64, data_directories_x64_t, data_directories_x86_t>::type>
-	struct data_directories_t : base_type {};
-	static_assert( sizeof( data_directories_t<false> ) == sizeof( data_directories_x86_t ) &&
-				   sizeof( data_directories_t<true> ) == sizeof( data_directories_x64_t ),
-				   "Empty structure influenced structure size." );
+	template<bool x64 = IS_DEF_AMD64>
+	using data_directories_t = std::conditional_t<x64, data_directories_x64_t, data_directories_x86_t>;
 
 	// Optional header
 	//
@@ -374,13 +369,8 @@ namespace win
 		inline bool has_directory( const data_directory_t* dir ) const { return &data_directories.entries[ num_data_directories ] < dir && dir->present(); }
 		inline bool has_directory( directory_id id ) const { return has_directory( &data_directories.entries[ id ] ); }
 	};
-
-	template<bool x64 = IS_DEF_AMD64, 
-		typename base_type = typename std::conditional<x64, optional_header_x64_t, optional_header_x86_t>::type>
-	struct optional_header_t : base_type {};
-	static_assert( sizeof( optional_header_t<false> ) == sizeof( optional_header_x86_t ) &&
-				   sizeof( optional_header_t<true> ) == sizeof( optional_header_x64_t ),
-				   "Empty structure influenced structure size." );
+	template<bool x64 = IS_DEF_AMD64>
+	using optional_header_t = std::conditional_t<x64, optional_header_x64_t, optional_header_x86_t>;
 
 	// Section header
 	//

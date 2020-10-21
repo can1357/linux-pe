@@ -35,11 +35,7 @@ namespace win
         tls_characteristics_t       characteristics;
     };
 
-    template<bool x64 = IS_DEF_AMD64,
-        typename base_type = typename std::conditional<x64, tls_directory_x64_t, tls_directory_x86_t>::type>
-        struct tls_directory_t : base_type {};
-    static_assert( sizeof( tls_directory_t<false> ) == sizeof( tls_directory_x86_t ) &&
-                   sizeof( tls_directory_t<true> ) == sizeof( tls_directory_x64_t ),
-                   "Empty structure influenced structure size." );
+    template<bool x64 = IS_DEF_AMD64>
+    using tls_directory_t = std::conditional_t<x64, tls_directory_x64_t, tls_directory_x86_t>;
 };
 #pragma pack(pop)

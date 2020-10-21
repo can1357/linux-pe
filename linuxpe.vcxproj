@@ -27,7 +27,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{484c6780-9000-4efa-9a3b-4318b828b714}</ProjectGuid>
+    <ProjectGuid>{B1F1BC0E-862F-4172-A34B-99EB4FAF5229}</ProjectGuid>
     <RootNamespace>linuxpe</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>linux-pe</ProjectName>
