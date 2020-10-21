@@ -1,6 +1,5 @@
 #pragma once
 #include "nt_headers.hpp"
-
 #include "dir_debug.hpp"
 #include "dir_exceptions.hpp"
 #include "dir_export.hpp"
@@ -10,10 +9,9 @@
 #include "dir_tls.hpp"
 #include "dir_load_config.hpp"
 #include "dir_resource.hpp"
+#include "dir_security.hpp"
+#include "dir_delay_load.hpp"
 
-// TODO:
-// - Implement security directory
-// - Implement parsing helpers
 namespace win
 {
 	// Image wrapper

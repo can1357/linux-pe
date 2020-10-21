@@ -236,7 +236,7 @@ namespace win
 				data_directory_t	import_directory;
 				data_directory_t	resource_directory;
 				data_directory_t	exception_directory;
-				data_directory_t	security_directory;
+				data_directory_t	security_directory;  // File offset instead of virtual address!
 				data_directory_t	basereloc_directory;
 				data_directory_t	debug_directory;
 				data_directory_t	copyright_directory;
@@ -263,7 +263,7 @@ namespace win
 				data_directory_t	import_directory;
 				data_directory_t	resource_directory;
 				data_directory_t	exception_directory;
-				data_directory_t	security_directory;
+				data_directory_t	security_directory;  // File offset instead of virtual address!
 				data_directory_t	basereloc_directory;
 				data_directory_t	debug_directory;
 				data_directory_t	architecture_directory;

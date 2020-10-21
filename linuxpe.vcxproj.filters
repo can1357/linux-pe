@@ -45,6 +45,12 @@
     <ClInclude Include="includes\nt_headers.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="includes\dir_security.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\dir_delay_load.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="linuxpe" />

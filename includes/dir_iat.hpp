@@ -44,6 +44,19 @@ namespace win
         };
     };
 
+    struct bound_forwarder_ref_t
+    {
+        uint32_t                    timedate_stamp;
+        uint16_t                    offset_module_name;
+    };
+
+    struct bound_import_descriptor_t
+    {
+        uint32_t                    timedate_stamp;
+        uint16_t                    offset_module_name;
+        uint16_t                    num_module_forwarder_refs;
+    };
+
     template<bool x64 = IS_DEF_AMD64>
     using image_thunk_data_t = std::conditional_t<x64, image_thunk_data_x64_t, image_thunk_data_x86_t>;
 };
