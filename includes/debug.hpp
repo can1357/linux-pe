@@ -1,5 +1,8 @@
 #pragma once
-#include "nt_headers.hpp"
+#include "common.hpp"
+#include "file_header.hpp"
+#include "optional_header.hpp"
+#include "data_directories.hpp"
 
 namespace win
 {
@@ -42,7 +45,7 @@ namespace win
                 case machine_id::m32r:			                return "m32r";
                 case machine_id::arm64:			                return "arm64";
                 case machine_id::cee:			                return "cee";
-                default:						                return "?";
+                default:						                return "";
             }
         }
         static inline const char* resolve_enum( subsystem_id id )
@@ -64,7 +67,7 @@ namespace win
                 case subsystem_id::xbox:						return "xbox";
                 case subsystem_id::windows_boot_application:	return "windows_boot_application";
                 case subsystem_id::xbox_code_catalog:			return "xbox_code_catalog";
-                default:										return "?";
+                default:										return "";
             }
         }
         static inline const char* resolve_enum( directory_id id )

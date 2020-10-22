@@ -1,5 +1,5 @@
 #pragma once
-#include "nt_headers.hpp"
+#include "common.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -38,7 +38,7 @@ namespace win
 
     struct debug_directory_t
     {
-        debug_directory_entry_t     entries[ 1 ];       // Variable length array
+        debug_directory_entry_t     entries[ VAR_LEN ];
     };
 };
 #pragma pack(pop)

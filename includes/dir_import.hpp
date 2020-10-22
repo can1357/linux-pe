@@ -1,5 +1,5 @@
 #pragma once
-#include "nt_headers.hpp"
+#include "common.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win

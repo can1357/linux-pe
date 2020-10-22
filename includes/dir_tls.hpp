@@ -1,5 +1,5 @@
 #pragma once
-#include "nt_headers.hpp"
+#include "common.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -35,7 +35,7 @@ namespace win
         tls_characteristics_t       characteristics;
     };
 
-    template<bool x64 = IS_DEF_AMD64>
+    template<bool x64 = default_architecture>
     using tls_directory_t = std::conditional_t<x64, tls_directory_x64_t, tls_directory_x86_t>;
 };
 #pragma pack(pop)

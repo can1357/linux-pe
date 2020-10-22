@@ -1,4 +1,5 @@
 #pragma once
+#include "common.hpp"
 #include "nt_headers.hpp"
 #include "dir_debug.hpp"
 #include "dir_exceptions.hpp"
@@ -12,17 +13,20 @@
 #include "dir_security.hpp"
 #include "dir_delay_load.hpp"
 
+
 namespace win
 {
 	// Image wrapper
 	//
-	template<bool x64 = IS_DEF_AMD64>
+	template<bool x64 = default_architecture>
 	struct image_t
 	{
 		dos_header_t				dos_header;
 		
 		inline dos_header_t* get_dos_headers() { return &dos_header; }
 		inline const dos_header_t* get_dos_headers() const { return &dos_header; }
+		inline file_header_t* get_file_header() { return dos_header.get_file_header(); }
+		inline const file_header_t* get_file_header() const { return dos_header.get_file_header(); }
 		inline nt_headers_t<x64>* get_nt_headers() { return dos_header.get_nt_headers<x64>(); }
 		inline const nt_headers_t<x64>* get_nt_headers() const { return dos_header.get_nt_headers<x64>(); }
 

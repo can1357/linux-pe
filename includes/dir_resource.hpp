@@ -1,7 +1,7 @@
 #pragma once
 #include <type_traits>
 #include <string_view>
-#include "nt_headers.hpp"
+#include "common.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -35,7 +35,7 @@ namespace win
     struct resource_directory_string_t
     {
         uint16_t                    length;
-        C                           name[ 1 ];              // Variable length array
+        C                           name[ VAR_LEN ];
     };
 
     struct resource_directory_data_t
@@ -68,9 +68,9 @@ namespace win
         ex_version_t                version;
         uint16_t                    num_named_entries;
         uint16_t                    num_id_entries;
-        resource_directory_entry_t  entries[ 1 ];           // Variable length array
+        resource_directory_entry_t  entries[ VAR_LEN ];
 
-        inline uint32_t num_entries() const { return num_named_entries + num_id_entries; }
+        inline size_t num_entries() const { return num_named_entries + num_id_entries; }
     };
 
     // Contains { Type -> Name -> Lang } directory, nested

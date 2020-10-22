@@ -1,5 +1,5 @@
 #pragma once
-#include "nt_headers.hpp"
+#include "common.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -17,7 +17,7 @@ namespace win
         uint32_t             length;
         version_t            revision;
         certificate_type_id  certificate_type;
-        uint8_t              raw_data[];
+        uint8_t              raw_data[ VAR_LEN ];
     };
 };
 #pragma pack(pop)

@@ -12,6 +12,7 @@
   <ItemGroup>
     <ClInclude Include="includes\common.hpp" />
     <ClInclude Include="includes\debug.hpp" />
+    <ClInclude Include="includes\data_directories.hpp" />
     <ClInclude Include="includes\dir_debug.hpp" />
     <ClInclude Include="includes\dir_delay_load.hpp" />
     <ClInclude Include="includes\dir_exceptions.hpp" />
@@ -23,8 +24,11 @@
     <ClInclude Include="includes\dir_resource.hpp" />
     <ClInclude Include="includes\dir_security.hpp" />
     <ClInclude Include="includes\dir_tls.hpp" />
+    <ClInclude Include="includes\file_header.hpp" />
     <ClInclude Include="includes\image.hpp" />
     <ClInclude Include="includes\nt_headers.hpp" />
+    <ClInclude Include="includes\optional_header.hpp" />
+    <ClInclude Include="includes\section_header.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
