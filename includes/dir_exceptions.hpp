@@ -39,10 +39,10 @@ namespace win
     };
 
     struct exception_directory_t
-	{
+    {
         // Length of this array is determined by the size of the directory
         //
-        runtime_function_t           functions[ 1 ];
-	};
+        runtime_function_t           functions[ VAR_LEN ];
+    };
 };
 #pragma pack(pop)

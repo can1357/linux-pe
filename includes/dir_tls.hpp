@@ -33,12 +33,12 @@ namespace win
 {
     union tls_characteristics_t
     {
-        uint32_t flags;
+        uint32_t                    flags;
         struct
         {
-            uint32_t _reserved0     : 20;
-            uint32_t alignment      : 4;
-            uint32_t _reserved1     : 8;
+            uint32_t                _reserved0     : 20;
+            uint32_t                alignment      : 4;
+            uint32_t                _reserved1     : 8;
         };
     };
 

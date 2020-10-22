@@ -73,15 +73,15 @@ namespace win
 
     struct bound_forwarder_ref_t
     {
-        uint32_t                    timedate_stamp;
-        uint16_t                    offset_module_name;
+        uint32_t            timedate_stamp;
+        uint16_t            offset_module_name;
     };
 
     struct bound_import_descriptor_t
     {
-        uint32_t                    timedate_stamp;
-        uint16_t                    offset_module_name;
-        uint16_t                    num_module_forwarder_refs;
+        uint32_t            timedate_stamp;
+        uint16_t            offset_module_name;
+        uint16_t            num_module_forwarder_refs;
     };
 
     template<bool x64 = default_architecture>

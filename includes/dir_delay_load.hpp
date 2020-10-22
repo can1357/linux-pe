@@ -33,11 +33,11 @@ namespace win
 {
     union delay_load_attributes_t
     {
-        uint32_t flags;
-        struct
-        {
-            uint32_t rva_based : 1;
-            uint32_t reserved  : 31;
+        uint32_t                         flags;
+        struct                           
+        {                                
+            uint32_t                     rva_based : 1;
+            uint32_t                     reserved  : 31;
         };
     };
 

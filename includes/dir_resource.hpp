@@ -91,7 +91,7 @@ namespace win
     struct resource_directory_desc_t
     {
         uint32_t                    characteristics;
-        uint32_t					timedate_stamp;
+        uint32_t                    timedate_stamp;
         ex_version_t                version;
         uint16_t                    num_named_entries;
         uint16_t                    num_id_entries;
