@@ -1,11 +1,10 @@
 #pragma once
-#include "nt_headers.hpp"
+#include "common.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
 {
-    // Not "enum class" to ease the casting to uint16_t:4
-    enum reloc_type_id 
+    enum class reloc_type_id : uint16_t
     {
         rel_based_absolute =          0,
         rel_based_high =              1,
@@ -19,20 +18,19 @@ namespace win
     struct reloc_entry_t
     {
         uint16_t                    offset  : 12;
-        uint16_t                    type    : 4;
+        reloc_type_id               type    : 4;
     };
+    static_assert( sizeof( reloc_entry_t ) == 2, "Enum bitfield is not supported." );
 
     struct reloc_block_t
     {
         uint32_t                    base_rva;
         uint32_t                    size_block;
-        reloc_entry_t               entries[ 1 ];   // Variable length array
-
+        reloc_entry_t               entries[ VAR_LEN ];
 
         inline reloc_block_t* get_next() { return ( reloc_block_t* ) ( ( char* ) this + this->size_block ); }
         inline const reloc_block_t* get_next() const { return const_cast< reloc_block_t* >( this )->get_next(); }
-        inline uint32_t num_entries() const { return ( reloc_entry_t* ) get_next() - &entries[ 0 ]; }
-
+        inline size_t num_entries() const { return ( reloc_entry_t* ) get_next() - &entries[ 0 ]; }
     };
 
     struct reloc_directory_t

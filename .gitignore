@@ -2,3 +2,8 @@
 .vs/linux-pe/v16/.suo
 
 linuxpe.vcxproj.user
+
+x64/Debug/
+x64/Release/
+Debug/
+Release/

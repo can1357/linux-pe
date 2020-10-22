@@ -1,5 +1,5 @@
 #pragma once
-#include "nt_headers.hpp"
+#include "common.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -57,7 +57,7 @@ namespace win
         uint16_t                    num_module_forwarder_refs;
     };
 
-    template<bool x64 = IS_DEF_AMD64>
+    template<bool x64 = default_architecture>
     using image_thunk_data_t = std::conditional_t<x64, image_thunk_data_x64_t, image_thunk_data_x86_t>;
 };
 #pragma pack(pop)
