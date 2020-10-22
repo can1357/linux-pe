@@ -27,6 +27,7 @@
 //
 #pragma once
 #include "common.hpp"
+#include "data_directories.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -44,5 +45,7 @@ namespace win
         //
         runtime_function_t           functions[ VAR_LEN ];
     };
+
+    template<bool x64> struct directory_type<directory_id::directory_entry_exception, x64, void> { using type = exception_directory_t; };
 };
 #pragma pack(pop)

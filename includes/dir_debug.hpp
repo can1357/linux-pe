@@ -27,6 +27,7 @@
 //
 #pragma once
 #include "common.hpp"
+#include "data_directories.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -67,5 +68,7 @@ namespace win
     {
         debug_directory_entry_t     entries[ VAR_LEN ];
     };
+
+    template<bool x64> struct directory_type<directory_id::directory_entry_debug, x64, void> { using type = debug_directory_t; };
 };
 #pragma pack(pop)

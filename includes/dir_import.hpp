@@ -27,6 +27,7 @@
 //
 #pragma once
 #include "common.hpp"
+#include "data_directories.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -47,5 +48,7 @@ namespace win
         uint32_t      rva_name;
         uint32_t      rva_first_thunk;                // RVA to IAT (if bound this IAT has actual addresses)
     };
+
+    template<bool x64> struct directory_type<directory_id::directory_entry_import, x64, void> { using type = import_directory_t; };
 };
 #pragma pack(pop)

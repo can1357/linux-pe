@@ -27,6 +27,7 @@
 //
 #pragma once
 #include "common.hpp"
+#include "data_directories.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -64,5 +65,7 @@ namespace win
 
     template<bool x64 = default_architecture>
     using tls_directory_t = std::conditional_t<x64, tls_directory_x64_t, tls_directory_x86_t>;
+
+    template<bool x64> struct directory_type<directory_id::directory_entry_tls, x64, void> { using type = tls_directory_t<x64>; };
 };
 #pragma pack(pop)

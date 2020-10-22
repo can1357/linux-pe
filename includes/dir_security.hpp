@@ -27,6 +27,7 @@
 //
 #pragma once
 #include "common.hpp"
+#include "data_directories.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -46,5 +47,7 @@ namespace win
         certificate_type_id  certificate_type;
         uint8_t              raw_data[ VAR_LEN ];
     };
+
+    template<bool x64> struct directory_type<directory_id::directory_entry_security, x64, void> { using type = security_directory_t; };
 };
 #pragma pack(pop)

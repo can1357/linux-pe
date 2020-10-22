@@ -27,6 +27,7 @@
 //
 #pragma once
 #include "common.hpp"
+#include "data_directories.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -52,5 +53,7 @@ namespace win
         uint32_t                         unload_information_table_rva;
         uint32_t                         time_date_stamp;
     };
+
+    template<bool x64> struct directory_type<directory_id::directory_entry_delay_import, x64, void> { using type = delay_load_directory_t; };
 };
 #pragma pack(pop)
