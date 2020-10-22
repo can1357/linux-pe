@@ -34,7 +34,7 @@ namespace win
     struct export_directory_t
     {
         uint32_t                    characteristics;
-        uint32_t					timedate_stamp;
+        uint32_t                    timedate_stamp;
         ex_version_t                version;
         uint32_t                    name;
         uint32_t                    base;

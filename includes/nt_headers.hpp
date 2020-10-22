@@ -34,56 +34,56 @@
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
 {
-	// Magic constants
-	//
-	static constexpr uint16_t DOS_HDR_MAGIC =			0x5A4D;			// "MZ"
-	static constexpr uint32_t NT_HDR_MAGIC =			0x00004550;		// "PE\x0\x0"
+    // Magic constants
+    //
+    static constexpr uint16_t DOS_HDR_MAGIC =            0x5A4D;            // "MZ"
+    static constexpr uint32_t NT_HDR_MAGIC =            0x00004550;        // "PE\x0\x0"
 
-	// NT headers
-	//
-	template<bool x64 = default_architecture>
-	struct nt_headers_t
-	{
-		uint32_t					signature;
-		file_header_t				file_header;
-		optional_header_t<x64>		optional_header;
+    // NT headers
+    //
+    template<bool x64 = default_architecture>
+    struct nt_headers_t
+    {
+        uint32_t                    signature;
+        file_header_t                file_header;
+        optional_header_t<x64>        optional_header;
 
-		inline section_header_t* get_sections() { return ( section_header_t* ) ( ( uint8_t* ) &optional_header + file_header.size_optional_header ); }
-		inline const section_header_t* get_sections() const { return const_cast< nt_headers_t* >( this )->get_sections(); }
-		inline section_header_t* get_section( int n ) { return get_sections() + n; }
-		inline const section_header_t* get_section( int n ) const { return get_sections() + n; }
-	};
-	using nt_headers_x64_t = nt_headers_t<true>;
-	using nt_headers_x86_t = nt_headers_t<false>;
+        inline section_header_t* get_sections() { return ( section_header_t* ) ( ( uint8_t* ) &optional_header + file_header.size_optional_header ); }
+        inline const section_header_t* get_sections() const { return const_cast< nt_headers_t* >( this )->get_sections(); }
+        inline section_header_t* get_section( size_t n ) { return get_sections() + n; }
+        inline const section_header_t* get_section( size_t n ) const { return get_sections() + n; }
+    };
+    using nt_headers_x64_t = nt_headers_t<true>;
+    using nt_headers_x86_t = nt_headers_t<false>;
 
-	// DOS header
-	//
-	struct dos_header_t
-	{
-		uint16_t					e_magic;
-		uint16_t					e_cblp;
-		uint16_t					e_cp;
-		uint16_t					e_crlc;
-		uint16_t					e_cparhdr;
-		uint16_t					e_minalloc;
-		uint16_t					e_maxalloc;
-		uint16_t					e_ss;
-		uint16_t					e_sp;
-		uint16_t					e_csum;
-		uint16_t					e_ip;
-		uint16_t					e_cs;
-		uint16_t					e_lfarlc;
-		uint16_t					e_ovno;
-		uint16_t					e_res[ 4 ];
-		uint16_t					e_oemid;
-		uint16_t					e_oeminfo;
-		uint16_t					e_res2[ 10 ];
-		uint32_t					e_lfanew;
+    // DOS header
+    //
+    struct dos_header_t
+    {
+        uint16_t                    e_magic;
+        uint16_t                    e_cblp;
+        uint16_t                    e_cp;
+        uint16_t                    e_crlc;
+        uint16_t                    e_cparhdr;
+        uint16_t                    e_minalloc;
+        uint16_t                    e_maxalloc;
+        uint16_t                    e_ss;
+        uint16_t                    e_sp;
+        uint16_t                    e_csum;
+        uint16_t                    e_ip;
+        uint16_t                    e_cs;
+        uint16_t                    e_lfarlc;
+        uint16_t                    e_ovno;
+        uint16_t                    e_res[ 4 ];
+        uint16_t                    e_oemid;
+        uint16_t                    e_oeminfo;
+        uint16_t                    e_res2[ 10 ];
+        uint32_t                    e_lfanew;
 
-		inline file_header_t* get_file_header() { return &get_nt_headers<>()->file_header; }
-		inline const file_header_t* get_file_header() const { return &get_nt_headers<>()->file_header; }
-		template<bool x64 = default_architecture> inline nt_headers_t<x64>* get_nt_headers() { return ( nt_headers_t<x64>* ) ( ( uint8_t* ) this + e_lfanew ); }
-		template<bool x64 = default_architecture> inline const nt_headers_t<x64>* get_nt_headers() const { return const_cast< dos_header_t* >( this )->template get_nt_headers<x64>(); }
-	};
+        inline file_header_t* get_file_header() { return &get_nt_headers<>()->file_header; }
+        inline const file_header_t* get_file_header() const { return &get_nt_headers<>()->file_header; }
+        template<bool x64 = default_architecture> inline nt_headers_t<x64>* get_nt_headers() { return ( nt_headers_t<x64>* ) ( ( uint8_t* ) this + e_lfanew ); }
+        template<bool x64 = default_architecture> inline const nt_headers_t<x64>* get_nt_headers() const { return const_cast< dos_header_t* >( this )->template get_nt_headers<x64>(); }
+    };
 };
 #pragma pack(pop)
