@@ -72,5 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="linuxpe" />
+    <None Include="linux-pe.licenseheader" />
   </ItemGroup>
 </Project>
