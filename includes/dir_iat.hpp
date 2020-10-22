@@ -27,6 +27,7 @@
 //
 #pragma once
 #include "common.hpp"
+#include "data_directories.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -86,5 +87,7 @@ namespace win
 
     template<bool x64 = default_architecture>
     using image_thunk_data_t = std::conditional_t<x64, image_thunk_data_x64_t, image_thunk_data_x86_t>;
+
+    template<bool x64> struct directory_type<directory_id::directory_entry_iat, x64, void> { using type = image_thunk_data_t<x64>; };
 };
 #pragma pack(pop)

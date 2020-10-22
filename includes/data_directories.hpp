@@ -56,6 +56,13 @@ namespace win
         directory_reserved0 =                           15,               // -
     };
 
+    // Declare generic mapping for indices
+    //
+    template<directory_id id, bool x64, typename = void>
+    struct directory_type { using type = void; };
+    template<directory_id id, bool x64>
+    using directory_type_t = typename directory_type<id, x64>::type;
+
     // Generic directory descriptors
     //
     struct data_directory_t
@@ -83,7 +90,7 @@ namespace win
                 data_directory_t      import_directory;
                 data_directory_t      resource_directory;
                 data_directory_t      exception_directory;
-                raw_data_directory_t  security_directory;  // File offset instead of virtual address!
+                raw_data_directory_t  security_directory;  // File offset instead of RVA!
                 data_directory_t      basereloc_directory;
                 data_directory_t      debug_directory;
                 data_directory_t      copyright_directory;
@@ -109,7 +116,7 @@ namespace win
                 data_directory_t      import_directory;
                 data_directory_t      resource_directory;
                 data_directory_t      exception_directory;
-                raw_data_directory_t  security_directory;  // File offset instead of virtual address!!
+                raw_data_directory_t  security_directory;  // File offset instead of RVA!
                 data_directory_t      basereloc_directory;
                 data_directory_t      debug_directory;
                 data_directory_t      architecture_directory;

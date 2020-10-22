@@ -29,6 +29,7 @@
 #include <type_traits>
 #include <string_view>
 #include "common.hpp"
+#include "data_directories.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -126,5 +127,7 @@ namespace win
                 return ( const C* ) L"";
         }
     };
+
+    template<bool x64> struct directory_type<directory_id::directory_entry_resource, x64, void> { using type = resource_directory_t; };
 };
 #pragma pack(pop)

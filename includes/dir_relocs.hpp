@@ -27,6 +27,7 @@
 //
 #pragma once
 #include "common.hpp"
+#include "data_directories.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -64,5 +65,7 @@ namespace win
     {
         reloc_block_t               first_block;
     };
+
+    template<bool x64> struct directory_type<directory_id::directory_entry_basereloc, x64, void> { using type = reloc_directory_t; };
 };
 #pragma pack(pop)

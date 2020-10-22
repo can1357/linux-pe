@@ -27,6 +27,7 @@
 //
 #pragma once
 #include "common.hpp"
+#include "data_directories.hpp"
 
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
@@ -44,5 +45,7 @@ namespace win
         uint32_t                    rva_names;
         uint32_t                    rva_name_ordinals;
     };
+
+    template<bool x64> struct directory_type<directory_id::directory_entry_export, x64, void> { using type = export_directory_t; };
 };
 #pragma pack(pop)
