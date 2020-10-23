@@ -53,6 +53,54 @@ namespace win
         repro =                     0x00000010,
     };
 
+    // Codeview headers
+    //
+    enum class cv_signature : uint32_t
+    {
+        cv41 =                      0x3930424E, // 'NB09'
+        pdb20 =                     0x3031424E, // 'NB10'
+        cv50 =                      0x3131424E, // 'NB11'
+        pdb70 =                     0x53445352, // 'RSDS'
+    };
+
+    struct cv_header_t
+    {
+        cv_signature                signature;
+    };
+
+    struct cv_pdb20_t : cv_header_t
+    {
+        uint32_t                    offset;          // If not zero, stored within the image.
+        uint32_t                    timedate_stamp;
+        uint32_t                    age;
+
+    };
+
+    struct cv_pdb70_t : cv_header_t
+    {                              
+        guid_t                      guid;
+        uint32_t                    age;
+        char                        pdb_name[ VAR_LEN ];
+    };
+
+    // Misc headers
+    //
+    enum class misc_debug_data_id : uint32_t
+    {
+        exe_name = 1,
+    };
+
+    struct misc_debug_data_t
+    {
+        misc_debug_data_id          data_type;
+        uint32_t                    record_length;
+        uint8_t                     is_unicode;
+        uint8_t                     _pad[ 3 ];
+        uint8_t                     data[ VAR_LEN ];
+    };
+
+    // Directory type.
+    //
     struct debug_directory_entry_t
     {
         uint32_t                    characteristics;
