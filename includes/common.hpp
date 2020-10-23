@@ -39,6 +39,7 @@
     #define VAR_LEN
 #endif
 
+#pragma pack(push, 1)
 namespace win
 {
     // Default image architecture.
@@ -65,4 +66,12 @@ namespace win
             uint16_t                minor;
         };
     };
+
+    struct guid_t
+    {
+        uint32_t                    dword;
+        uint16_t                    word[ 2 ];
+        uint8_t                     byte[ 8 ];
+    };
 };
+#pragma pack(pop)

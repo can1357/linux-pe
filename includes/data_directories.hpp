@@ -59,7 +59,7 @@ namespace win
     // Declare generic mapping for indices
     //
     template<directory_id id, bool x64, typename = void>
-    struct directory_type { using type = void; };
+    struct directory_type { using type = char; };
     template<directory_id id, bool x64>
     using directory_type_t = typename directory_type<id, x64>::type;
 
