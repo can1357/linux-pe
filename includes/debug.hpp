@@ -30,14 +30,17 @@
 #include "file_header.hpp"
 #include "optional_header.hpp"
 #include "data_directories.hpp"
+#include "dir_resource.hpp"
 
 namespace win
 {
     namespace debug
     {
-        // Enum -> String
+        template<typename T> struct _enum_tag {};
+
+        // Enum Class -> String
         //
-        static inline const char* resolve_enum( machine_id id )
+        static inline const char* _resolve_enum( machine_id id, _enum_tag<machine_id> )
         {
             switch ( id )
             {
@@ -75,7 +78,7 @@ namespace win
                 default:                                        return nullptr;
             }
         }
-        static inline const char* resolve_enum( subsystem_id id )
+        static inline const char* _resolve_enum( subsystem_id id, _enum_tag<subsystem_id> )
         {
             switch ( id )
             {
@@ -97,7 +100,7 @@ namespace win
                 default:                                        return nullptr;
             }
         }
-        static inline const char* resolve_enum( directory_id id )
+        static inline const char* _resolve_enum( directory_id id, _enum_tag<directory_id> )
         {
             switch ( id )
             {
@@ -120,5 +123,36 @@ namespace win
                 default:                                        return nullptr;
             }
         }
+        static inline const char* _resolve_enum( resource_id id, _enum_tag<resource_id> )
+        {
+            switch ( id )
+            {
+                case resource_id::cursor:                       return "cursor";
+                case resource_id::bitmap:                       return "bitmap";
+                case resource_id::icon:                         return "icon";
+                case resource_id::menu:                         return "menu";
+                case resource_id::dialog:                       return "dialog";
+                case resource_id::string:                       return "string";
+                case resource_id::font_dir:                     return "font_dir";
+                case resource_id::font:                         return "font";
+                case resource_id::accelerator:                  return "accelerator";
+                case resource_id::rcdata:                       return "rcdata";
+                case resource_id::message_table:                return "message_table";
+                case resource_id::group_cursor:                 return "group_cursor";
+                case resource_id::group_icon:                   return "group_icon";
+                case resource_id::version:                      return "version";
+                case resource_id::dlg_include:                  return "dlg_include";
+                case resource_id::plug_play:                    return "plug_play";
+                case resource_id::vxd:                          return "vxd";
+                case resource_id::ani_cursor:                   return "ani_cursor";
+                case resource_id::ani_icon:                     return "ani_icon";
+                case resource_id::html:                         return "html";
+                case resource_id::manifest:                     return "manifest";
+                default:                                        return nullptr;
+            }
+        }
+
+        template<typename T> requires ( std::is_enum_v<T> )
+        static inline const char* resolve_enum( T id ) { return _resolve_enum( id, _enum_tag<T>{} ); }
     };
 };
