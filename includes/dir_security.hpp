@@ -40,12 +40,17 @@ namespace win
         ts_stack_signed =  0x0004,
     };
 
-    struct security_directory_t
+    struct win_certificate_t
     {
         uint32_t             length;
         version_t            revision;
         certificate_type_id  certificate_type;
         uint8_t              raw_data[ VAR_LEN ];
+    };
+
+    struct security_directory_t
+    {
+        win_certificate_t    begin;
     };
 
     template<bool x64> struct directory_type<directory_id::directory_entry_security, x64, void> { using type = security_directory_t; };
