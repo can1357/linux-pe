@@ -41,6 +41,9 @@ namespace win
             uint32_t                alignment      : 4;
             uint32_t                _reserved1     : 8;
         };
+
+        inline size_t get_alignment() const { return convert_alignment( alignment ); }
+        inline bool set_alignment( size_t align ) { return alignment = reflect_alignment( align ); }
     };
 
     struct tls_directory_x64_t
