@@ -45,9 +45,11 @@ namespace win
     struct nt_headers_t
     {
         uint32_t                    signature;
-        file_header_t                file_header;
-        optional_header_t<x64>        optional_header;
+        file_header_t               file_header;
+        optional_header_t<x64>      optional_header;
 
+        // Section getter
+        //
         inline section_header_t* get_sections() { return ( section_header_t* ) ( ( uint8_t* ) &optional_header + file_header.size_optional_header ); }
         inline const section_header_t* get_sections() const { return const_cast< nt_headers_t* >( this )->get_sections(); }
         inline section_header_t* get_section( size_t n ) { return get_sections() + n; }

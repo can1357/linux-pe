@@ -56,9 +56,14 @@ namespace win
         uint32_t                    size_block;
         reloc_entry_t               entries[ VAR_LEN ];
 
-        inline reloc_block_t* get_next() { return ( reloc_block_t* ) ( ( char* ) this + this->size_block ); }
-        inline const reloc_block_t* get_next() const { return const_cast< reloc_block_t* >( this )->get_next(); }
-        inline size_t num_entries() const { return ( reloc_entry_t* ) get_next() - &entries[ 0 ]; }
+        inline reloc_block_t* next() { return ( reloc_block_t* ) ( ( char* ) this + this->size_block ); }
+        inline const reloc_block_t* next() const { return const_cast< reloc_block_t* >( this )->next(); }
+        inline size_t num_entries() const { return ( reloc_entry_t* ) next() - &entries[ 0 ]; }
+
+        inline reloc_entry_t* begin() { return &entries[ 0 ]; }
+        inline const reloc_entry_t* begin() const { return &entries[ 0 ]; }
+        inline reloc_entry_t* end() { return ( reloc_entry_t* ) next(); }
+        inline const reloc_entry_t* end() const { return ( const reloc_entry_t* ) next(); }
     };
 
     struct reloc_directory_t

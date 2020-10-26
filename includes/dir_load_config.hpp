@@ -121,43 +121,42 @@ namespace win
         uint16_t register_number            : 4;
     };
 
-    struct dynamic_reloc_x86_t
+    template<bool x64 = default_architecture>
+    struct dynamic_reloc_v1_t
     {
-        uint32_t                    symbol;
+        using va_t = std::conditional_t<x64, uint64_t, uint32_t>;
+
+        va_t                        symbol;
         uint32_t                    size;
         reloc_block_t               first_block;
-    };
 
-    struct dynamic_reloc_x64_t
-    {
-        uint64_t                    symbol;
-        uint32_t                    size;
-        reloc_block_t               first_block;
-    };
+        inline reloc_block_t* begin() { return &first_block; }
+        inline const reloc_block_t* begin() const { return &first_block; }
+        inline reloc_block_t* end() { return ( reloc_block_t* ) next(); }
+        inline const reloc_block_t* end() const { return ( const reloc_block_t* ) next(); }
 
-    struct dynamic_reloc_v2_x86_t
+        inline dynamic_reloc_v1_t* next() { return ( dynamic_reloc_v1_t* ) ( ( char* ) &first_block + this->size ); }
+        inline const dynamic_reloc_v1_t* next() const { return const_cast< dynamic_reloc_v1_t* >( this )->next(); }
+    };
+    using dynamic_reloc_v1_x86_t = dynamic_reloc_v1_t<false>;
+    using dynamic_reloc_v1_x64_t = dynamic_reloc_v1_t<true>;
+
+    template<bool x64 = default_architecture>
+    struct dynamic_reloc_v2_t
     {
+        using va_t = std::conditional_t<x64, uint64_t, uint32_t>;
+
         uint32_t                    header_size;
         uint32_t                    fixup_info_size;
-        uint32_t                    symbol;
+        va_t                        symbol;
         uint32_t                    symbol_group;
         uint32_t                    flags;
         uint8_t                     fixup_info[ VAR_LEN ];
-    };
 
-    struct dynamic_reloc_v2_x64_t
-    {
-        uint32_t                    header_size;
-        uint32_t                    fixup_info_size;
-        uint64_t                    symbol;
-        uint32_t                    symbol_group;
-        uint32_t                    flags;
-        uint8_t                     fixup_info[ VAR_LEN ];
+        const void* end() const { return fixup_info + fixup_info_size; }
     };
-    template<bool x64 = default_architecture>
-    using dynamic_reloc_t =    std::conditional_t<x64, dynamic_reloc_x64_t, dynamic_reloc_x86_t>;
-    template<bool x64 = default_architecture>
-    using dynamic_reloc_v2_t = std::conditional_t<x64, dynamic_reloc_v2_x64_t, dynamic_reloc_v2_x86_t>;
+    using dynamic_reloc_v2_x86_t = dynamic_reloc_v2_t<false>;
+    using dynamic_reloc_v2_x64_t = dynamic_reloc_v2_t<true>;
 
     // Dynamic relocation table
     //
@@ -168,9 +167,11 @@ namespace win
         uint32_t                    size;
         union
         {
-            dynamic_reloc_t<x64>    first_entry; // Variable length array.
-            dynamic_reloc_v2_t<x64> first_v2_entry; // Variable length array.
+            dynamic_reloc_v1_t<x64> v1_begin; // Variable length array.
+            dynamic_reloc_v2_t<x64> v2_begin; // Variable length array.
         };
+
+        const void* end() const { return ( char* ) &v1_begin + size; }
     };
     using dynamic_reloc_table_x86_t = dynamic_reloc_table_t<false>;
     using dynamic_reloc_table_x64_t = dynamic_reloc_table_t<true>;
@@ -216,79 +217,62 @@ namespace win
         uint32_t                    _pad0;                              // Additional bitmask to be defined later
     };
 
-    struct load_config_directory_x64_t
+    template<bool x64 = default_architecture>
+    struct load_config_directory_t
     {
+        // Architecture dependent typedefs
+        //
+        using va_t =    std::conditional_t<x64, uint64_t, uint32_t>;
+        using vsize_t = va_t;
+        
+        struct table_t 
+        { 
+            va_t virtual_address; 
+            vsize_t count; 
+        };
+
+        // Directory description
+        //
         uint32_t                    size;
         uint32_t                    timedate_stamp;
         ex_version_t                version;
         uint32_t                    global_flags_clear;
         uint32_t                    global_flags_set;
         uint32_t                    critical_section_default_timeout;
-        uint64_t                    decommit_free_block_threshold;
-        uint64_t                    decommit_total_free_threshold;
-        uint64_t                    lock_prefix_table;
-        uint64_t                    maximum_allocation_size;
-        uint64_t                    virtual_memory_threshold;
-        uint64_t                    process_affinity_mask;
+        vsize_t                     decommit_free_block_threshold;
+        vsize_t                     decommit_total_free_threshold;
+        va_t                        lock_prefix_table;
+        vsize_t                     maximum_allocation_size;
+        vsize_t                     virtual_memory_threshold;
+        vsize_t                     process_affinity_mask;
         uint32_t                    process_heap_flags;
         uint16_t                    csd_version;
         uint16_t                    dependent_load_flags;
-        uint64_t                    edit_list;
-        uint64_t                    security_cookie;
-        uint64_t                    se_handler_table;
-        uint64_t                    se_handler_count;
-        uint64_t                    guard_cf_check_function_ptr;
-        uint64_t                    guard_cf_dispatch_function_ptr;
-        uint64_t                    guard_cf_function_table;
-        uint64_t                    guard_cf_function_count;
+        va_t                        edit_list;
+        va_t                        security_cookie;
+        table_t                     se_handler_table;
+        va_t                        guard_cf_check_function_ptr;
+        va_t                        guard_cf_dispatch_function_ptr;
+        table_t                     guard_cf_function_table;
         uint32_t                    guard_flags;
         load_config_ci_t            code_integrity;
-        uint64_t                    guard_address_taken_iat_entry_table;
-        uint64_t                    guard_address_taken_iat_entry_count;
-        uint64_t                    guard_long_jump_target_table;
-        uint64_t                    guard_long_jump_target_count;
-        uint64_t                    dynamic_value_reloc_table;
-        uint64_t                    chpe_metadata_ptr;
-        uint64_t                    guard_rf_failure_routine;
-        uint64_t                    guard_rf_failure_routine_function_ptr;
+        table_t                     guard_address_taken_iat_entry_table;
+        table_t                     guard_long_jump_target_table;
+        va_t                        dynamic_value_reloc_table;
+        va_t                        chpe_metadata_ptr;                      // hybrid_metadata_ptr @ v1607
+        va_t                        guard_rf_failure_routine;
+        va_t                        guard_rf_failure_routine_function_ptr;
         uint32_t                    dynamic_value_reloc_table_offset;
         uint16_t                    dynamic_value_reloc_table_section;
-        uint16_t                    _pad0;
-        uint64_t                    guard_rf_verify_stack_ptr_function_ptr;
+        va_t                        guard_rf_verify_stack_ptr_function_ptr;
         uint32_t                    hotpatch_table_offset;
-        uint32_t                    _pad1;
-        uint64_t                    enclave_configuration_ptr;
-        uint64_t                    volatile_metadata_ptr;
-        uint64_t                    guard_eh_continuation_table;
-        uint64_t                    guard_eh_continuation_table_count;
+        uint32_t                    reserved;
+        va_t                        enclave_configuration_ptr;
+        va_t                        volatile_metadata_ptr;
+        table_t                     guard_eh_continuation_table;
     };
-
-    struct load_config_directory_x86_t
-    {
-        uint32_t                    size;
-        uint32_t                    timedate_stamp;
-        ex_version_t                version;
-        uint32_t                    global_flags_clear;
-        uint32_t                    global_flags_set;
-        uint32_t                    critical_section_default_timeout;
-        uint32_t                    decommit_free_block_threshold;
-        uint32_t                    decommit_total_free_threshold;
-        uint32_t                    lock_prefix_table;
-        uint32_t                    maximum_allocation_size;
-        uint32_t                    virtual_memory_threshold;
-        uint32_t                    process_heap_flags;
-        uint32_t                    process_affinity_mask;
-        uint16_t                    csd_version;
-        uint16_t                    _pad0;
-        uint32_t                    edit_list;
-        uint32_t                    security_cookie;
-        uint32_t                    se_handler_table;
-        uint32_t                    se_handler_count;
-    };
-
-    template<bool x64 = default_architecture>
-    using load_config_directory_t = std::conditional_t<x64, load_config_directory_x64_t, load_config_directory_x86_t>;
-
+    using load_config_directory_x86_t = load_config_directory_t<false>;
+    using load_config_directory_x64_t = load_config_directory_t<true>;
     template<bool x64> struct directory_type<directory_id::directory_entry_load_config, x64, void> { using type = load_config_directory_t<x64>; };
 };
 #pragma pack(pop)
