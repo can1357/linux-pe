@@ -12,9 +12,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\coff_headers.hpp" />
+    <ClInclude Include="includes\coff_line_number.hpp" />
+    <ClInclude Include="includes\coff_reloc.hpp" />
+    <ClInclude Include="includes\coff_string.hpp" />
     <ClInclude Include="includes\common.hpp" />
     <ClInclude Include="includes\debug.hpp" />
     <ClInclude Include="includes\data_directories.hpp" />
+    <ClInclude Include="includes\coff_symbol.hpp" />
     <ClInclude Include="includes\dir_debug.hpp" />
     <ClInclude Include="includes\dir_delay_load.hpp" />
     <ClInclude Include="includes\dir_exceptions.hpp" />

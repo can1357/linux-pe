@@ -7,7 +7,10 @@
     <Filter Include="Headers\Data Directories">
       <UniqueIdentifier>{ac8943f0-065d-49f4-826d-b868dbb560d0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Image Descriptor">
+    <Filter Include="Headers\COFF Types">
+      <UniqueIdentifier>{6338239a-3c88-4097-9ec5-a626e3d71197}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\NT Types">
       <UniqueIdentifier>{a64faa92-6ec6-420d-8ece-db6264aeca99}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -52,25 +55,37 @@
       <Filter>Headers\Data Directories</Filter>
     </ClInclude>
     <ClInclude Include="includes\image.hpp">
-      <Filter>Headers\Image Descriptor</Filter>
+      <Filter>Headers\NT Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt_headers.hpp">
-      <Filter>Headers\Image Descriptor</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\file_header.hpp">
-      <Filter>Headers\Image Descriptor</Filter>
+      <Filter>Headers\NT Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\optional_header.hpp">
-      <Filter>Headers\Image Descriptor</Filter>
+      <Filter>Headers\NT Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\data_directories.hpp">
-      <Filter>Headers\Image Descriptor</Filter>
+      <Filter>Headers\NT Types</Filter>
     </ClInclude>
-    <ClInclude Include="includes\section_header.hpp">
-      <Filter>Headers\Image Descriptor</Filter>
+    <ClInclude Include="includes\coff_line_number.hpp">
+      <Filter>Headers\COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\coff_reloc.hpp">
+      <Filter>Headers\COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\coff_string.hpp">
+      <Filter>Headers\COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\coff_symbol.hpp">
+      <Filter>Headers\COFF Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\coff_headers.hpp">
-      <Filter>Headers\Image Descriptor</Filter>
+      <Filter>Headers\COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\section_header.hpp">
+      <Filter>Headers\COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\file_header.hpp">
+      <Filter>Headers\COFF Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

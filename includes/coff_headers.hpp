@@ -27,16 +27,19 @@
 //
 #pragma once
 #include "common.hpp"
-#include "dir_coff.hpp"
+#include "coff_line_number.hpp"
+#include "coff_reloc.hpp"
+#include "coff_string.hpp"
+#include "coff_symbol.hpp"
 #include "file_header.hpp"
 #include "section_header.hpp"
 
-#pragma pack(push, WIN_STRUCT_PACKING)
-namespace win
+#pragma pack(push, COFF_STRUCT_PACKING)
+namespace coff
 {
-    // COFF headers.
+    // Optional header and the header collection.
     //
-	struct coff_optional_header_t
+	struct optional_header_t
 	{
         // Only standard fields as described in the common object file format.
         //
@@ -51,27 +54,29 @@ namespace win
 		uint32_t                    base_of_code;
 		uint32_t                    base_of_data;
 	};
-	struct coff_headers_t
+	struct image_t
 	{
 		file_header_t               file_header;
-		coff_optional_header_t      optional_header;
+		optional_header_t           optional_header;
 
 		// Section getter
         //
         inline section_header_t* get_sections() { return ( section_header_t* ) ( ( uint8_t* ) &optional_header + file_header.size_optional_header ); }
-        inline const section_header_t* get_sections() const { return const_cast<coff_headers_t*>( this )->get_sections(); }
+        inline const section_header_t* get_sections() const { return const_cast< image_t*>( this )->get_sections(); }
         inline section_header_t* get_section( size_t n ) { return get_sections() + n; }
         inline const section_header_t* get_section( size_t n ) const { return get_sections() + n; }
 
         // Symbol table getter
         //
-		inline coff_symbol_t* get_symbols() { return ( coff_symbol_t* ) ( ( uint8_t* ) this ) + file_header.ptr_symbols; }
-		inline const coff_symbol_t* get_symbols() const { return const_cast< coff_headers_t* >( this )->get_symbols(); }
+		inline symbol_t* get_symbols() { return ( symbol_t* ) ( ( uint8_t* ) this ) + file_header.ptr_symbols; }
+		inline const symbol_t* get_symbols() const { return const_cast< image_t* >( this )->get_symbols(); }
+		inline symbol_t* get_symbol( size_t n ) { return get_symbols() + n; }
+		inline const symbol_t* get_symbol( size_t n ) const { return get_symbols() + n; }
 
 		// String table getter.
 		//
-		inline coff_string_table_t* get_strings() { return ( coff_string_table_t* ) ( get_symbols() + file_header.num_symbols ); }
-		inline const coff_string_table_t* get_strings() const { return const_cast< coff_headers_t* >( this )->get_strings(); }
+		inline string_table_t* get_strings() { return ( string_table_t* ) ( get_symbols() + file_header.num_symbols ); }
+		inline const string_table_t* get_strings() const { return const_cast< image_t* >( this )->get_strings(); }
 	};
 };
 #pragma pack(pop)

@@ -30,7 +30,9 @@
 #include <type_traits>
 #include <immintrin.h>
 
-#define WIN_STRUCT_PACKING                4
+#define WIN_STRUCT_PACKING                4 // Structure packings of the variants.
+#define COFF_STRUCT_PACKING               1 //
+#define LEN_SHORT_STR                     8 // Common short string length used in COFF and it's variants.
 
 // If your compiler does not support zero-len arrays, define VAR_LEN as 1 before including linuxpe.
 //
@@ -42,10 +44,6 @@
 #pragma pack(push, 1)
 namespace win
 {
-    // Common short string length used in COFF and it's variants.
-    //
-    static constexpr uint32_t LEN_SHORT_STR = 8;
-
     // Default image architecture
     //
     static constexpr bool default_architecture = sizeof( void* ) == 8;
@@ -96,5 +94,10 @@ namespace win
                 return align_flag;
         return 0;
     }
+};
+namespace coff 
+{ 
+    using version_t =                win::version_t;
+    using ex_version_t =             win::ex_version_t;
 };
 #pragma pack(pop)

@@ -27,24 +27,23 @@
 //
 #pragma once
 #include "common.hpp"
+#include "coff_string.hpp"
 
-// Contains COFF directory types.
-//
-#pragma pack(push, 1)
-namespace win
+#pragma pack(push, COFF_STRUCT_PACKING)
+namespace coff
 {
     // Special section indices.
     //
-    enum coff_special_section_id_t : int16_t
+    enum special_section_id_t : int16_t
     {
-        coff_symbol_undefined =   0,                           // External symbol
-        coff_symbol_absolute =    -1,                          // Absolute symbol, non-relocatable value.
-        coff_symbol_debug =       -2,                          // Misc. debugging info, not within a section.
+        symbol_undefined =   0,                                // External symbol
+        symbol_absolute =    -1,                               // Absolute symbol, non-relocatable value.
+        symbol_debug =       -2,                               // Misc. debugging info, not within a section.
     };
 
     // Storage class.
     //
-    enum class coff_storage_class_t : uint8_t
+    enum class storage_class_t : uint8_t
     {
         none =                    0,                           // None.
         auto_variable =           1,                           // Automatic variable.
@@ -82,7 +81,7 @@ namespace win
 
     // Type identifiers.
     //
-    enum class coff_base_type_t : uint16_t
+    enum class base_type_t : uint16_t
     {
         t_none =                  0,
         t_void =                  1,
@@ -101,101 +100,28 @@ namespace win
         t_uint =                  14,
         t_ulong =                 15,
     };
-    enum class coff_derived_type_t : uint16_t
+    enum class derived_type_t : uint16_t
     {
         none =                    0,                           // Not derived.
         pointer =                 1,                           // Pointer to base type.
         function =                2,                           // Function returning base type.
         c_array =                 3,                           // Array of base type.
     };
-    enum class coff_rel_type_t : uint16_t
-    {
-        // AMD64:
-        //
-        coff_rel_amd64_absolute = 0x0000,                      // The relocation is ignored.
-        coff_rel_amd64_addr64 =   0x0001,                      // The 64-bit VA of the relocation target.
-        coff_rel_amd64_addr32 =   0x0002,                      // The 32-bit VA of the relocation target.
-        coff_rel_amd64_addr32nb = 0x0003,                      // The 32-bit address without an image base (RVA).
-        coff_rel_amd64_rel32 =    0x0004,                      // The 32-bit relative address from the byte following the relocation.
-        coff_rel_amd64_rel32_1 =  0x0005,                      // The 32-bit address relative to byte distance 1 from the relocation.
-        coff_rel_amd64_rel32_2 =  0x0006,                      // The 32-bit address relative to byte distance 2 from the relocation.
-        coff_rel_amd64_rel32_3 =  0x0007,                      // The 32-bit address relative to byte distance 3 from the relocation.
-        coff_rel_amd64_rel32_4 =  0x0008,                      // The 32-bit address relative to byte distance 4 from the relocation.
-        coff_rel_amd64_rel32_5 =  0x0009,                      // The 32-bit address relative to byte distance 5 from the relocation.
-        coff_rel_amd64_section =  0x000A,                      // The 16-bit section index of the section that contains the target. This is used to support debugging information.
-        coff_rel_amd64_secrel =   0x000B,                      // The 32-bit offset of the target from the beginning of its section. This is used to support debugging information and static thread local storage.
-        coff_rel_amd64_secrel7 =  0x000C,                      // A 7-bit unsigned offset from the base of the section that contains the target.
-        coff_rel_amd64_token =    0x000D,                      // CLR tokens.
-        coff_rel_amd64_srel32 =   0x000E,                      // A 32-bit signed span-dependent value emitted into the object.
-        coff_rel_amd64_pair =     0x000F,                      // A pair that must immediately follow every span-dependent value.
-        coff_rel_amd64_sspan32 =  0x0010,                      // A 32-bit signed span-dependent value that is applied at link time.
-
-        // I386:
-        //
-        coff_rel_i386_absolute =  0x0000,                      // The relocation is ignored.
-        coff_rel_i386_dir16 =     0x0001,                      // Not supported.
-        coff_rel_i386_rel16 =     0x0002,                      // Not supported.
-        coff_rel_i386_dir32 =     0x0006,                      // The target's 32-bit VA.
-        coff_rel_i386_dir32nb =   0x0007,                      // The target's 32-bit RVA.
-        coff_rel_i386_seg12 =     0x0009,                      // Not supported.
-        coff_rel_i386_section =   0x000A,                      // The 16-bit section index of the section that contains the target. This is used to support debugging information.
-        coff_rel_i386_secrel =    0x000B,                      // The 32-bit offset of the target from the beginning of its section. This is used to support debugging information and static thread local storage.
-        coff_rel_i386_token =     0x000C,                      // The CLR token.
-        coff_rel_i386_secrel7 =   0x000D,                      // A 7-bit offset from the base of the section that contains the target.
-        coff_rel_i386_rel32 =     0x0014,                      // The 32-bit relative displacement to the target. This supports the x86 relative branch and call instructions.
-    };
-
-    // Relocation entry.
-    //
-    struct coff_reloc_t
-    {
-        uint32_t                  virtual_address;             // Virtual address of the relocated data.
-        uint32_t                  symbol_index;                // Symbol index.
-        coff_rel_type_t           type;                        // Type of the relocation applied.
-    };
-
-    // Line number entry.
-    //
-    struct coff_line_number_t
-    {
-        union
-        {
-            uint32_t              symbol_index;                // If first entry at line #0, symbol index to the function.
-            uint32_t              ptr_raw_data;                // Else, raw offset from the beginning of the directory that this data relates to.
-        };
-        uint16_t                  line_number;                 // Line number.
-    };
 
     // Symbol table entry.
     //
-    struct coff_symbol_t
+    struct symbol_t
     {
-        union
-        {
-            char                 short_name[ LEN_SHORT_STR ];  // Name as inlined string.
-            struct
-            {
-                uint32_t         is_short;                     // If non-zero, name is inline'd into short_name, else has a long name.
-                uint32_t         long_name_offset;             // Offset into string table.
-            };
-        };
+        string_t                 name;                         // Name of the symbol.
         int32_t                  value;                        // Value associated with the symbol, interp. depends on the type, usually address of the entry.
         int16_t                  section_index;                // If <= 0, a speccial descriptor else scn+1.
 
-        coff_base_type_t         base_type    : 4;             // Base and derived type describing the symbol.
-        coff_derived_type_t      derived_type : 12;            //
+        base_type_t              base_type    : 4;             // Base and derived type describing the symbol.
+        derived_type_t           derived_type : 12;            //
 
-        coff_storage_class_t     storage_class;                // Storage class as described above.
+        storage_class_t          storage_class;                // Storage class as described above.
         uint8_t                  num_auxiliary;                // Auxiliary data following this symbol.
     };
-    static_assert( sizeof( coff_symbol_t ) == 18, "Invalid enum bitfield." );
-
-    // String table.
-    //
-    struct coff_string_table_t
-    {
-        uint32_t                 size;
-        char                     raw_data[ VAR_LEN ];
-    };
+    static_assert( sizeof( symbol_t ) == 18, "Invalid enum bitfield." );
 };
 #pragma pack(pop)

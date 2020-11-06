@@ -108,4 +108,10 @@ namespace win
         file_characteristics_t   characteristics;
     };
 };
+namespace coff 
+{ 
+    using machine_id =                win::machine_id;
+    using file_header_t =             win::file_header_t; 
+    using file_characteristics_t =    win::file_characteristics_t;
+};
 #pragma pack(pop)
