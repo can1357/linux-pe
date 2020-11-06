@@ -99,7 +99,10 @@
     <ClInclude Include="includes\aux_weak_external.hpp">
       <Filter>Headers\COFF Auxiliaries</Filter>
     </ClInclude>
-    <ClInclude Include="includes\aux_file.hpp">
+    <ClInclude Include="includes\aux_file_name.hpp">
+      <Filter>Headers\COFF Auxiliaries</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\aux_section.hpp">
       <Filter>Headers\COFF Auxiliaries</Filter>
     </ClInclude>
   </ItemGroup>

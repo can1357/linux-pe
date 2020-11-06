@@ -26,6 +26,7 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include <string_view>
 #include "common.hpp"
 
 #pragma pack(push, COFF_STRUCT_PACKING)
@@ -50,6 +51,8 @@ namespace coff
             uint32_t             long_name_offset;             // Offset into string table.
         };
 
+        // Comparison with a short string.
+        //
         template<size_t N> requires( N <= ( LEN_SHORT_STR + 1 ) )
         int short_cmp( const char( &str )[ N ] ) const
         {
@@ -57,6 +60,22 @@ namespace coff
                 return memcmp( short_name, str, LEN_SHORT_STR );
             else
                 return memcmp( short_name, str, N );
+        }
+
+        // Convert to string view given the string table.
+        //
+        std::string_view to_string( const string_table_t* tbl ) const
+        {
+            if ( is_short )
+            {
+                if ( short_name[ LEN_SHORT_STR - 1 ] ) return { short_name, LEN_SHORT_STR };
+                return short_name;
+            }
+            else
+            {
+                if ( tbl ) return ( ( const char* ) tbl ) + long_name_offset;
+                return {};
+            }
         }
     };
 };
