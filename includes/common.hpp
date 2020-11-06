@@ -42,6 +42,10 @@
 #pragma pack(push, 1)
 namespace win
 {
+    // Common short string length used in COFF and it's variants.
+    //
+    static constexpr uint32_t LEN_SHORT_STR = 8;
+
     // Default image architecture
     //
     static constexpr bool default_architecture = sizeof( void* ) == 8;

@@ -11,6 +11,7 @@
     <None Include="linuxpe" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="includes\coff_headers.hpp" />
     <ClInclude Include="includes\common.hpp" />
     <ClInclude Include="includes\debug.hpp" />
     <ClInclude Include="includes\data_directories.hpp" />

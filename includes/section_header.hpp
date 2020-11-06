@@ -31,10 +31,6 @@
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
 {
-    // Magic numbers
-    //
-    static constexpr uint32_t LEN_SECTION_NAME =        8;
-
     // Section characteristics
     //
     union section_characteristics_t
@@ -77,7 +73,7 @@ namespace win
     //
     struct section_header_t
     {
-        char                        name[ LEN_SECTION_NAME ];
+        char                        name[ LEN_SHORT_STR ];
         
         union
         {
