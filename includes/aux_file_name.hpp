@@ -26,38 +26,37 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include <string_view>
 #include "common.hpp"
+#include "coff_symbol.hpp"
 
 #pragma pack(push, COFF_STRUCT_PACKING)
 namespace coff
 {
-    // String table.
+    // Declare the data type.
     //
-    struct string_table_t
+    struct aux_file_name_t
     {
-        uint32_t                 size;
-        char                     raw_data[ VAR_LEN ];
-    };
+        char                    file_name[ 18 ];            // Name of the file.
 
-    // External reference to string table.
-    //
-    union string_t
-    {
-        char                     short_name[ LEN_SHORT_STR ];  // Name as inlined string.
-        struct
+        std::string_view to_string() const
         {
-            uint32_t             is_short;                     // If non-zero, name is inline'd into short_name, else has a long name.
-            uint32_t             long_name_offset;             // Offset into string table.
-        };
+            const char* begin = std::begin( file_name );
+            const char* end = std::end( file_name );
 
-        template<size_t N> requires( N <= ( LEN_SHORT_STR + 1 ) )
-        int short_cmp( const char( &str )[ N ] ) const
-        {
-            if ( N == ( LEN_SHORT_STR + 1 ) )
-                return memcmp( short_name, str, LEN_SHORT_STR );
-            else
-                return memcmp( short_name, str, N );
+            if ( end[ -1 ] ) return { begin, end - begin };
+            else             return { begin };
         }
     };
+    static_assert( sizeof( aux_file_name_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );
+    
+    // Declare the matching logic.
+    //
+    template<>
+    inline bool symbol_t::has_aux<aux_file_name_t>() const
+    {
+        return !name.short_cmp( ".file" ) &&
+               storage_class == storage_class_t::file_name;
+    }
 };
 #pragma pack(pop)

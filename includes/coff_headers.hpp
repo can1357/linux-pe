@@ -33,6 +33,11 @@
 #include "coff_symbol.hpp"
 #include "file_header.hpp"
 #include "section_header.hpp"
+#include "aux_file_name.hpp"
+#include "aux_function.hpp"
+#include "aux_function_delimiter.hpp"
+#include "aux_section.hpp"
+#include "aux_weak_external.hpp"
 
 #pragma pack(push, COFF_STRUCT_PACKING)
 namespace coff

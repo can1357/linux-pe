@@ -27,37 +27,31 @@
 //
 #pragma once
 #include "common.hpp"
+#include "coff_symbol.hpp"
 
 #pragma pack(push, COFF_STRUCT_PACKING)
 namespace coff
 {
-    // String table.
+    // Declare the data type.
     //
-    struct string_table_t
+    struct aux_function_delimiter_t
     {
-        uint32_t                 size;
-        char                     raw_data[ VAR_LEN ];
+        uint32_t                _pad0;
+        uint16_t                line_number;                // Line number
+        uint16_t                _pad1;              
+        uint32_t                _pad2;              
+        uint32_t                sym_next_bf_idx;            // Symbol table index for the next .bf index, if zero last entry.
+        uint16_t                _pad;
     };
-
-    // External reference to string table.
+    static_assert( sizeof( aux_function_delimiter_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );
+    
+    // Declare the matching logic.
     //
-    union string_t
+    template<>
+    inline bool symbol_t::has_aux<aux_function_delimiter_t>() const
     {
-        char                     short_name[ LEN_SHORT_STR ];  // Name as inlined string.
-        struct
-        {
-            uint32_t             is_short;                     // If non-zero, name is inline'd into short_name, else has a long name.
-            uint32_t             long_name_offset;             // Offset into string table.
-        };
-
-        template<size_t N> requires( N <= ( LEN_SHORT_STR + 1 ) )
-        int short_cmp( const char( &str )[ N ] ) const
-        {
-            if ( N == ( LEN_SHORT_STR + 1 ) )
-                return memcmp( short_name, str, LEN_SHORT_STR );
-            else
-                return memcmp( short_name, str, N );
-        }
-    };
+        return ( !name.short_cmp( ".bf" ) || !name.short_cmp( ".ef" ) ) &&
+               storage_class == storage_class_t::function_delimiter;
+    }
 };
 #pragma pack(pop)

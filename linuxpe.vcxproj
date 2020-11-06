@@ -11,6 +11,9 @@
     <None Include="linuxpe" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="includes\aux_file.hpp" />
+    <ClInclude Include="includes\aux_function.hpp" />
+    <ClInclude Include="includes\aux_weak_external.hpp" />
     <ClInclude Include="includes\coff_headers.hpp" />
     <ClInclude Include="includes\coff_line_number.hpp" />
     <ClInclude Include="includes\coff_reloc.hpp" />
@@ -31,6 +34,7 @@
     <ClInclude Include="includes\dir_security.hpp" />
     <ClInclude Include="includes\dir_tls.hpp" />
     <ClInclude Include="includes\file_header.hpp" />
+    <ClInclude Include="includes\aux_function_delimiter.hpp" />
     <ClInclude Include="includes\image.hpp" />
     <ClInclude Include="includes\nt_headers.hpp" />
     <ClInclude Include="includes\optional_header.hpp" />
