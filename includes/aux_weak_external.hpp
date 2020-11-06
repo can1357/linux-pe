@@ -27,37 +27,36 @@
 //
 #pragma once
 #include "common.hpp"
+#include "coff_symbol.hpp"
 
 #pragma pack(push, COFF_STRUCT_PACKING)
 namespace coff
 {
-    // String table.
-    //
-    struct string_table_t
+    enum class weak_external_type_t : uint32_t
     {
-        uint32_t                 size;
-        char                     raw_data[ VAR_LEN ];
+        no_library =            1,                          // No library search for sym1 should be performed.
+        library =               2,                          // Library search for sym1 should be performed.
+        alias =                 3,                          // Sym1 is just an alias to Sym2.
     };
 
-    // External reference to string table.
+    // Declare the data type.
     //
-    union string_t
+    struct aux_weak_external_t
     {
-        char                     short_name[ LEN_SHORT_STR ];  // Name as inlined string.
-        struct
-        {
-            uint32_t             is_short;                     // If non-zero, name is inline'd into short_name, else has a long name.
-            uint32_t             long_name_offset;             // Offset into string table.
-        };
-
-        template<size_t N> requires( N <= ( LEN_SHORT_STR + 1 ) )
-        int short_cmp( const char( &str )[ N ] ) const
-        {
-            if ( N == ( LEN_SHORT_STR + 1 ) )
-                return memcmp( short_name, str, LEN_SHORT_STR );
-            else
-                return memcmp( short_name, str, N );
-        }
+        uint32_t                sym_alias_idx;              // Index of sym2 that should be linked if sym1 does not exist.
+        weak_external_type_t    type;                       // Type of the weak external.
+        uint8_t                 _pad[ 10 ];
     };
+    static_assert( sizeof( aux_weak_external_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );
+    
+    // Declare the matching logic.
+    //
+    template<>
+    inline bool symbol_t::has_aux<aux_weak_external_t>() const
+    {
+        return storage_class == storage_class_t::public_symbol &&
+               section_index == special_section_id_t::symbol_undefined &&
+               value == 0;
+    }
 };
 #pragma pack(pop)

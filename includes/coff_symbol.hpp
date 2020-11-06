@@ -66,8 +66,8 @@ namespace coff
         bitfield =                18,                          // Marks a bitfield.
         auto_argument =           19,                          // Automatic argument.
         end_of_block =            20,                          // Marks the end of a block.
-        block_delimitor =         100,                         // Marks the beginning or the end of a block.
-        function_delimitor =      101,                         // Marks the beginning or the end of a function
+        block_delimiter =         100,                         // Marks the beginning or the end of a block.
+        function_delimiter =      101,                         // Marks the beginning or the end of a function
         struct_end =              102,                         // Marks the end of a structure definition.
         file_name =               103,                         // File name as symbol.
         line_number =             104,                         // a) Line number as symbol.
@@ -83,7 +83,7 @@ namespace coff
     //
     enum class base_type_t : uint16_t
     {
-        t_none =                  0,
+        none =                    0,
         t_void =                  1,
         t_char =                  2,
         t_short =                 3,
@@ -121,6 +121,10 @@ namespace coff
 
         storage_class_t          storage_class;                // Storage class as described above.
         uint8_t                  num_auxiliary;                // Auxiliary data following this symbol.
+
+        // Dynamic logic for auxiliary entries.
+        //
+        template<typename T>     bool has_aux() const;
     };
     static_assert( sizeof( symbol_t ) == 18, "Invalid enum bitfield." );
 };
