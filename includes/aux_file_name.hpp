@@ -41,11 +41,8 @@ namespace coff
 
         std::string_view to_string() const
         {
-            const char* begin = std::begin( file_name );
-            const char* end = std::end( file_name );
-
-            if ( end[ -1 ] ) return { begin, end - begin };
-            else             return { begin };
+            if ( file_name[ 17 ] ) return { file_name, 18 };
+            return file_name;
         }
     };
     static_assert( sizeof( aux_file_name_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );

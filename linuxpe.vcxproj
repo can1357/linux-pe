@@ -11,8 +11,9 @@
     <None Include="linuxpe" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="includes\aux_file.hpp" />
+    <ClInclude Include="includes\aux_file_name.hpp" />
     <ClInclude Include="includes\aux_function.hpp" />
+    <ClInclude Include="includes\aux_section.hpp" />
     <ClInclude Include="includes\aux_weak_external.hpp" />
     <ClInclude Include="includes\coff_headers.hpp" />
     <ClInclude Include="includes\coff_line_number.hpp" />

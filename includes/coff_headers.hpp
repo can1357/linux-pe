@@ -73,7 +73,7 @@ namespace coff
 
         // Symbol table getter
         //
-		inline symbol_t* get_symbols() { return ( symbol_t* ) ( ( uint8_t* ) this ) + file_header.ptr_symbols; }
+		inline symbol_t* get_symbols() { return ( symbol_t* ) ( ( uint8_t* ) this + file_header.ptr_symbols ); }
 		inline const symbol_t* get_symbols() const { return const_cast< image_t* >( this )->get_symbols(); }
 		inline symbol_t* get_symbol( size_t n ) { return get_symbols() + n; }
 		inline const symbol_t* get_symbol( size_t n ) const { return get_symbols() + n; }
