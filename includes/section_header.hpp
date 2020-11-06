@@ -93,4 +93,9 @@ namespace win
         section_characteristics_t   characteristics;
     };
 };
+namespace coff 
+{ 
+    using section_header_t =             win::section_header_t;
+    using section_characteristics_t =    win::section_characteristics_t;
+};
 #pragma pack(pop)
