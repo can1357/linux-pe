@@ -74,7 +74,7 @@ namespace coff
     //
     struct section_header_t
     {
-        string_t                    name;
+        scn_string_t                name;
         union
         {
             uint32_t                physical_address;

@@ -87,7 +87,8 @@ namespace ar
 			memmove( string, it, len );
 			memset( string + len, ' ', N - len );
 		}
-		string_integer( const string_integer& o ) = default;
+		string_integer( const string_integer& ) = default;
+		string_integer& operator=( const string_integer& ) = default;
 
 		// String to integer.
 		//
@@ -196,7 +197,7 @@ namespace ar
 
 	// Archive view wrapping the AR format.
 	//
-	template<bool constant>
+	template<bool constant = true>
 	struct view
 	{
 		// Typedefs.
@@ -286,6 +287,10 @@ namespace ar
 				}
 			}
 		}
+		view( view&& ) noexcept = default;
+		view( const view& ) = default;
+		view& operator=( view&& ) noexcept = default;
+		view& operator=( const view& ) = default;
 
 		// Make iterable.
 		//
