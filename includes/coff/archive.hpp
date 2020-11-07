@@ -221,10 +221,11 @@ namespace ar
 			}
 			bool operator!=( const iterator& other ) const { return !operator==( other ); }
 
-			// Implement iterator interface.
+			// Implement iterator interface and the name helper.
 			//
-			inline reference operator*() const { return reference{ at->to_string( str_table ), *at }; }
-			inline entry_type* operator->() const { return at; }
+			std::string_view to_string() const { return at->to_string( str_table ); }
+			reference operator*() const { return reference{ to_string(), *at }; }
+			entry_type* operator->() const { return at; }
 		};
 		using const_iterator = iterator;
 
