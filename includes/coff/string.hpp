@@ -55,7 +55,7 @@ namespace coff
             const char* lim = end();
             for ( const char* it = start; it < lim; it++ )
                 if ( !*it )
-                    return { start, it - start };
+                    return { start, ( size_t ) ( it - start ) };
 
             // Invalid string.
             //
