@@ -27,6 +27,7 @@
 //
 #pragma once
 #include <string_view>
+#include <stdlib.h>
 #include "../img_common.hpp"
 
 #pragma pack(push, COFF_STRUCT_PACKING)
@@ -106,6 +107,55 @@ namespace coff
             //
             if constexpr ( N == 1 )
                 return ( !is_short && !long_name_offset ) || ( is_short && !short_name[ 0 ] );
+
+            // Can skip is short check since if string is not null, is short will be overwritten.
+            //
+            if constexpr ( N == ( LEN_SHORT_STR + 1 ) )
+                return !memcmp( short_name, str, LEN_SHORT_STR );
+            else
+                return !memcmp( short_name, str, N );
+        }
+    };
+
+    // Same as above but archive convention, used for section names.
+    //
+    struct scn_string_t
+    {
+        char                     short_name[ LEN_SHORT_STR ];
+
+        // Convert to string view given an optional string table.
+        //
+        std::string_view to_string( const string_table_t* tbl = nullptr ) const
+        {
+            if ( tbl && short_name[ 0 ] == '/' )
+            {
+                char* end = ( char* ) std::end( short_name );
+                return tbl->resolve( strtoll( short_name + 1, &end, 10 ) );
+            }
+
+            size_t len = 0;
+            while ( len != LEN_SHORT_STR && short_name[ len ] ) len++;
+            return { short_name, len };
+        }
+
+        // Array lookup, only available for short strings.
+        //
+        char& operator[]( size_t n ) { return const_cast<char&>( to_string()[ n ] ); }
+        const char& operator[]( size_t n ) const { return to_string()[ n ]; }
+
+        // Basic comparison primitive.
+        //
+        bool equals( const char* str, const string_table_t* tbl = nullptr ) const { return to_string( tbl ) == str; }
+
+        // Short string comparison primitive.
+        //
+        template<size_t N> requires( N <= ( LEN_SHORT_STR + 1 ) )
+        bool equals_s( const char( &str )[ N ] ) const
+        {
+            // Compare with against empty string.
+            //
+            if constexpr ( N == 1 )
+                return !short_name[ 0 ];
 
             // Can skip is short check since if string is not null, is short will be overwritten.
             //
