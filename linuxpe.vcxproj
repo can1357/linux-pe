@@ -10,6 +10,7 @@
     <None Include="linux-pe.licenseheader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="includes\coff\archive.hpp" />
     <ClInclude Include="includes\coff\auxiliaries\aux_file_name.hpp" />
     <ClInclude Include="includes\coff\auxiliaries\aux_function.hpp" />
     <ClInclude Include="includes\coff\auxiliaries\aux_function_delimiter.hpp" />
@@ -22,7 +23,6 @@
     <ClInclude Include="includes\coff\symbol.hpp" />
     <ClInclude Include="includes\coff\file_header.hpp" />
     <ClInclude Include="includes\coff\section_header.hpp" />
-    <ClInclude Include="includes\coff_image.hpp" />
     <ClInclude Include="includes\img_common.hpp" />
     <ClInclude Include="includes\linuxpe" />
     <ClInclude Include="includes\nt\data_directories.hpp" />
@@ -40,7 +40,9 @@
     <ClInclude Include="includes\nt\image.hpp" />
     <ClInclude Include="includes\nt\nt_headers.hpp" />
     <ClInclude Include="includes\nt\optional_header.hpp" />
-    <ClInclude Include="includes\nt_image.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

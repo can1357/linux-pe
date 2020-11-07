@@ -1,121 +1,118 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Headers">
-      <UniqueIdentifier>{63426bd1-477a-4f24-8d95-e4d74f1e88cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\COFF Types">
-      <UniqueIdentifier>{6338239a-3c88-4097-9ec5-a626e3d71197}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\NT Types">
-      <UniqueIdentifier>{a64faa92-6ec6-420d-8ece-db6264aeca99}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\COFF Auxiliaries">
+    <Filter Include="COFF Auxiliaries">
       <UniqueIdentifier>{3bdb67a9-81e9-48e7-817c-784235cb7d32}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\NT Directories">
+    <Filter Include="COFF Types">
+      <UniqueIdentifier>{6338239a-3c88-4097-9ec5-a626e3d71197}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NT Directories">
       <UniqueIdentifier>{ac8943f0-065d-49f4-826d-b868dbb560d0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Includes">
+    <Filter Include="NT Types">
+      <UniqueIdentifier>{a64faa92-6ec6-420d-8ece-db6264aeca99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes">
       <UniqueIdentifier>{b42cdc57-0360-426e-8521-100f62a7bf2e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\coff\auxiliaries\aux_file_name.hpp">
-      <Filter>Headers\COFF Auxiliaries</Filter>
+      <Filter>COFF Auxiliaries</Filter>
     </ClInclude>
     <ClInclude Include="includes\coff\auxiliaries\aux_function.hpp">
-      <Filter>Headers\COFF Auxiliaries</Filter>
+      <Filter>COFF Auxiliaries</Filter>
     </ClInclude>
     <ClInclude Include="includes\coff\auxiliaries\aux_function_delimiter.hpp">
-      <Filter>Headers\COFF Auxiliaries</Filter>
+      <Filter>COFF Auxiliaries</Filter>
     </ClInclude>
     <ClInclude Include="includes\coff\auxiliaries\aux_section.hpp">
-      <Filter>Headers\COFF Auxiliaries</Filter>
+      <Filter>COFF Auxiliaries</Filter>
     </ClInclude>
     <ClInclude Include="includes\coff\auxiliaries\aux_weak_external.hpp">
-      <Filter>Headers\COFF Auxiliaries</Filter>
+      <Filter>COFF Auxiliaries</Filter>
     </ClInclude>
     <ClInclude Include="includes\coff\file_header.hpp">
-      <Filter>Headers\COFF Types</Filter>
+      <Filter>COFF Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\coff\section_header.hpp">
-      <Filter>Headers\COFF Types</Filter>
+      <Filter>COFF Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\directories\dir_debug.hpp">
-      <Filter>Headers\NT Directories</Filter>
+      <Filter>NT Directories</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\directories\dir_delay_load.hpp">
-      <Filter>Headers\NT Directories</Filter>
+      <Filter>NT Directories</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\directories\dir_exceptions.hpp">
-      <Filter>Headers\NT Directories</Filter>
+      <Filter>NT Directories</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\directories\dir_export.hpp">
-      <Filter>Headers\NT Directories</Filter>
+      <Filter>NT Directories</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\directories\dir_iat.hpp">
-      <Filter>Headers\NT Directories</Filter>
+      <Filter>NT Directories</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\directories\dir_import.hpp">
-      <Filter>Headers\NT Directories</Filter>
+      <Filter>NT Directories</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\directories\dir_load_config.hpp">
-      <Filter>Headers\NT Directories</Filter>
+      <Filter>NT Directories</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\directories\dir_relocs.hpp">
-      <Filter>Headers\NT Directories</Filter>
+      <Filter>NT Directories</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\directories\dir_resource.hpp">
-      <Filter>Headers\NT Directories</Filter>
+      <Filter>NT Directories</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\directories\dir_security.hpp">
-      <Filter>Headers\NT Directories</Filter>
+      <Filter>NT Directories</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\directories\dir_tls.hpp">
-      <Filter>Headers\NT Directories</Filter>
+      <Filter>NT Directories</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\data_directories.hpp">
-      <Filter>Headers\NT Types</Filter>
+      <Filter>NT Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\image.hpp">
-      <Filter>Headers\NT Types</Filter>
+      <Filter>NT Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\nt_headers.hpp">
-      <Filter>Headers\NT Types</Filter>
+      <Filter>NT Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\nt\optional_header.hpp">
-      <Filter>Headers\NT Types</Filter>
+      <Filter>NT Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\img_common.hpp">
-      <Filter>Headers\Includes</Filter>
+      <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="includes\coff\image.hpp">
-      <Filter>Headers\COFF Types</Filter>
+      <Filter>COFF Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\coff\line_number.hpp">
-      <Filter>Headers\COFF Types</Filter>
+      <Filter>COFF Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\coff\reloc.hpp">
-      <Filter>Headers\COFF Types</Filter>
+      <Filter>COFF Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\coff\string.hpp">
-      <Filter>Headers\COFF Types</Filter>
+      <Filter>COFF Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\coff\symbol.hpp">
-      <Filter>Headers\COFF Types</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\coff_image.hpp">
-      <Filter>Headers\Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\nt_image.hpp">
-      <Filter>Headers\Includes</Filter>
+      <Filter>COFF Types</Filter>
     </ClInclude>
     <ClInclude Include="includes\linuxpe">
-      <Filter>Headers\Includes</Filter>
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\coff\archive.hpp">
+      <Filter>COFF Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="linux-pe.licenseheader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
 </Project>
