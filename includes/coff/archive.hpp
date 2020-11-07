@@ -54,18 +54,36 @@ namespace ar
 		//
 		string_integer( uint64_t integer )
 		{
+			// Handle zero:
+			//
+			if ( !integer )
+			{
+				string[ 0 ] = '0';
+				memset( string + 1, ' ', N - 1 );
+				return;
+			}
+			
+			// Until all characters are written:
+			//
 			static constexpr char dictionary[] = "0123456789ABCDEF";
 			char* it = std::end( string );
-			if ( !integer ) *--it = '0';
 			while ( integer )
 			{
 				*--it = dictionary[ integer % B ];
 				integer /= B;
+
+				// Overflow, malformed.
+				//
 				if ( it == std::begin( string ) )
-					throw std::overflow_error( "Integer does not fit." );
+				{
+					it = std::end( string );
+					break;
+				}
 			}
 
-			size_t len = std::end( string ) - it;
+			// Move to leftmost and right pad with spaces.
+			//
+			size_t len = ( size_t ) ( std::end( string ) - it );
 			memmove( string, it, len );
 			memset( string + len, ' ', N - len );
 		}
@@ -152,7 +170,7 @@ namespace ar
 		{
 			const char* begin = std::begin( identifier );
 			const char* end = std::end( identifier );
-			char terminator = '//';
+			char terminator = '/';
 
 			if ( has_long_name() )
 			{
@@ -276,7 +294,7 @@ namespace ar
 
 		// Parser for the System V symbol table.
 		//
-		std::unordered_map<std::string_view, iterator> parse_symbol_table() const
+		std::unordered_map<std::string_view, iterator> read_symbols() const
 		{
 			// Get the table descriptor.
 			//
