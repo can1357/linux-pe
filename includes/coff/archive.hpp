@@ -32,6 +32,7 @@
 #include <cstring>
 #include <stdlib.h>
 #include <type_traits>
+#include <unordered_map>
 #include "../img_common.hpp"
 
 #pragma pack(push, COFF_STRUCT_PACKING)
@@ -80,6 +81,29 @@ namespace ar
 			return strtoull( string, &it, B );
 		}
 		operator uint64_t() const { return get(); }
+	};
+
+	// Big endian integers.
+	//
+	template<typename T>
+	struct big_endian_t
+	{
+		uint8_t bytes[ sizeof( T ) ];
+
+		big_endian_t( T val )
+		{
+			for( size_t i = 0; i != sizeof( T ); i++ )
+				bytes[ sizeof( T ) - ( i + 1 ) ] = ( val >> ( 8 * i ) ) & 0xFF;
+		}
+
+		T get() const
+		{
+			T value = 0;
+			for ( size_t i = 0; i != sizeof( T ); i++ )
+				value |= bytes[ sizeof( T ) - ( i + 1 ) ] << ( 8 * i );
+			return value;
+		}
+		operator T() const { return get(); }
 	};
 
 	// File entry.
@@ -246,8 +270,53 @@ namespace ar
 
 		// Make iterable.
 		//
-		iterator begin( bool long_strings = true ) const { return { string_table, first_entry, limit }; }
+		iterator begin() const { return { string_table, first_entry, limit }; }
 		iterator end() const { return { nullptr, nullptr, nullptr }; }
+
+		// Parser for the System V symbol table.
+		//
+		std::unordered_map<std::string_view, iterator> parse_symbol_table() const
+		{
+			// Get the table descriptor.
+			//
+			if ( symbol_tables.empty() ) return {};
+			auto* table = symbol_tables.front();
+			const uint8_t* it = table->begin();
+			const uint8_t* end = table->end();
+
+			// Read entry count.
+			//
+			if ( ( it + 4 ) > end ) return {};
+			uint32_t entry_count = *( const big_endian_t<uint32_t>* ) it;
+			it += 4;
+
+			// Reference the offset table.
+			//
+			if ( ( it + 4 * entry_count ) > end ) return {};
+			const big_endian_t<uint32_t>* offsets = ( const big_endian_t<uint32_t>* ) it;
+			it += 4 * entry_count;
+
+			// Read the entries one by one.
+			//
+			std::unordered_map<std::string_view, iterator> entries;
+			for ( size_t n = 0; n != entry_count; n++ )
+			{
+				// Read a zero-terminated string.
+				//
+				const uint8_t* str_begin = it;
+				while ( it != end && *it ) it++;
+				if ( it == end ) return {}; // Malformed entry.
+				std::string_view string{ ( const char* ) str_begin, ( size_t ) ( it++ - str_begin ) };
+
+				// Read the entry.
+				//
+				entry_type* entry = ( entry_type* ) ( ( uint8_t* ) archive + offsets[ n ].get() );
+				if ( entry >= limit || entry->terminator != entry_terminator ) return {}; // Malformed entry.
+				iterator entry_iterator = { string_table, entry, limit };
+				entries.emplace( std::move( string ), std::move( entry_iterator ) );
+			}
+			return entries;
+		}
 	};
 	template<typename T> view( T*, size_t ) -> view<std::is_const_v<T>>;
 };
