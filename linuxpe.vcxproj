@@ -8,38 +8,39 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="linux-pe.licenseheader" />
-    <None Include="linuxpe" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="includes\aux_file_name.hpp" />
-    <ClInclude Include="includes\aux_function.hpp" />
-    <ClInclude Include="includes\aux_section.hpp" />
-    <ClInclude Include="includes\aux_weak_external.hpp" />
-    <ClInclude Include="includes\coff_headers.hpp" />
-    <ClInclude Include="includes\coff_line_number.hpp" />
-    <ClInclude Include="includes\coff_reloc.hpp" />
-    <ClInclude Include="includes\coff_string.hpp" />
-    <ClInclude Include="includes\common.hpp" />
-    <ClInclude Include="includes\debug.hpp" />
-    <ClInclude Include="includes\data_directories.hpp" />
-    <ClInclude Include="includes\coff_symbol.hpp" />
-    <ClInclude Include="includes\dir_debug.hpp" />
-    <ClInclude Include="includes\dir_delay_load.hpp" />
-    <ClInclude Include="includes\dir_exceptions.hpp" />
-    <ClInclude Include="includes\dir_export.hpp" />
-    <ClInclude Include="includes\dir_iat.hpp" />
-    <ClInclude Include="includes\dir_import.hpp" />
-    <ClInclude Include="includes\dir_load_config.hpp" />
-    <ClInclude Include="includes\dir_relocs.hpp" />
-    <ClInclude Include="includes\dir_resource.hpp" />
-    <ClInclude Include="includes\dir_security.hpp" />
-    <ClInclude Include="includes\dir_tls.hpp" />
-    <ClInclude Include="includes\file_header.hpp" />
-    <ClInclude Include="includes\aux_function_delimiter.hpp" />
-    <ClInclude Include="includes\image.hpp" />
-    <ClInclude Include="includes\nt_headers.hpp" />
-    <ClInclude Include="includes\optional_header.hpp" />
-    <ClInclude Include="includes\section_header.hpp" />
+    <ClInclude Include="includes\coff\auxiliaries\aux_file_name.hpp" />
+    <ClInclude Include="includes\coff\auxiliaries\aux_function.hpp" />
+    <ClInclude Include="includes\coff\auxiliaries\aux_function_delimiter.hpp" />
+    <ClInclude Include="includes\coff\auxiliaries\aux_section.hpp" />
+    <ClInclude Include="includes\coff\auxiliaries\aux_weak_external.hpp" />
+    <ClInclude Include="includes\coff\image.hpp" />
+    <ClInclude Include="includes\coff\line_number.hpp" />
+    <ClInclude Include="includes\coff\reloc.hpp" />
+    <ClInclude Include="includes\coff\string.hpp" />
+    <ClInclude Include="includes\coff\symbol.hpp" />
+    <ClInclude Include="includes\coff\file_header.hpp" />
+    <ClInclude Include="includes\coff\section_header.hpp" />
+    <ClInclude Include="includes\coff_image.hpp" />
+    <ClInclude Include="includes\img_common.hpp" />
+    <ClInclude Include="includes\linuxpe" />
+    <ClInclude Include="includes\nt\data_directories.hpp" />
+    <ClInclude Include="includes\nt\directories\dir_debug.hpp" />
+    <ClInclude Include="includes\nt\directories\dir_delay_load.hpp" />
+    <ClInclude Include="includes\nt\directories\dir_exceptions.hpp" />
+    <ClInclude Include="includes\nt\directories\dir_export.hpp" />
+    <ClInclude Include="includes\nt\directories\dir_iat.hpp" />
+    <ClInclude Include="includes\nt\directories\dir_import.hpp" />
+    <ClInclude Include="includes\nt\directories\dir_load_config.hpp" />
+    <ClInclude Include="includes\nt\directories\dir_relocs.hpp" />
+    <ClInclude Include="includes\nt\directories\dir_resource.hpp" />
+    <ClInclude Include="includes\nt\directories\dir_security.hpp" />
+    <ClInclude Include="includes\nt\directories\dir_tls.hpp" />
+    <ClInclude Include="includes\nt\image.hpp" />
+    <ClInclude Include="includes\nt\nt_headers.hpp" />
+    <ClInclude Include="includes\nt\optional_header.hpp" />
+    <ClInclude Include="includes\nt_image.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
