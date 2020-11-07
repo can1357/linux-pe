@@ -294,7 +294,7 @@ namespace ar
 
 		// Parser for the System V symbol table.
 		//
-		std::unordered_map<std::string_view, iterator> read_symbols() const
+		std::unordered_multimap<std::string_view, iterator> read_symbols() const
 		{
 			// Get the table descriptor.
 			//
@@ -317,7 +317,7 @@ namespace ar
 
 			// Read the entries one by one.
 			//
-			std::unordered_map<std::string_view, iterator> entries;
+			std::unordered_multimap<std::string_view, iterator> entries;
 			for ( size_t n = 0; n != entry_count; n++ )
 			{
 				// Read a zero-terminated string.
