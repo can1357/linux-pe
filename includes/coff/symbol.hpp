@@ -114,7 +114,7 @@ namespace coff
     {
         string_t                 name;                         // Name of the symbol.
         int32_t                  value;                        // Value associated with the symbol, interp. depends on the type, usually address of the entry.
-        int16_t                  section_index;                // If <= 0, a speccial descriptor else scn+1.
+        int16_t                  section_index;                // If <= 0, a special descriptor else scn+1.
 
         base_type_t              base_type    : 4;             // Base and derived type describing the symbol.
         derived_type_t           derived_type : 12;            //

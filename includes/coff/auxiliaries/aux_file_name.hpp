@@ -37,13 +37,10 @@ namespace coff
     //
     struct aux_file_name_t
     {
-        char                    file_name[ 18 ];            // Name of the file.
-
-        std::string_view to_string() const
-        {
-            if ( file_name[ 17 ] ) return { file_name, 18 };
-            return file_name;
-        }
+        // Name of the file, zero terminated, multiple entries will be used if longer than 18 chars.
+        //
+        char                    file_name[ 18 ];            
+        std::string_view to_string() const { return file_name; }
     };
     static_assert( sizeof( aux_file_name_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );
     
