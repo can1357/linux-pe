@@ -182,7 +182,7 @@ namespace ar
 			}
 
 			auto it = begin;
-			while ( it != end && *it != terminator ) it++;
+			while ( it != end && *it != terminator && *it ) it++;
 			return { begin, ( size_t ) ( it - begin ) };
 		}
 	};
