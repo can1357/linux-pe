@@ -23,6 +23,7 @@
     <ClInclude Include="includes\coff\symbol.hpp" />
     <ClInclude Include="includes\coff\file_header.hpp" />
     <ClInclude Include="includes\coff\section_header.hpp" />
+    <ClInclude Include="includes\coff\uleb128.hpp" />
     <ClInclude Include="includes\img_common.hpp" />
     <ClInclude Include="includes\linuxpe" />
     <ClInclude Include="includes\nt\data_directories.hpp" />
