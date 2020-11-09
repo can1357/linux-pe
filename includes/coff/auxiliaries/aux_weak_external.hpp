@@ -34,6 +34,7 @@ namespace coff
 {
     enum class weak_external_type_t : uint32_t
     {
+        invalid =               0,
         no_library =            1,                          // No library search for sym1 should be performed.
         library =               2,                          // Library search for sym1 should be performed.
         alias =                 3,                          // Sym1 is just an alias to Sym2.
