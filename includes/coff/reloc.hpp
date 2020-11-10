@@ -31,7 +31,7 @@
 #pragma pack(push, COFF_STRUCT_PACKING)
 namespace coff
 {
-    enum class rel_type_t : uint16_t
+    enum rel_type_t : uint16_t
     {
         // AMD64:
         //

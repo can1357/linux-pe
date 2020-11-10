@@ -55,7 +55,7 @@ namespace coff
     template<>
     inline bool symbol_t::valid_aux<aux_weak_external_t>() const
     {
-        return storage_class == storage_class_t::public_symbol &&
+        return storage_class == storage_class_t::weak_external &&
                section_index == special_section_id_t::symbol_undefined &&
                value == 0;
     }
