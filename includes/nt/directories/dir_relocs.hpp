@@ -32,7 +32,7 @@
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
 {
-    enum class reloc_type_id : uint16_t
+    enum reloc_type_id : uint16_t
     {
         rel_based_absolute =          0,
         rel_based_high =              1,

@@ -49,9 +49,9 @@ namespace coff
     template<>
     inline bool symbol_t::valid_aux<aux_function_t>() const
     {
-        return storage_class == storage_class_t::public_symbol &&
-               derived_type == derived_type_t::function &&
-               section_index > 0;
+        return storage_class == storage_class_id::public_symbol &&
+               derived_type == derived_type_id::function &&
+               has_section();
     }
 };
 #pragma pack(pop)

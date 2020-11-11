@@ -34,7 +34,7 @@ namespace coff
 {
     // Special section indices.
     //
-    enum special_section_id_t : int16_t
+    enum special_section_id : uint16_t
     {
         symbol_undefined =   0,                                // External symbol
         symbol_absolute =    -1,                               // Absolute symbol, non-relocatable value.
@@ -43,7 +43,7 @@ namespace coff
 
     // Storage class.
     //
-    enum class storage_class_t : uint8_t
+    enum class storage_class_id : uint8_t
     {
         none =                    0,                           // None.
         auto_variable =           1,                           // Automatic variable.
@@ -81,7 +81,7 @@ namespace coff
 
     // Type identifiers.
     //
-    enum class base_type_t : uint16_t
+    enum class base_type_id : uint16_t
     {
         none =                    0,
         t_void =                  1,
@@ -100,7 +100,7 @@ namespace coff
         t_uint =                  14,
         t_ulong =                 15,
     };
-    enum class derived_type_t : uint16_t
+    enum class derived_type_id : uint16_t
     {
         none =                    0,                           // Not derived.
         pointer =                 1,                           // Pointer to base type.
@@ -114,17 +114,26 @@ namespace coff
     {
         string_t                 name;                         // Name of the symbol.
         int32_t                  value;                        // Value associated with the symbol, interp. depends on the type, usually address of the entry.
-        int16_t                  section_index;                // If <= 0, a special descriptor else scn+1.
+        uint16_t                 section_index;                // Special index or scn#+1.
 
-        base_type_t              base_type    : 4;             // Base and derived type describing the symbol.
-        derived_type_t           derived_type : 12;            //
+        base_type_id             base_type    : 4;             // Base and derived type describing the symbol.
+        derived_type_id          derived_type : 12;            //
 
-        storage_class_t          storage_class;                // Storage class as described above.
+        storage_class_id         storage_class;                // Storage class as described above.
         uint8_t                  num_auxiliary;                // Auxiliary data following this symbol.
 
         // Dynamic logic for auxiliary entries.
         //
         template<typename T>     bool valid_aux() const;
+
+        // Checks whether or not this symbol has a section.
+        //
+        bool has_section() const
+        {
+            return section_index != symbol_debug &&
+                   section_index != symbol_absolute &&
+                   section_index != symbol_undefined;
+        }
     };
     static_assert( sizeof( symbol_t ) == 18, "Invalid enum bitfield." );
 };
