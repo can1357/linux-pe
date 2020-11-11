@@ -129,7 +129,7 @@ namespace win
 
     // Iterator type propagating reference to tree root
     //
-    enum rsrc_directory_depth_t : int32_t
+    enum rsrc_directory_depth : int32_t
     {
         rsrc_null =          -1,
         rsrc_type_directory = 0,

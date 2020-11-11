@@ -32,7 +32,7 @@
 #pragma pack(push, COFF_STRUCT_PACKING)
 namespace coff
 {
-    enum class weak_external_type_t : uint32_t
+    enum class weak_external_type : uint32_t
     {
         invalid =               0,
         no_library =            1,                          // No library search for sym1 should be performed.
@@ -45,7 +45,7 @@ namespace coff
     struct aux_weak_external_t
     {
         uint32_t                sym_alias_idx;              // Index of sym2 that should be linked if sym1 does not exist.
-        weak_external_type_t    type;                       // Type of the weak external.
+        weak_external_type      type;                       // Type of the weak external.
         uint8_t                 _pad[ 10 ];
     };
     static_assert( sizeof( aux_weak_external_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );
@@ -55,8 +55,8 @@ namespace coff
     template<>
     inline bool symbol_t::valid_aux<aux_weak_external_t>() const
     {
-        return storage_class == storage_class_t::weak_external &&
-               section_index == special_section_id_t::symbol_undefined &&
+        return storage_class == storage_class_id::weak_external &&
+               section_index == special_section_id::symbol_undefined &&
                value == 0;
     }
 };

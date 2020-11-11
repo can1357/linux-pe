@@ -33,7 +33,7 @@
 #pragma pack(push, COFF_STRUCT_PACKING)
 namespace coff
 {
-    enum class comdat_select_t : uint8_t
+    enum class comdat_select_id : uint8_t
     {
         invalid =                     0,
         select_no_duplicates =        1,                      // Throw multiply defined symbol if matching entry found.
@@ -58,7 +58,7 @@ namespace coff
         //
         uint32_t                      checksum;               // Checksum of the data for COMDAT matching.
         uint16_t                      associative_section;    // One-based index into section table, only used if selection type is ::select_associative.
-        comdat_select_t               comdat_select;          // COMDAT selection type.
+        comdat_select_id              comdat_select;          // COMDAT selection type.
         
         uint8_t                       _pad[ 3 ];
     };
@@ -72,9 +72,9 @@ namespace coff
         // Must also have matching names, but cannot be checked here.
         //
         return value == 0 &&
-               storage_class == storage_class_t::private_symbol &&
-               base_type == base_type_t::none &&
-               derived_type == derived_type_t::none;
+               storage_class == storage_class_id::private_symbol &&
+               base_type == base_type_id::none &&
+               derived_type == derived_type_id::none;
     }
 };
 #pragma pack(pop)

@@ -31,7 +31,7 @@
 #pragma pack(push, COFF_STRUCT_PACKING)
 namespace coff
 {
-    enum rel_type_t : uint16_t
+    enum reloc_type : uint16_t
     {
         // AMD64:
         //
@@ -74,7 +74,7 @@ namespace coff
     {
         uint32_t                  virtual_address;             // Virtual address of the relocated data.
         uint32_t                  symbol_index;                // Symbol index.
-        rel_type_t                type;                        // Type of the relocation applied.
+        reloc_type                type;                        // Type of the relocation applied.
     };
 };
 #pragma pack(pop)

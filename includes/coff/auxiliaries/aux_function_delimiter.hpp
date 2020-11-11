@@ -51,7 +51,7 @@ namespace coff
     inline bool symbol_t::valid_aux<aux_function_delimiter_t>() const
     {
         return ( name.equals_s( ".bf" ) || name.equals_s( ".ef" ) ) &&
-               storage_class == storage_class_t::function_delimiter;
+               storage_class == storage_class_id::function_delimiter;
     }
 };
 #pragma pack(pop)
