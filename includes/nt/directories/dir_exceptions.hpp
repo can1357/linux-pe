@@ -363,16 +363,23 @@ namespace win
         switch ( ( unwind_opcode ) code.unwind_op )
         {
             case unwind_opcode::push_nonvol:     visitor( ( const amd64_unwind_push_t* ) &code );       break;
+
             case unwind_opcode::alloc_large:
             case unwind_opcode::alloc_small:     visitor( ( const amd64_unwind_alloc_t* ) &code );      break;
+
             case unwind_opcode::set_frame:       visitor( ( const amd64_unwind_set_frame_t* ) &code );  break;
+
             case unwind_opcode::save_nonvol:
             case unwind_opcode::save_nonvol_far: visitor( ( const amd64_unwind_save_gp_t* ) &code );    break;
+
             case unwind_opcode::save_xmm128:
             case unwind_opcode::save_xmm128_far: visitor( ( const amd64_unwind_save_xmm_t* ) &code );   break;
+
             case unwind_opcode::push_machframe:  visitor( ( const amd64_unwind_iframe_t* ) &code );     break;
+
             case unwind_opcode::spare_code:
-            case unwind_opcode::epilog:          return false;
+            case unwind_opcode::epilog:          return true; // Silently ignored in w10 2004.
+            default:                             return false;
         }
         return true;
     }
