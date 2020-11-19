@@ -356,29 +356,39 @@ namespace win
             return true;
         }
     };
+    template<size_t N>
+    struct amd64_unwind_nop_t : amd64_unwind_code_t
+    {
+        size_t get_size() const { return N; }
+        bool rewind( const state_t& state ) const { return false; }
+        bool unwind( const state_t& state ) const { return true; }
+    };
+
 
     template<typename T>
     static bool visit_amd64_unwind( const unwind_code_t& code, T&& visitor )
     {
         switch ( ( unwind_opcode ) code.unwind_op )
         {
+            // push r64
             case unwind_opcode::push_nonvol:     visitor( ( const amd64_unwind_push_t* ) &code );       break;
-
+            // sub rsp, N
             case unwind_opcode::alloc_large:
             case unwind_opcode::alloc_small:     visitor( ( const amd64_unwind_alloc_t* ) &code );      break;
-
+            // <reg> <= rsp + n
             case unwind_opcode::set_frame:       visitor( ( const amd64_unwind_set_frame_t* ) &code );  break;
-
+            // mov [rsp/frame+N], gpreg
             case unwind_opcode::save_nonvol:
             case unwind_opcode::save_nonvol_far: visitor( ( const amd64_unwind_save_gp_t* ) &code );    break;
-
+            // mov?ps [rsp/frame+N], xmmreg
             case unwind_opcode::save_xmm128:
             case unwind_opcode::save_xmm128_far: visitor( ( const amd64_unwind_save_xmm_t* ) &code );   break;
-
+            // sw/hw int
             case unwind_opcode::push_machframe:  visitor( ( const amd64_unwind_iframe_t* ) &code );     break;
-
+            // silently ignored in w10 2004
             case unwind_opcode::spare_code:
-            case unwind_opcode::epilog:          return true; // Silently ignored in w10 2004.
+            case unwind_opcode::epilog:          visitor( ( const amd64_unwind_nop_t<1>* ) &code );     break;
+            // invalid, raises STATUS_BAD_FUNCTION_TABLE
             default:                             return false;
         }
         return true;
