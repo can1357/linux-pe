@@ -36,60 +36,60 @@ namespace win
     //
     enum class unwind_opcode : uint16_t // : 4
     {
-        push_nonvol =     0x0, /* info == register number */
-        alloc_large =     0x1, /* no info, alloc size in next 2 slots */
-        alloc_small =     0x2, /* info == size of allocation / 8 - 1 */
-        set_frame =       0x3, /* no info, FP = RSP + UNWIND_INFO.FPRegOffset*16 */
-        save_nonvol =     0x4, /* info == register number, offset in next slot */
-        save_nonvol_far = 0x5, /* info == register number, offset in next 2 slots */
-        epilog =          0x6,
-        spare_code =      0x7,
-        save_xmm128 =     0x8, /* info == XMM reg number, offset in next slot */
-        save_xmm128_far = 0x9, /* info == XMM reg number, offset in next 2 slots */
-        push_machframe =  0xa, /* info == 0: no error-code, 1: error-code */
+        push_nonvol =               0x0,   // info == register number
+        alloc_large =               0x1,   // no info, alloc size in next 2 slots
+        alloc_small =               0x2,   // info == size of allocation / 8 - 1
+        set_frame =                 0x3,   // no info, FP = RSP + UNWIND_INFO.FPRegOffset*16
+        save_nonvol =               0x4,   // info == register number, offset in next slot
+        save_nonvol_far =           0x5,   // info == register number, offset in next 2 slots
+        epilog =                    0x6,   // (?)
+        spare_code =                0x7,   // (?)
+        save_xmm128 =               0x8,   // info == XMM reg number, offset in next slot
+        save_xmm128_far =           0x9,   // info == XMM reg number, offset in next 2 slots
+        push_machframe =            0xa,   // info == 0: no error-code, 1: error-code
     };
 
     // Unwind register identifiers.
     //
     enum class unwind_register_id : uint8_t // : 4
     {
-        amd64_rax =       0,      // GP
-        amd64_rcx =       1,
-        amd64_rdx =       2,
-        amd64_rbx =       3,
-        amd64_rsp =       4,
-        amd64_rbp =       5,
-        amd64_rsi =       6,
-        amd64_rdi =       7,
-        amd64_r8 =        8,
-        amd64_r9 =        9,
-        amd64_r10 =       10,
-        amd64_r11 =       11,
-        amd64_r12 =       12,
-        amd64_r13 =       13,
-        amd64_r14 =       14,
-        amd64_r15 =       15,
-        amd64_eflags =    16,     // Fake GP entries used by our helper.
-        amd64_rip =       17,     // 
-        amd64_seg_ss =    18,     // 
-        amd64_seg_cs =    19,     // 
-        
-        amd64_xmm0 =      0,      // XMM
-        amd64_xmm1 =      1,
-        amd64_xmm2 =      2,
-        amd64_xmm3 =      3,
-        amd64_xmm4 =      4,
-        amd64_xmm5 =      5,
-        amd64_xmm6 =      6,
-        amd64_xmm7 =      7,
-        amd64_xmm8 =      8,
-        amd64_xmm9 =      9,
-        amd64_xmm10 =     10,
-        amd64_xmm11 =     11,
-        amd64_xmm12 =     12,
-        amd64_xmm13 =     13,
-        amd64_xmm14 =     14,
-        amd64_xmm15 =     15,
+        amd64_rax =                 0,      // GP
+        amd64_rcx =                 1,
+        amd64_rdx =                 2,
+        amd64_rbx =                 3,
+        amd64_rsp =                 4,
+        amd64_rbp =                 5,
+        amd64_rsi =                 6,
+        amd64_rdi =                 7,
+        amd64_r8 =                  8,
+        amd64_r9 =                  9,
+        amd64_r10 =                 10,
+        amd64_r11 =                 11,
+        amd64_r12 =                 12,
+        amd64_r13 =                 13,
+        amd64_r14 =                 14,
+        amd64_r15 =                 15,
+        amd64_eflags =              16,     // Fake GP entries used by our helper.
+        amd64_rip =                 17,     // 
+        amd64_seg_ss =              18,     // 
+        amd64_seg_cs =              19,     // 
+
+        amd64_xmm0 =                0,      // XMM
+        amd64_xmm1 =                1,
+        amd64_xmm2 =                2,
+        amd64_xmm3 =                3,
+        amd64_xmm4 =                4,
+        amd64_xmm5 =                5,
+        amd64_xmm6 =                6,
+        amd64_xmm7 =                7,
+        amd64_xmm8 =                8,
+        amd64_xmm9 =                9,
+        amd64_xmm10 =               10,
+        amd64_xmm11 =               11,
+        amd64_xmm12 =               12,
+        amd64_xmm13 =               13,
+        amd64_xmm14 =               14,
+        amd64_xmm15 =               15,
     };
 
     // Unwind code and info descriptors.
@@ -152,17 +152,17 @@ namespace win
         //
         struct state_t
         {
-            using xmm_resolver_t = void*(*)( void* ctx, unwind_register_id reg );
-            using gp_resolver_t =  void*(*)( void* ctx, unwind_register_id reg );
-            using rmemcpy_t =      bool(*)( void* dst, uint64_t src, size_t n );
-            using wmemcpy_t =      bool(*)( uint64_t dst, const void* src, size_t n );
+            using xmm_resolver_t =  void*(*)( void* ctx, unwind_register_id reg );
+            using gp_resolver_t =   void*(*)( void* ctx, unwind_register_id reg );
+            using rmemcpy_t =       bool(*)( void* ctx, void* dst, uint64_t src, size_t n );
+            using wmemcpy_t =       bool(*)( void* ctx, uint64_t dst, const void* src, size_t n );
 
-            const unwind_info_t*  owner =       nullptr; // Pointer to parent.
-            void*                 context =     nullptr; // User-defined context.
-            gp_resolver_t         resolve_gp =  nullptr; // Should get a reference to the GP register given in the second argument.
-            xmm_resolver_t        resolve_xmm = nullptr; // Should get a reference to the XMM register given in the second argument.
-            rmemcpy_t             rmemcpy =     nullptr; // Safe memory operations, if not set will use current process.
-            wmemcpy_t             wmemcpy =     nullptr; //
+            const unwind_info_t*    owner =       nullptr; // Pointer to parent.
+            void*                   context =     nullptr; // User-defined context.
+            gp_resolver_t           resolve_gp =  nullptr; // Should get a reference to the GP register given in the second argument.
+            xmm_resolver_t          resolve_xmm = nullptr; // Should get a reference to the XMM register given in the second argument.
+            rmemcpy_t               rmemcpy =     nullptr; // Safe memory operations, if not set will use current process.
+            wmemcpy_t               wmemcpy =     nullptr; //
 
             // Implement wrappers for some common operations.
             //
@@ -179,14 +179,14 @@ namespace win
             template<typename T>
             bool read( T& out, uint64_t address ) const
             {
-                if ( rmemcpy ) return rmemcpy( &out, address, sizeof( T ) );
+                if ( rmemcpy ) return rmemcpy( context, &out, address, sizeof( T ) );
                 memcpy( &out, ( const void* ) address, sizeof( T ) );
                 return true;
             }
             template<typename T>
             bool write( uint64_t address, const T& data ) const
             {
-                if ( wmemcpy ) return wmemcpy( address, &data, sizeof( T ) );
+                if ( wmemcpy ) return wmemcpy( context, address, &data, sizeof( T ) );
                 memcpy( ( void* ) address, &data, sizeof( T ) );
                 return true;
             }
