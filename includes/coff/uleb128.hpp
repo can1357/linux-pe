@@ -40,7 +40,7 @@ namespace coff
         {
             // Push the value of the segment and shift the integer.
             //
-            auto& segment = out.emplace_back( value & 0x7F );
+            auto& segment = out.emplace_back( ( uint8_t ) ( value & 0x7F ) );
             value >>= 7;
 
             // If we reached zero, break.

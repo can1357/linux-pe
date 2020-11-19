@@ -60,7 +60,7 @@ namespace win
 
         // Calculation of optional header checksum.
         //
-        inline uint32_t compute_checksum( uint32_t file_len ) const
+        inline uint32_t compute_checksum( size_t file_len ) const
         {
             // Sum over each word.
             //
@@ -86,9 +86,9 @@ namespace win
                 presult -= presult < adjust_sum[ i ];
                 presult -= adjust_sum[ i ];
             }
-            return presult + file_len;
+            return presult + ( uint32_t ) file_len;
         }
-        inline void update_checksum( uint32_t file_len )
+        inline void update_checksum( size_t file_len )
         {
             get_nt_headers()->optional_header.checksum = compute_checksum( file_len );
         }
@@ -102,7 +102,7 @@ namespace win
             data_directory_t* dir = &nt_hdrs->optional_header.data_directories.entries[ id ];
             return dir->present() ? dir : nullptr;
         }
-        inline const data_directory_t* get_directory( directory_id id ) const { const_cast< image_t* >( this )->get_directory( id ); }
+        inline const data_directory_t* get_directory( directory_id id ) const { return const_cast< image_t* >( this )->get_directory( id ); }
 
         // RVA to section mapping
         //
@@ -117,7 +117,7 @@ namespace win
             }
             return nullptr;
         }
-        inline const section_header_t* rva_to_section( uint32_t rva ) const { const_cast< image_t* >( this )->rva_to_section( rva ); }
+        inline const section_header_t* rva_to_section( uint32_t rva ) const { return const_cast< image_t* >( this )->rva_to_section( rva ); }
 
         // RVA to raw offset mapping
         //
@@ -133,7 +133,7 @@ namespace win
             return ( T* ) ( ( uint8_t* ) &dos_header + scn->ptr_raw_data + offset );
         }
         template<typename T = void>
-        inline const T* rva_to_ptr( uint32_t rva ) const { const_cast< image_t* >( this )->template rva_to_ptr<const T>( rva ); }
+        inline const T* rva_to_ptr( uint32_t rva ) const { return const_cast< image_t* >( this )->template rva_to_ptr<const T>( rva ); }
     };
     using image_x64_t = image_t<true>;
     using image_x86_t = image_t<false>;

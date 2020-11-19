@@ -37,8 +37,8 @@ namespace coff
     enum special_section_id : uint16_t
     {
         symbol_undefined =   0,                                // External symbol
-        symbol_absolute =    -1,                               // Absolute symbol, non-relocatable value.
-        symbol_debug =       -2,                               // Misc. debugging info, not within a section.
+        symbol_absolute =    0xFFFF,                           // Absolute symbol, non-relocatable value.
+        symbol_debug =       0xFFFE,                           // Misc. debugging info, not within a section.
     };
 
     // Storage class.
