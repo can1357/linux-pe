@@ -7,3 +7,5 @@ target_include_directories(${PROJECT_NAME} INTERFACE includes)
 
 # C++20 requirement.
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_20)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED true)
