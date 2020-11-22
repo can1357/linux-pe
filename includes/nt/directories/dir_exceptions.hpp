@@ -26,6 +26,7 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include <xmmintrin.h>
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
 
