@@ -52,10 +52,12 @@ namespace coff
             }
         }
     }
-    inline std::pair<uint64_t, bool> decode_uleb128( const uint8_t*& it, const uint8_t* end )
+    
+    template<typename It1, typename It2>
+    inline std::pair<uint64_t, bool> decode_uleb128( It1& it, It2&& end )
     {
         uint64_t value = 0;
-        for ( size_t bitcnt = 0; it < end; it++, bitcnt += 7 )
+        for ( size_t bitcnt = 0; it < end; ++it, bitcnt += 7 )
         {
             // Read one segment and write it into value.
             //
@@ -71,7 +73,7 @@ namespace coff
             //
             if ( !( segment & 0x80 ) )
             {
-                it++;
+                ++it;
                 return { value, true };
             }
         }
@@ -95,8 +97,9 @@ namespace coff
             encode_uleb128( value, result );
         return result;
     }
-    
-    inline std::vector<uint64_t> decode_uleb128s( const uint8_t* begin, const uint8_t* end )
+
+    template<typename It1, typename It2>
+    inline std::vector<uint64_t> decode_uleb128s( It1&& begin, It2&& end )
     {
         // Allocate a vector for the result and reserve an average result size assuming average integer is 22 bits.
         //
@@ -106,7 +109,7 @@ namespace coff
 
         // Read until we reach the end, indicate failure by returning null.
         //
-        const uint8_t* it = begin;
+        auto it = begin;
         while ( it != end )
         {
             auto [val, success] = decode_uleb128( it, end );
