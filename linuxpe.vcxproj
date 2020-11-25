@@ -17,6 +17,7 @@
     <ClInclude Include="includes\coff\auxiliaries\aux_section.hpp" />
     <ClInclude Include="includes\coff\auxiliaries\aux_weak_external.hpp" />
     <ClInclude Include="includes\coff\image.hpp" />
+    <ClInclude Include="includes\coff\import_library.hpp" />
     <ClInclude Include="includes\coff\line_number.hpp" />
     <ClInclude Include="includes\coff\reloc.hpp" />
     <ClInclude Include="includes\coff\string.hpp" />

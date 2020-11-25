@@ -111,6 +111,9 @@
     <ClInclude Include="includes\coff\uleb128.hpp">
       <Filter>COFF Types</Filter>
     </ClInclude>
+    <ClInclude Include="includes\coff\import_library.hpp">
+      <Filter>COFF Types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="linux-pe.licenseheader" />
