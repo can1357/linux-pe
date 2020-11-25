@@ -183,6 +183,7 @@ namespace ar
 
 			auto it = begin;
 			while ( it != end && *it != terminator && *it ) it++;
+			if ( it != begin && it[ -1 ] == '/' ) --it;
 			return { begin, ( size_t ) ( it - begin ) };
 		}
 	};
