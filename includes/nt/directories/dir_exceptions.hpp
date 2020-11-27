@@ -95,6 +95,7 @@ namespace win
 
     // Unwind code and info descriptors.
     //
+    struct runtime_function_t;
     struct unwind_code_t
     {
         union
@@ -126,19 +127,23 @@ namespace win
 
         // Getter for the scaled frame offset.
         //
-        size_t get_frame_offset() const { return frame_offset * 16; }
+        size_t get_frame_offset() const { return size_t( frame_offset ) * 16; }
 
         // Followed by rva of language specific information:
         //
-        uint32_t& exception_handler_rva() { return *( uint32_t* ) &unwind_code[ ( num_uw_codes + 1 ) & ~1 ]; }
-        uint32_t& function_entry_rva() { return exception_handler_rva(); }
+        void* get_language_specific_data() { return &unwind_code[ ( num_uw_codes + 1 ) & ~1 ]; }
+        const void* get_language_specific_data() const { return const_cast< unwind_info_t* >( this )->get_language_specific_data(); }
+
+        uint32_t& exception_handler_rva() { return *( uint32_t* ) get_language_specific_data(); }
         const uint32_t& exception_handler_rva() const { return const_cast< unwind_info_t* >( this )->exception_handler_rva(); }
-        const uint32_t& function_entry_rva() const { return exception_handler_rva(); }
+
+        runtime_function_t& chained_function_entry() { return *( runtime_function_t* ) get_language_specific_data(); }
+        const runtime_function_t& chained_function_entry() const { return const_cast< unwind_info_t* >( this )->chained_function_entry(); }
 
         // Followed by optional exception data.
         //
-        void* exception_data() { return &exception_handler_rva() + 1; }
-        const void* exception_data() const { return &exception_handler_rva() + 1; }
+        void* exception_specific_data() { return &exception_handler_rva() + 1; }
+        const void* exception_specific_data() const { return const_cast< unwind_info_t* >( this )->exception_specific_data(); }
     };
 
     // High level descriptors of the opcodes.
