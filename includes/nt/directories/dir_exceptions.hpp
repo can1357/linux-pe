@@ -162,8 +162,9 @@ namespace win
             using gp_resolver_t =   void*(*)( void* ctx, unwind_register_id reg );
             using rmemcpy_t =       bool(*)( void* ctx, void* dst, uint64_t src, size_t n );
             using wmemcpy_t =       bool(*)( void* ctx, uint64_t dst, const void* src, size_t n );
-
-            const unwind_info_t*    owner =       nullptr; // Pointer to parent.
+            
+			uint8_t                 frame_offset = 0;      // Information from the parent.
+            win::unwind_register_id frame_register = {};   //
             void*                   context =     nullptr; // User-defined context.
             gp_resolver_t           resolve_gp =  nullptr; // Should get a reference to the GP register given in the second argument.
             xmm_resolver_t          resolve_xmm = nullptr; // Should get a reference to the XMM register given in the second argument.
@@ -180,7 +181,7 @@ namespace win
 
             uint64_t& sp() const { return gp( unwind_register_id::amd64_rsp ); }
             uint64_t& ip() const { return gp( unwind_register_id::amd64_rip ); }
-            uint64_t& frame() const { return gp( owner->frame_register ); }
+            uint64_t& frame() const { return gp( frame_register ); }
 
             template<typename T>
             bool read( T& out, uint64_t address ) const
@@ -207,12 +208,12 @@ namespace win
         size_t get_size() const { return 1; }
         bool rewind( const state_t& state ) const
         {
-            state.frame() = state.sp() + state.owner->get_frame_offset();
+            state.frame() = state.sp() + ( size_t( state.frame_offset ) * 16 );
             return true;
         }
         bool unwind( const state_t& state ) const
         {
-            state.sp() = state.frame() - state.owner->get_frame_offset();
+            state.sp() = state.frame() - ( size_t( state.frame_offset ) * 16 );
             return true;
         }
     };
