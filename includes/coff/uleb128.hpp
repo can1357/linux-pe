@@ -45,11 +45,8 @@ namespace coff
 
             // If we reached zero, break.
             //
-            if ( !value )
-            {
-                segment |= 0x80; 
-                break;
-            }
+            if ( !value ) break;
+            segment |= 0x80;
         }
     }
     
