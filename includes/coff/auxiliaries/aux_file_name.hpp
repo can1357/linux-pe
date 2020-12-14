@@ -42,7 +42,6 @@ namespace coff
         char                    file_name[ 18 ];            
         std::string_view to_string() const { return file_name; }
     };
-    static_assert( sizeof( aux_file_name_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );
     
     // Declare the matching logic.
     //
