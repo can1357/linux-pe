@@ -135,6 +135,6 @@ namespace coff
                    section_index != symbol_undefined;
         }
     };
-    static_assert( sizeof( symbol_t ) == 18, "Invalid enum bitfield." );
+    static_assert( sizeof( symbol_t ) == 20, "Invalid enum bitfield." );
 };
 #pragma pack(pop)
