@@ -28,6 +28,7 @@
 #pragma once
 #include <stdint.h>
 #include <type_traits>
+#include <cstddef>
 
 #define WIN_STRUCT_PACKING                4 // Structure packings of the variants.
 #define COFF_STRUCT_PACKING               1 //
@@ -35,7 +36,9 @@
 
 // If your compiler does not support zero-len arrays, define VAR_LEN as 1 before including linuxpe.
 //
-#ifndef VAR_LEN
+#if defined(__GNUG__)
+    #define VAR_LEN 1
+#else
     #pragma warning(disable:4200)
     #define VAR_LEN
 #endif
