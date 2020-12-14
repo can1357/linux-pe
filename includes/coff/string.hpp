@@ -29,6 +29,7 @@
 #include <string_view>
 #include <stdlib.h>
 #include "../img_common.hpp"
+#include <cstring>
 
 #pragma pack(push, COFF_STRUCT_PACKING)
 namespace coff
