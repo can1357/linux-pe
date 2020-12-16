@@ -54,7 +54,6 @@ namespace win
     //
     union version_t
     {
-        uint16_t                    identifier;
         struct
         {
             uint8_t                 major;
@@ -63,7 +62,6 @@ namespace win
     };
     union ex_version_t
     {
-        uint32_t                    identifier;
         struct
         {
             uint16_t                major;
