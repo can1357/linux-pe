@@ -134,6 +134,16 @@ namespace win
         }
         template<typename T = void>
         inline const T* rva_to_ptr( uint32_t rva ) const { return const_cast< image_t* >( this )->template rva_to_ptr<const T>( rva ); }
+        
+        // RVA to directory mapping
+        //
+        template<typename T = void>
+        inline T* rva_to_dir(uint32_t rva)
+        {
+            return (T*)((uint8_t*)&dos_header + rva);
+        }
+        template<typename T = void>
+        inline const T* rva_to_dir(uint32_t rva) const { return const_cast<image_t*>(this)->template rva_to_dir<const T>(rva); }
     };
     using image_x64_t = image_t<true>;
     using image_x86_t = image_t<false>;
