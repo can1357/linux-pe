@@ -38,6 +38,7 @@ namespace win
         pkcs_signed_data = 0x0002,
         reserved_1 =       0x0003,
         ts_stack_signed =  0x0004,
+        pkcs1_sign =       0x0009,
     };
 
     struct win_certificate_t
