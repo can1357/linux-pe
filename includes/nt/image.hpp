@@ -135,7 +135,7 @@ namespace win
         template<typename T = void>
         inline const T* rva_to_ptr( uint32_t rva ) const { return const_cast< image_t* >( this )->template rva_to_ptr<const T>( rva ); }
         
-        // raw offset to ptr mapping
+        // Raw offset to pointer mapping
         //
         template<typename T = void>
         inline T* raw_to_ptr(uint32_t rva)
