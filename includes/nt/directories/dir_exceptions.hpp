@@ -134,7 +134,7 @@ namespace win
         uint8_t                     chained        : 1;
         uint8_t                     reserved_flags : 2;
 
-        uint8_t                     size_prolog;
+        uint8_t                     size_prologue;
         uint8_t                     num_uw_codes;
         
         unwind_register_id          frame_register : 4;
