@@ -54,7 +54,7 @@ namespace win
     //
     enum class unwind_register_id : uint8_t // : 4
     {
-        amd64_rax =                 0,      // GP
+        amd64_rax =                 0,           // GP
         amd64_rcx =                 1,
         amd64_rdx =                 2,
         amd64_rbx =                 3,
@@ -70,27 +70,44 @@ namespace win
         amd64_r13 =                 13,
         amd64_r14 =                 14,
         amd64_r15 =                 15,
-        amd64_eflags =              16,     // Fake GP entries used by our helper.
-        amd64_rip =                 17,     // 
-        amd64_seg_ss =              18,     // 
-        amd64_seg_cs =              19,     // 
+        amd64_eflags =              16,          // Fake GP entries used by our helper.
+        amd64_rip =                 17,          // 
+        amd64_seg_ss =              18,          // 
+        amd64_seg_cs =              19,          //
 
-        amd64_xmm0 =                0,      // XMM
-        amd64_xmm1 =                1,
-        amd64_xmm2 =                2,
-        amd64_xmm3 =                3,
-        amd64_xmm4 =                4,
-        amd64_xmm5 =                5,
-        amd64_xmm6 =                6,
-        amd64_xmm7 =                7,
-        amd64_xmm8 =                8,
-        amd64_xmm9 =                9,
-        amd64_xmm10 =               10,
-        amd64_xmm11 =               11,
-        amd64_xmm12 =               12,
-        amd64_xmm13 =               13,
-        amd64_xmm14 =               14,
-        amd64_xmm15 =               15,
+        amd64_xmm0 =                24 + 0,      // XMM, has artifical offset added.
+        amd64_xmm1 =                24 + 1,      //
+        amd64_xmm2 =                24 + 2,      //
+        amd64_xmm3 =                24 + 3,      //
+        amd64_xmm4 =                24 + 4,      //
+        amd64_xmm5 =                24 + 5,      //
+        amd64_xmm6 =                24 + 6,      //
+        amd64_xmm7 =                24 + 7,      //
+        amd64_xmm8 =                24 + 8,      //
+        amd64_xmm9 =                24 + 9,      //
+        amd64_xmm10 =               24 + 10,     //
+        amd64_xmm11 =               24 + 11,     //
+        amd64_xmm12 =               24 + 12,     //
+        amd64_xmm13 =               24 + 13,     //
+        amd64_xmm14 =               24 + 14,     //
+        amd64_xmm15 =               24 + 15,     //
+
+        nat_amd64_xmm0 =            0,           // XMM, original range found in the native structure.
+        nat_amd64_xmm1 =            1,           //
+        nat_amd64_xmm2 =            2,           //
+        nat_amd64_xmm3 =            3,           //
+        nat_amd64_xmm4 =            4,           //
+        nat_amd64_xmm5 =            5,           //
+        nat_amd64_xmm6 =            6,           //
+        nat_amd64_xmm7 =            7,           //
+        nat_amd64_xmm8 =            8,           //
+        nat_amd64_xmm9 =            9,           //
+        nat_amd64_xmm10 =           10,          //
+        nat_amd64_xmm11 =           11,          //
+        nat_amd64_xmm12 =           12,          //
+        nat_amd64_xmm13 =           13,          //
+        nat_amd64_xmm14 =           14,          //
+        nat_amd64_xmm15 =           15,          //
     };
 
     // Unwind code and info descriptors.
@@ -127,7 +144,7 @@ namespace win
 
         // Getter for the scaled frame offset.
         //
-        size_t get_frame_offset() const { return size_t( frame_offset ) * 16; }
+        int64_t get_frame_offset() const { return ( int64_t ) ( ( ( uint32_t ) frame_offset ) * 16 ); }
 
         // Followed by rva of language specific information:
         //
@@ -158,26 +175,24 @@ namespace win
         //
         struct state_t
         {
-            using xmm_resolver_t =  void*(*)( void* ctx, unwind_register_id reg );
-            using gp_resolver_t =   void*(*)( void* ctx, unwind_register_id reg );
+            using reg_resolver_t =  void*(*)( void* ctx, unwind_register_id reg );
             using rmemcpy_t =       bool(*)( void* ctx, void* dst, uint64_t src, size_t n );
             using wmemcpy_t =       bool(*)( void* ctx, uint64_t dst, const void* src, size_t n );
             
-			uint8_t                 frame_offset = 0;      // Information from the parent.
+			uint8_t                 frame_offset = 0;      // Information from the function entry.
             win::unwind_register_id frame_register = {};   //
             void*                   context =     nullptr; // User-defined context.
-            gp_resolver_t           resolve_gp =  nullptr; // Should get a reference to the GP register given in the second argument.
-            xmm_resolver_t          resolve_xmm = nullptr; // Should get a reference to the XMM register given in the second argument.
+            reg_resolver_t          resolve_reg = nullptr; // Should get a pointer to the value of the register specified in the second argument.
             rmemcpy_t               rmemcpy =     nullptr; // Safe memory operations, if not set will use current process.
             wmemcpy_t               wmemcpy =     nullptr; //
 
             // Implement wrappers for some common operations.
             //
-            uint64_t& gp( unwind_register_id gp_reg ) const { return *( uint64_t* ) resolve_gp( context, gp_reg ); }
-            __m128& xmm( unwind_register_id xmm_reg ) const { return *( __m128* ) resolve_xmm( context, xmm_reg ); }
-            uint16_t& ss() const { return *( uint16_t* ) resolve_gp( context, unwind_register_id::amd64_seg_ss ); }
-            uint16_t& cs() const { return *( uint16_t* ) resolve_gp( context, unwind_register_id::amd64_seg_cs ); }
-            uint32_t& flags() const { return *( uint32_t* ) resolve_gp( context, unwind_register_id::amd64_eflags ); }
+            uint64_t& gp( unwind_register_id gp_reg ) const { return *( uint64_t* ) resolve_reg( context, gp_reg ); }
+            __m128& xmm( unwind_register_id xmm_reg ) const { return *( __m128* ) resolve_reg( context, xmm_reg ); }
+            uint16_t& ss() const { return *( uint16_t* ) resolve_reg( context, unwind_register_id::amd64_seg_ss ); }
+            uint16_t& cs() const { return *( uint16_t* ) resolve_reg( context, unwind_register_id::amd64_seg_cs ); }
+            uint32_t& flags() const { return *( uint32_t* ) resolve_reg( context, unwind_register_id::amd64_eflags ); }
 
             uint64_t& sp() const { return gp( unwind_register_id::amd64_rsp ); }
             uint64_t& ip() const { return gp( unwind_register_id::amd64_rip ); }
@@ -276,12 +291,12 @@ namespace win
     {
         // Implement helpers.
         //
-        size_t get_sp_offset() const
+        int64_t get_sp_offset() const
         {
             if ( unwind_op == unwind_opcode::save_nonvol_far )
-                return *( uint32_t* ) ( this + 1 );
+                return ( int64_t ) ( *( uint32_t* ) ( this + 1 ) );
             else
-                return 8 * *( uint16_t* ) ( this + 1 );
+                return ( int64_t ) ( 8 * *( uint16_t* ) ( this + 1 ) );
         }
         unwind_register_id get_register() const { return ( unwind_register_id ) op_info; }
 
@@ -301,14 +316,14 @@ namespace win
     {
         // Implement helpers.
         //
-        size_t get_sp_offset() const
+        int64_t get_sp_offset() const
         {
             if ( unwind_op == unwind_opcode::save_xmm128_far )
-                return *( uint32_t* ) ( this + 1 );
+                return ( int64_t ) ( *( uint32_t* ) ( this + 1 ) );
             else
-                return 16 * *( uint16_t* ) ( this + 1 );
+                return ( int64_t ) ( 16 * *( uint16_t* ) ( this + 1 ) );
         }
-        unwind_register_id get_register() const { return ( unwind_register_id ) op_info; }
+        unwind_register_id get_register() const { return ( unwind_register_id ) ( size_t( unwind_register_id::amd64_xmm0 ) + op_info ); }
 
         // Implement the interface.
         //
@@ -363,10 +378,9 @@ namespace win
             return true;
         }
     };
-    template<size_t N>
     struct amd64_unwind_nop_t : amd64_unwind_code_t
     {
-        size_t get_size() const { return N; }
+        size_t get_size() const { return 1; }
         bool rewind( const state_t& state ) const { return false; }
         bool unwind( const state_t& state ) const { return true; }
     };
@@ -375,7 +389,7 @@ namespace win
     template<typename T>
     static bool visit_amd64_unwind( const unwind_code_t& code, T&& visitor )
     {
-        switch ( ( unwind_opcode ) code.unwind_op )
+        switch ( code.unwind_op )
         {
             // push r64
             case unwind_opcode::push_nonvol:     visitor( ( const amd64_unwind_push_t* ) &code );       break;
@@ -394,7 +408,7 @@ namespace win
             case unwind_opcode::push_machframe:  visitor( ( const amd64_unwind_iframe_t* ) &code );     break;
             // silently ignored in w10 2004
             case unwind_opcode::spare_code:
-            case unwind_opcode::epilog:          visitor( ( const amd64_unwind_nop_t<1>* ) &code );     break;
+            case unwind_opcode::epilog:          visitor( ( const amd64_unwind_nop_t* ) &code );        break;
             // invalid, raises STATUS_BAD_FUNCTION_TABLE
             default:                             return false;
         }
