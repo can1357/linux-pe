@@ -449,5 +449,101 @@ namespace win
         runtime_function_t           functions[ VAR_LEN ];
     };
     template<bool x64> struct directory_type<directory_id::directory_entry_exception, x64, void> { using type = exception_directory_t; };
+
+    // Wrapper around exception directory.
+    //
+    struct exception_directory
+    {
+        // std::map like traits.
+        //
+        struct key_compare
+        {
+            constexpr bool operator()( const runtime_function_t& a, const runtime_function_t& b ) const noexcept
+            {
+                return a.rva_begin < b.rva_begin;
+            }
+        };
+        struct key_compare_end
+        {
+            constexpr bool operator()( const runtime_function_t& a, const runtime_function_t& b ) const noexcept
+            {
+                return a.rva_end < b.rva_end;
+            }
+        };
+        using key_type =               uint32_t;
+        using mapped_type =            runtime_function_t;
+        using value_type =             runtime_function_t;
+        using size_type =              size_t;
+        using difference_type =        ptrdiff_t;
+        using iterator =               const runtime_function_t*;
+        using const_iterator =         const runtime_function_t*;
+        using pointer =                const runtime_function_t*;
+        using const_pointer =          const runtime_function_t*;
+        using reference =              const runtime_function_t&;
+        using const_reference =        const runtime_function_t&;
+        using reverse_iterator =       std::reverse_iterator<iterator>;
+        using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+        // The range it's viewing.
+        //
+        const runtime_function_t* table;
+        size_t length;
+
+        // Constructed with a pointer to the data and the raw length in bytes.
+        //
+        exception_directory( const void* data, size_t length )
+            : table( ( runtime_function_t* ) data ), length( length / sizeof( runtime_function_t ) ) {}
+
+        // Make it iterable.
+        //
+        iterator begin() const { return table; }
+        iterator end() const { return table + length; }
+        reverse_iterator rbegin() const { return reverse_iterator( end() ); }
+        reverse_iterator rend() const { return reverse_iterator( begin() ); }
+
+        // Basic properties.
+        //
+        size_t size() const { return length; }
+        bool empty() const { return length == 0; }
+
+        // Binary-search lookup.
+        //
+        iterator lower_bound( uint32_t rva ) const
+        {
+            return std::lower_bound( begin(), end(), runtime_function_t{ .rva_begin = rva }, key_compare{} );
+        }
+        iterator upper_bound( uint32_t rva ) const
+        {
+            return std::upper_bound( begin(), end(), runtime_function_t{ .rva_end = rva }, key_compare_end{} );
+        }
+        std::pair<iterator, iterator> equal_range( uint32_t rva ) const
+        {
+            iterator low = lower_bound( rva );
+            iterator high = std::upper_bound( low, end(), runtime_function_t{ .rva_end = rva }, key_compare_end{} );
+            return { low, high };
+        }
+
+        // Finds a function using binary search.
+        //
+        iterator find_overlapping( uint32_t rva ) const
+        {
+            iterator it = lower_bound( rva );
+            if ( it == end() || ( it->rva_begin <= rva && rva < it->rva_end ) )
+                return it;
+            else
+                return end();
+        }
+        iterator find( uint32_t rva ) const
+        {
+            auto it = lower_bound( rva );
+            if ( it != end() && it->rva_begin != rva )
+                it = end();
+            return it;
+        }
+        bool contains( uint32_t rva ) const
+        {
+            return find( rva ) != end();
+        }
+    };
 };
 #pragma pack(pop)
