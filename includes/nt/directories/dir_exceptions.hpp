@@ -27,6 +27,8 @@
 //
 #pragma once
 #include <xmmintrin.h>
+#include <algorithm>
+#include <map>
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
 
