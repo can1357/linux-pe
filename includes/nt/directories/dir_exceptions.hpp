@@ -348,7 +348,7 @@ namespace win
         // Implement the interface.
         //
         size_t get_size() const { return 1; }
-        bool rewind( const state_t& state ) const
+        bool rewind( [[maybe_unused]] const state_t& state ) const
         {
             return false;
         }
