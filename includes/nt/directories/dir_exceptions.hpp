@@ -204,6 +204,7 @@ namespace win
             bool read( T& out, uint64_t address ) const
             {
                 if ( rmemcpy ) return rmemcpy( context, &out, address, sizeof( T ) );
+                if ( !address ) return false;
                 memcpy( &out, ( const void* ) address, sizeof( T ) );
                 return true;
             }
@@ -211,6 +212,7 @@ namespace win
             bool write( uint64_t address, const T& data ) const
             {
                 if ( wmemcpy ) return wmemcpy( context, address, &data, sizeof( T ) );
+                if ( !address ) return false;
                 memcpy( ( void* ) address, &data, sizeof( T ) );
                 return true;
             }
@@ -218,6 +220,7 @@ namespace win
         //bool rewind( const state_t& state ) const = 0;
         //bool unwind( const state_t& state ) const = 0;
     };
+    using amd64_unwind_state_t = amd64_unwind_code_t::state_t;
     struct amd64_unwind_set_frame_t : amd64_unwind_code_t
     {
         // Implement the interface.
@@ -241,9 +244,9 @@ namespace win
         size_t get_allocation_size() const 
         {  
             if ( unwind_op == unwind_opcode::alloc_small )
-                return op_info * 8 + 8;
+                return uint64_t( op_info ) * 8 + 8;
             if ( op_info ) return *( uint32_t* ) ( this + 1 );
-            else           return 8 * *( uint16_t* ) ( this + 1 );
+            else           return 8 * ( uint64_t ) *( uint16_t* ) ( this + 1 );
         }
 
         // Implement the interface.
@@ -298,7 +301,7 @@ namespace win
             if ( unwind_op == unwind_opcode::save_nonvol_far )
                 return ( int64_t ) ( *( uint32_t* ) ( this + 1 ) );
             else
-                return ( int64_t ) ( 8 * *( uint16_t* ) ( this + 1 ) );
+                return ( int64_t ) ( 8 * ( uint64_t ) *( uint16_t* ) ( this + 1 ) );
         }
         unwind_register_id get_register() const { return ( unwind_register_id ) op_info; }
 
@@ -323,7 +326,7 @@ namespace win
             if ( unwind_op == unwind_opcode::save_xmm128_far )
                 return ( int64_t ) ( *( uint32_t* ) ( this + 1 ) );
             else
-                return ( int64_t ) ( 16 * *( uint16_t* ) ( this + 1 ) );
+                return ( int64_t ) ( 16 * ( uint64_t ) *( uint16_t* ) ( this + 1 ) );
         }
         unwind_register_id get_register() const { return ( unwind_register_id ) ( size_t( unwind_register_id::amd64_xmm0 ) + op_info ); }
 
@@ -512,11 +515,11 @@ namespace win
         //
         iterator lower_bound( uint32_t rva ) const
         {
-            return std::lower_bound( begin(), end(), runtime_function_t{ .rva_begin = rva }, key_compare{} );
+            return std::lower_bound( begin(), end(), runtime_function_t{ .rva_end = rva }, key_compare_end{} );
         }
         iterator upper_bound( uint32_t rva ) const
         {
-            return std::upper_bound( begin(), end(), runtime_function_t{ .rva_end = rva }, key_compare_end{} );
+            return std::upper_bound( begin(), end(), runtime_function_t{ .rva_begin = rva }, key_compare{} );
         }
         std::pair<iterator, iterator> equal_range( uint32_t rva ) const
         {
