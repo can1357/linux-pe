@@ -50,6 +50,7 @@ namespace win
         save_xmm128 =               0x8,   // info == XMM reg number, offset in next slot
         save_xmm128_far =           0x9,   // info == XMM reg number, offset in next 2 slots
         push_machframe =            0xa,   // info == 0: no error-code, 1: error-code
+        maximum
     };
 
     // Unwind register identifiers.
@@ -181,6 +182,8 @@ namespace win
             using rmemcpy_t =       bool(*)( void* ctx, void* dst, uint64_t src, size_t n );
             using wmemcpy_t =       bool(*)( void* ctx, uint64_t dst, const void* src, size_t n );
             
+            // Provided by the user.
+            //
 			uint8_t                 frame_offset = 0;      // Information from the function entry.
             win::unwind_register_id frame_register = {};   //
             void*                   context =     nullptr; // User-defined context.
@@ -390,34 +393,37 @@ namespace win
         bool unwind( [[maybe_unused]] const state_t& state ) const { return true; }
     };
 
-
-    template<typename T>
+    template<unwind_opcode op> struct amd64_unwind { using type = void; };
+    template<> struct amd64_unwind<unwind_opcode::push_nonvol>     { using type = amd64_unwind_push_t; };
+    template<> struct amd64_unwind<unwind_opcode::alloc_large>     { using type = amd64_unwind_alloc_t; };
+    template<> struct amd64_unwind<unwind_opcode::alloc_small>     { using type = amd64_unwind_alloc_t; };
+    template<> struct amd64_unwind<unwind_opcode::set_frame>       { using type = amd64_unwind_set_frame_t; };
+    template<> struct amd64_unwind<unwind_opcode::save_nonvol>     { using type = amd64_unwind_push_t; };
+    template<> struct amd64_unwind<unwind_opcode::save_nonvol_far> { using type = amd64_unwind_save_gp_t; };
+    template<> struct amd64_unwind<unwind_opcode::save_xmm128>     { using type = amd64_unwind_save_xmm_t; };
+    template<> struct amd64_unwind<unwind_opcode::save_xmm128_far> { using type = amd64_unwind_save_xmm_t; };
+    template<> struct amd64_unwind<unwind_opcode::push_machframe>  { using type = amd64_unwind_iframe_t; };
+    template<> struct amd64_unwind<unwind_opcode::spare_code>      { using type = amd64_unwind_nop_t; };
+    template<> struct amd64_unwind<unwind_opcode::epilog>          { using type = amd64_unwind_nop_t; };
+    template<unwind_opcode op>
+    using amd64_unwind_t = typename amd64_unwind<op>::type;
+    
+    template<typename T, size_t I = 0>
     static bool visit_amd64_unwind( const unwind_code_t& code, T&& visitor )
     {
-        switch ( code.unwind_op )
+        using U = amd64_unwind_t<( unwind_opcode ) I>;
+
+        if constexpr ( I != ( size_t ) unwind_opcode::maximum )
         {
-            // push r64
-            case unwind_opcode::push_nonvol:     visitor( ( const amd64_unwind_push_t* ) &code );       break;
-            // sub rsp, N
-            case unwind_opcode::alloc_large:
-            case unwind_opcode::alloc_small:     visitor( ( const amd64_unwind_alloc_t* ) &code );      break;
-            // <reg> <= rsp + n
-            case unwind_opcode::set_frame:       visitor( ( const amd64_unwind_set_frame_t* ) &code );  break;
-            // mov [rsp/frame+N], gpreg
-            case unwind_opcode::save_nonvol:
-            case unwind_opcode::save_nonvol_far: visitor( ( const amd64_unwind_save_gp_t* ) &code );    break;
-            // mov?ps [rsp/frame+N], xmmreg
-            case unwind_opcode::save_xmm128:
-            case unwind_opcode::save_xmm128_far: visitor( ( const amd64_unwind_save_xmm_t* ) &code );   break;
-            // sw/hw int
-            case unwind_opcode::push_machframe:  visitor( ( const amd64_unwind_iframe_t* ) &code );     break;
-            // silently ignored in w10 2004
-            case unwind_opcode::spare_code:
-            case unwind_opcode::epilog:          visitor( ( const amd64_unwind_nop_t* ) &code );        break;
-            // invalid, raises STATUS_BAD_FUNCTION_TABLE
-            default:                             return false;
+            if ( code.unwind_op != ( unwind_opcode ) I )
+                return visit_amd64_unwind<T, I + 1>( code, std::forward<T>( visitor ) );
+            if constexpr ( !std::is_void_v<U> )
+            {
+                visitor( ( const U* ) &code );
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     // Very commonly used language-specific data, C scope table.
