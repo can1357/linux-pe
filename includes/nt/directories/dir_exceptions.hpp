@@ -425,7 +425,7 @@ namespace win
     template<> struct amd64_unwind<unwind_opcode::alloc_large>     { using type = amd64_unwind_alloc_t; };
     template<> struct amd64_unwind<unwind_opcode::alloc_small>     { using type = amd64_unwind_alloc_t; };
     template<> struct amd64_unwind<unwind_opcode::set_frame>       { using type = amd64_unwind_set_frame_t; };
-    template<> struct amd64_unwind<unwind_opcode::save_nonvol>     { using type = amd64_unwind_push_t; };
+    template<> struct amd64_unwind<unwind_opcode::save_nonvol>     { using type = amd64_unwind_save_gp_t; };
     template<> struct amd64_unwind<unwind_opcode::save_nonvol_far> { using type = amd64_unwind_save_gp_t; };
     template<> struct amd64_unwind<unwind_opcode::save_xmm128>     { using type = amd64_unwind_save_xmm_t; };
     template<> struct amd64_unwind<unwind_opcode::save_xmm128_far> { using type = amd64_unwind_save_xmm_t; };
