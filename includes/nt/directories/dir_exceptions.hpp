@@ -374,24 +374,51 @@ namespace win
             return true;
         }
     };
-    struct amd64_unwind_call_t
-    {
-        // Implement special unwind helper.
-        //
-        bool unwind( const amd64_unwind_code_t::state_t& state ) const
-        {
-            if ( !state.read( state.ip(), state.sp() ) )
-                return false;
-            state.sp() += 8;
-            return true;
-        }
-    };
     struct amd64_unwind_nop_t : amd64_unwind_code_t
     {
         size_t get_size() const { return 1; }
-        bool rewind( [[maybe_unused]] const state_t& state ) const { return false; }
+        bool rewind( [[maybe_unused]] const state_t& state ) const { return true; }
         bool unwind( [[maybe_unused]] const state_t& state ) const { return true; }
     };
+
+    // Special unwind helper for unwinding after the function returns.
+    //
+    static bool amd64_unwind_call( const amd64_unwind_state_t& state )
+    {
+        // Read the return pointer.
+        //
+        if ( !state.read( state.ip(), state.sp() ) )
+            return false;
+        state.sp() += 8;
+
+        // Basic attempt at decoding the instruction to unwind rip.
+        //
+        uint8_t call_region[ 16 ] = { 0 };
+        for ( size_t n = 0; n != 16; n++ )
+            state.read( call_region[ n ], state.ip() - n );
+
+        // call reg rel
+        if ( call_region[ 6 ] == 0xFF && ( call_region[ 7 ] & 0xF0 ) == 0x40 )
+            state.ip() -= 7;
+        if ( call_region[ 6 ] == 0xFF )
+            state.ip() -= 6;
+        // call imm
+        else if ( call_region[ 5 ] == 0xE8 )
+            state.ip() -= 5;
+        // call reg
+        else if ( call_region[ 2 ] == 0xFF && ( call_region[ 3 ] & 0xF0 ) == 0x40 )
+            state.ip() -= 3;
+        else if ( call_region[ 2 ] == 0xFF )
+            state.ip() -= 2;
+        // int
+        else if ( call_region[ 2 ] == 0xCD )
+            state.ip() -= 2;
+        else if ( call_region[ 1 ] == 0xCC )
+            state.ip() -= 1;
+        else if ( call_region[ 1 ] == 0xF1 )
+            state.ip() -= 1;
+        return true;
+    }
 
     template<unwind_opcode op> struct amd64_unwind { using type = void; };
     template<> struct amd64_unwind<unwind_opcode::push_nonvol>     { using type = amd64_unwind_push_t; };
