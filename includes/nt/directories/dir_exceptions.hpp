@@ -29,6 +29,7 @@
 #include <xmmintrin.h>
 #include <algorithm>
 #include <map>
+#include <cstring>
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
 

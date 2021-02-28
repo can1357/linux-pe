@@ -144,7 +144,7 @@ namespace win
             return ( T* ) ( ( uint8_t* ) &dos_header + offset );
         }
         template<typename T = void>
-        inline const T* raw_to_ptr(uint32_t rva) const { return const_cast<image_t*>(this)->template raw_to_ptr<const T>(rva); }
+        inline const T* raw_to_ptr( uint32_t rva ) const { return const_cast<image_t*>(this)->template raw_to_ptr<const T>(rva); }
     };
     using image_x64_t = image_t<true>;
     using image_x86_t = image_t<false>;
