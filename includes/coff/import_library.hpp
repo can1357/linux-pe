@@ -71,7 +71,7 @@ namespace coff
 		uint16_t                    reserved  : 11;
 
 		const char* get_symbol_name() const { return ( const char* ) ( this + 1 ); }
-		const char* get_library_name() const { return &*std::string_view{ get_symbol_name() }.end() + 1; }
+		const char* get_library_name() const { return get_symbol_name() + strlen( get_symbol_name() ) + 1; }
 	};
 	static_assert( sizeof( import_header_t ) == 20, "Invalid enum bitfield." );
 };
