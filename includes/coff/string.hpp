@@ -28,6 +28,7 @@
 #pragma once
 #include <string_view>
 #include <stdlib.h>
+#include <cstring>
 #include "../img_common.hpp"
 
 #pragma pack(push, COFF_STRUCT_PACKING)
