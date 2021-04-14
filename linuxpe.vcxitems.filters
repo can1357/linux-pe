@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="COFF Auxiliaries">
+      <UniqueIdentifier>{3bdb67a9-81e9-48e7-817c-784235cb7d32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="COFF Types">
+      <UniqueIdentifier>{6338239a-3c88-4097-9ec5-a626e3d71197}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NT Directories">
+      <UniqueIdentifier>{ac8943f0-065d-49f4-826d-b868dbb560d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NT Types">
+      <UniqueIdentifier>{a64faa92-6ec6-420d-8ece-db6264aeca99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes">
+      <UniqueIdentifier>{b42cdc57-0360-426e-8521-100f62a7bf2e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\auxiliaries\aux_file_name.hpp">
+      <Filter>COFF Auxiliaries</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\auxiliaries\aux_function.hpp">
+      <Filter>COFF Auxiliaries</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\auxiliaries\aux_function_delimiter.hpp">
+      <Filter>COFF Auxiliaries</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\auxiliaries\aux_section.hpp">
+      <Filter>COFF Auxiliaries</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\auxiliaries\aux_weak_external.hpp">
+      <Filter>COFF Auxiliaries</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\file_header.hpp">
+      <Filter>COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\section_header.hpp">
+      <Filter>COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\directories\dir_debug.hpp">
+      <Filter>NT Directories</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\directories\dir_delay_load.hpp">
+      <Filter>NT Directories</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\directories\dir_exceptions.hpp">
+      <Filter>NT Directories</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\directories\dir_export.hpp">
+      <Filter>NT Directories</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\directories\dir_iat.hpp">
+      <Filter>NT Directories</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\directories\dir_import.hpp">
+      <Filter>NT Directories</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\directories\dir_load_config.hpp">
+      <Filter>NT Directories</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\directories\dir_relocs.hpp">
+      <Filter>NT Directories</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\directories\dir_resource.hpp">
+      <Filter>NT Directories</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\directories\dir_security.hpp">
+      <Filter>NT Directories</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\directories\dir_tls.hpp">
+      <Filter>NT Directories</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\data_directories.hpp">
+      <Filter>NT Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\image.hpp">
+      <Filter>NT Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\nt_headers.hpp">
+      <Filter>NT Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\optional_header.hpp">
+      <Filter>NT Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\img_common.hpp">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\image.hpp">
+      <Filter>COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\line_number.hpp">
+      <Filter>COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\reloc.hpp">
+      <Filter>COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\string.hpp">
+      <Filter>COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\symbol.hpp">
+      <Filter>COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\linuxpe">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\archive.hpp">
+      <Filter>COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\uleb128.hpp">
+      <Filter>COFF Types</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\import_library.hpp">
+      <Filter>COFF Types</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)linux-pe.licenseheader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="$(MSBuildThisFileDirectory)CMakeLists.txt" />
+  </ItemGroup>
+</Project>
