@@ -121,30 +121,45 @@ namespace win
 
         // RVA to raw offset mapping
         //
-        template<typename T = void>
-        inline T* rva_to_ptr( uint32_t rva )
+        template<typename T = uint8_t>
+        inline T* rva_to_ptr( uint32_t rva, size_t length = 1 )
         {
+            // Find the section.
+            //
             auto scn = rva_to_section( rva );
             if ( !scn ) return nullptr;
 
+            // Apply the boundary check.
+            //
             size_t offset = rva - scn->virtual_address;
-            if ( offset >= scn->size_raw_data ) return nullptr;
+            if ( ( offset + length ) > scn->size_raw_data ) 
+                return nullptr;
 
+            // Return the final pointer.
+            //
             return ( T* ) ( ( uint8_t* ) &dos_header + scn->ptr_raw_data + offset );
         }
-        template<typename T = void>
-        inline const T* rva_to_ptr( uint32_t rva ) const { return const_cast< image_t* >( this )->template rva_to_ptr<const T>( rva ); }
+        template<typename T = uint8_t>
+        inline const T* rva_to_ptr( uint32_t rva, size_t length = 1 ) const { return const_cast< image_t* >( this )->template rva_to_ptr<const T>( rva, length ); }
         
-        // Raw offset to pointer mapping, no boundary checks so this can
-        // be used to translate RVA as well if image is mapped
+        // Raw offset to pointer mapping, no boundary checks by default so this can
+        // be used to translate RVA as well if image is mapped.
+        // - If length is given, should not be used for RVA translation on mapped images.
         //
-        template<typename T = void>
-        inline T* raw_to_ptr( uint32_t offset )
+        template<typename T = uint8_t>
+        inline T* raw_to_ptr( uint32_t offset, size_t length = 0 )
         {
+            // Do a basic boundary check if length is given.
+            //
+            if ( length != 0 && ( offset + length ) > get_raw_limit() )
+                return nullptr;
+
+            // Return the final pointer.
+            //
             return ( T* ) ( ( uint8_t* ) &dos_header + offset );
         }
         template<typename T = void>
-        inline const T* raw_to_ptr( uint32_t rva ) const { return const_cast<image_t*>(this)->template raw_to_ptr<const T>(rva); }
+        inline const T* raw_to_ptr( uint32_t rva, size_t length = 0 ) const { return const_cast<image_t*>(this)->template raw_to_ptr<const T>( rva, length ); }
     };
     using image_x64_t = image_t<true>;
     using image_x86_t = image_t<false>;
