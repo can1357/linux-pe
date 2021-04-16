@@ -119,6 +119,28 @@ namespace win
         }
         inline const section_header_t* rva_to_section( uint32_t rva ) const { return const_cast< image_t* >( this )->rva_to_section( rva ); }
 
+        // Gets the max raw offset referenced.
+        //
+        inline size_t get_raw_limit() const
+        {
+            // Initialize the length with the header size.
+            //
+            auto* nt_hdrs = get_nt_headers();
+            size_t max_raw = nt_hdrs->optional_header.size_headers;
+
+            // Calculate max length from the sections.
+            //
+            auto* scn = nt_hdrs->get_sections();
+            for ( size_t i = 0; i != nt_hdrs->file_header.num_sections; i++ )
+                max_raw = std::max<size_t>( scn[ i ].size_raw_data, max_raw );
+
+            // If there is a security directory, which usually is at the end of the image unmapped, also consider that.
+            //
+            if ( auto dir = get_directory( directory_entry_security ) )
+                max_raw = std::max<size_t>( dir->rva + dir->size, max_raw );
+            return max_raw;
+        }
+
         // RVA to raw offset mapping
         //
         template<typename T = uint8_t>
