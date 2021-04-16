@@ -530,32 +530,40 @@ namespace win
 
         // Constructed with a pointer to the data and the raw length in bytes.
         //
-        exception_directory( const void* data, size_t length )
+        constexpr exception_directory() : table( nullptr ), length( 0 ) {}
+        constexpr exception_directory( const void* data, size_t length )
             : table( ( runtime_function_t* ) data ), length( length / sizeof( runtime_function_t ) ) {}
+
+        // Default copy/move.
+        //
+        constexpr exception_directory( exception_directory&& ) noexcept = default;
+        constexpr exception_directory( const exception_directory& ) = default;
+        constexpr exception_directory& operator=( exception_directory& ) noexcept = default;
+        constexpr exception_directory& operator=( const exception_directory& ) = default;
 
         // Make it iterable.
         //
-        iterator begin() const { return table; }
-        iterator end() const { return table + length; }
-        reverse_iterator rbegin() const { return reverse_iterator( end() ); }
-        reverse_iterator rend() const { return reverse_iterator( begin() ); }
+        constexpr iterator begin() const { return table; }
+        constexpr iterator end() const { return table + length; }
+        constexpr reverse_iterator rbegin() const { return reverse_iterator( end() ); }
+        constexpr reverse_iterator rend() const { return reverse_iterator( begin() ); }
 
         // Basic properties.
         //
-        size_t size() const { return length; }
-        bool empty() const { return length == 0; }
+        constexpr size_t size() const { return length; }
+        constexpr bool empty() const { return length == 0; }
 
         // Binary-search lookup.
         //
-        iterator lower_bound( uint32_t rva ) const
+        constexpr iterator lower_bound( uint32_t rva ) const
         {
             return std::lower_bound( begin(), end(), runtime_function_t{ .rva_end = rva }, key_compare_end{} );
         }
-        iterator upper_bound( uint32_t rva ) const
+        constexpr iterator upper_bound( uint32_t rva ) const
         {
             return std::upper_bound( begin(), end(), runtime_function_t{ .rva_begin = rva }, key_compare{} );
         }
-        std::pair<iterator, iterator> equal_range( uint32_t rva ) const
+        constexpr std::pair<iterator, iterator> equal_range( uint32_t rva ) const
         {
             iterator low = lower_bound( rva );
             iterator high = std::upper_bound( low, end(), runtime_function_t{ .rva_end = rva }, key_compare_end{} );
@@ -564,7 +572,7 @@ namespace win
 
         // Finds a function using binary search.
         //
-        iterator find_overlapping( uint32_t rva ) const
+        constexpr iterator find_overlapping( uint32_t rva ) const
         {
             iterator it = lower_bound( rva );
             if ( it == end() || ( it->rva_begin <= rva && rva < it->rva_end ) )
@@ -572,14 +580,14 @@ namespace win
             else
                 return end();
         }
-        iterator find( uint32_t rva ) const
+        constexpr iterator find( uint32_t rva ) const
         {
             auto it = lower_bound( rva );
             if ( it != end() && it->rva_begin != rva )
                 it = end();
             return it;
         }
-        bool contains( uint32_t rva ) const
+        constexpr bool contains( uint32_t rva ) const
         {
             return find( rva ) != end();
         }
