@@ -38,7 +38,6 @@ namespace win
         char                name[ 1 ];
     };
 
-    #pragma pack(push, 8)
     struct image_thunk_data_x64_t
     {
         union
@@ -54,7 +53,6 @@ namespace win
             };
         };
     };
-    #pragma pack(pop)
 
     struct image_thunk_data_x86_t
     {
