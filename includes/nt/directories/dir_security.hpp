@@ -48,11 +48,7 @@ namespace win
         certificate_type_id  certificate_type;
         uint8_t              raw_data[ VAR_LEN ];
     };
-
-    struct security_directory_t
-    {
-        win_certificate_t    begin;
-    };
+    using security_directory_t = win_certificate_t;
 
     template<bool x64> struct directory_type<directory_id::directory_entry_security, x64, void> { using type = security_directory_t; };
 };
