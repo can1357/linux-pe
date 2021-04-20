@@ -132,7 +132,7 @@ namespace win
             //
             auto* scn = nt_hdrs->get_sections();
             for ( size_t i = 0; i != nt_hdrs->file_header.num_sections; i++ )
-                max_raw = std::max<size_t>( scn[ i ].size_raw_data, max_raw );
+                max_raw = std::max<size_t>( scn[ i ].ptr_raw_data + scn[ i ].size_raw_data, max_raw );
 
             // If there is a security directory, which usually is at the end of the image unmapped, also consider that.
             //
