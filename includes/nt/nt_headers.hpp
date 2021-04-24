@@ -51,9 +51,9 @@ namespace win
         // Section getter
         //
         inline section_header_t* get_sections() { return ( section_header_t* ) ( ( uint8_t* ) &optional_header + file_header.size_optional_header ); }
+        inline section_header_t* get_section( size_t n ) { return n >= file_header.num_sections ? nullptr : get_sections() + n; }
         inline const section_header_t* get_sections() const { return const_cast< nt_headers_t* >( this )->get_sections(); }
-        inline section_header_t* get_section( size_t n ) { return get_sections() + n; }
-        inline const section_header_t* get_section( size_t n ) const { return get_sections() + n; }
+        inline const section_header_t* get_section( size_t n ) const { return const_cast< nt_headers_t* >( this )->get_section( n ); }
     };
     using nt_headers_x64_t = nt_headers_t<true>;
     using nt_headers_x86_t = nt_headers_t<false>;
