@@ -48,12 +48,25 @@ namespace win
         file_header_t               file_header;
         optional_header_t<x64>      optional_header;
 
-        // Section getter
+        // Section getters
         //
         inline section_header_t* get_sections() { return ( section_header_t* ) ( ( uint8_t* ) &optional_header + file_header.size_optional_header ); }
         inline section_header_t* get_section( size_t n ) { return n >= file_header.num_sections ? nullptr : get_sections() + n; }
         inline const section_header_t* get_sections() const { return const_cast< nt_headers_t* >( this )->get_sections(); }
         inline const section_header_t* get_section( size_t n ) const { return const_cast< nt_headers_t* >( this )->get_section( n ); }
+
+        // Section iterator
+        //
+        template<typename T>
+        struct proxy 
+        { 
+            T* base;
+            uint16_t count;
+            T* begin() const { return base; }
+            T* end() const { return base + count; }
+        };
+        inline proxy<section_header_t> sections() { return { get_sections(), file_header.num_sections }; }
+        inline proxy<const section_header_t> sections() const { return { get_sections(), file_header.num_sections }; }
     };
     using nt_headers_x64_t = nt_headers_t<true>;
     using nt_headers_x86_t = nt_headers_t<false>;
