@@ -91,6 +91,17 @@ namespace coff
         uint16_t                    num_line_numbers;
         
         section_characteristics_t   characteristics;
+
+        // Characteristics NT checks based on the name as well as the real flag
+        //
+        bool is_paged() const
+        {
+            return !characteristics.mem_not_paged && ( *( uint32_t* ) &name.short_name == 'ade.' || *( uint32_t* ) &name.short_name == 'EGAP' );
+        }
+        bool is_discardable() const
+        {
+            return characteristics.mem_discardable || *( uint32_t* ) &name.short_name == 'TINI';
+        }
     };
 };
 namespace win
