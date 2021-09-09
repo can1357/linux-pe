@@ -421,7 +421,7 @@ namespace win
         return true;
     }
 
-    template<unwind_opcode op> struct amd64_unwind { using type = void; };
+    template<unwind_opcode op> struct amd64_unwind;
     template<> struct amd64_unwind<unwind_opcode::push_nonvol>     { using type = amd64_unwind_push_t; };
     template<> struct amd64_unwind<unwind_opcode::alloc_large>     { using type = amd64_unwind_alloc_t; };
     template<> struct amd64_unwind<unwind_opcode::alloc_small>     { using type = amd64_unwind_alloc_t; };
@@ -436,22 +436,24 @@ namespace win
     template<unwind_opcode op>
     using amd64_unwind_t = typename amd64_unwind<op>::type;
     
-    template<typename T, size_t I = 0>
+    template<typename T>
     static bool visit_amd64_unwind( const unwind_code_t& code, T&& visitor )
     {
-        using U = amd64_unwind_t<( unwind_opcode ) I>;
-
-        if constexpr ( I != ( size_t ) unwind_opcode::maximum )
+        switch ( ( unwind_opcode ) code.unwind_op )
         {
-            if ( code.unwind_op != ( unwind_opcode ) I )
-                return visit_amd64_unwind<T, I + 1>( code, std::forward<T>( visitor ) );
-            if constexpr ( !std::is_void_v<U> )
-            {
-                visitor( ( const U* ) &code );
-                return true;
-            }
+           case unwind_opcode::push_nonvol:     visitor( ( const amd64_unwind_t<unwind_opcode::push_nonvol>     * ) &code ); return true;
+           case unwind_opcode::alloc_large:     visitor( ( const amd64_unwind_t<unwind_opcode::alloc_large>     * ) &code ); return true;
+           case unwind_opcode::alloc_small:     visitor( ( const amd64_unwind_t<unwind_opcode::alloc_small>     * ) &code ); return true;
+           case unwind_opcode::set_frame:       visitor( ( const amd64_unwind_t<unwind_opcode::set_frame>       * ) &code ); return true;
+           case unwind_opcode::save_nonvol:     visitor( ( const amd64_unwind_t<unwind_opcode::save_nonvol>     * ) &code ); return true;
+           case unwind_opcode::save_nonvol_far: visitor( ( const amd64_unwind_t<unwind_opcode::save_nonvol_far> * ) &code ); return true;
+           case unwind_opcode::epilog:          visitor( ( const amd64_unwind_t<unwind_opcode::epilog>          * ) &code ); return true;
+           case unwind_opcode::spare_code:      visitor( ( const amd64_unwind_t<unwind_opcode::spare_code>      * ) &code ); return true;
+           case unwind_opcode::save_xmm128:     visitor( ( const amd64_unwind_t<unwind_opcode::save_xmm128>     * ) &code ); return true;
+           case unwind_opcode::save_xmm128_far: visitor( ( const amd64_unwind_t<unwind_opcode::save_xmm128_far> * ) &code ); return true;
+           case unwind_opcode::push_machframe:  visitor( ( const amd64_unwind_t<unwind_opcode::push_machframe>  * ) &code ); return true;
+           default:                             return false;
         }
-        return false;
     }
 
     // Very commonly used language-specific data, C scope table.
