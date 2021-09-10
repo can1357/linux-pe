@@ -26,6 +26,7 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include <utility>
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
 
@@ -64,7 +65,7 @@ namespace win
 			size_t swap_count = idx / 2;
 			for ( size_t i = 0; i != swap_count; i++ )
 				std::swap( out[ i ], out[ idx - i - 1 ] );
-			
+
 			out += idx;
 		}
 	};
