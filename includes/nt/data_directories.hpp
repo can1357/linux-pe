@@ -35,7 +35,7 @@ namespace win
 
     // Directory indices
     //
-    enum directory_id
+    enum directory_id : uint8_t
     {
         directory_entry_export =                        0,                // Export Directory
         directory_entry_import =                        1,                // Import Directory
