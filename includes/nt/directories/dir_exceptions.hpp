@@ -26,7 +26,6 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
-#include <xmmintrin.h>
 #include <algorithm>
 #include <map>
 #include <cstring>
@@ -36,6 +35,8 @@
 #pragma pack(push, WIN_STRUCT_PACKING)
 namespace win
 {
+	using xmm_t = std::array<uint64_t, 2>;
+	
 	// Unwind opcodes.
 	//
 	enum class unwind_opcode : uint16_t // : 4
@@ -195,7 +196,7 @@ namespace win
 			// Implement wrappers for some common operations.
 			//
 			uint64_t& gp( unwind_register_id gp_reg ) const { return *( uint64_t* ) resolve_reg( context, gp_reg ); }
-			__m128& xmm( unwind_register_id xmm_reg ) const { return *( __m128* ) resolve_reg( context, xmm_reg ); }
+			xmm_t& xmm( unwind_register_id xmm_reg ) const { return *( xmm_t* ) resolve_reg( context, xmm_reg ); }
 			uint16_t& ss() const { return *( uint16_t* ) resolve_reg( context, unwind_register_id::amd64_seg_ss ); }
 			uint16_t& cs() const { return *( uint16_t* ) resolve_reg( context, unwind_register_id::amd64_seg_cs ); }
 			uint32_t& flags() const { return *( uint32_t* ) resolve_reg( context, unwind_register_id::amd64_eflags ); }
