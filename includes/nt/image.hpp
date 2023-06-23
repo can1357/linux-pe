@@ -40,149 +40,195 @@
 #include "directories/dir_security.hpp"
 #include "directories/dir_delay_load.hpp"
 
-namespace win
-{
-    // Image wrapper
-    //
-    template<bool x64 = default_architecture>
-    struct image_t
-    {
-        dos_header_t                dos_header;
-        
-        // Basic getters.
-        //
-        inline dos_header_t* get_dos_headers() { return &dos_header; }
-        inline const dos_header_t* get_dos_headers() const { return &dos_header; }
-        inline file_header_t* get_file_header() { return dos_header.get_file_header(); }
-        inline const file_header_t* get_file_header() const { return dos_header.get_file_header(); }
-        inline nt_headers_t<x64>* get_nt_headers() { return dos_header.get_nt_headers<x64>(); }
-        inline const nt_headers_t<x64>* get_nt_headers() const { return dos_header.get_nt_headers<x64>(); }
+namespace win {
+	static constexpr uint32_t img_npos = 0xFFFFFFFF;
 
-        // Calculation of optional header checksum.
-        //
-        inline uint32_t compute_checksum( size_t file_len ) const
-        {
-            // Sum over each word.
-            //
-            uint32_t chksum = 0;
-            const uint16_t* wdata = ( const uint16_t* ) this;
-            for ( size_t n = 0; n != file_len / 2; n++ )
-            {
-                uint32_t sum = wdata[ n ] + chksum;
-                chksum = ( uint16_t ) sum + ( sum >> 16 );
-            }
+	// Image wrapper
+	//
+	template<bool x64 = default_architecture>
+	struct image_t {
+		dos_header_t                dos_header;
 
-            // If there's a byte left append it.
-            //
-            uint16_t presult = chksum + ( chksum >> 16 );
-            if ( file_len & 1 )
-                presult += *( ( ( const char* ) this ) + file_len - 1 );
+		// Basic getters.
+		//
+		inline dos_header_t* get_dos_headers() { return &dos_header; }
+		inline const dos_header_t* get_dos_headers() const { return &dos_header; }
+		inline file_header_t* get_file_header() { return dos_header.get_file_header(); }
+		inline const file_header_t* get_file_header() const { return dos_header.get_file_header(); }
+		inline nt_headers_t<x64>* get_nt_headers() { return dos_header.get_nt_headers<x64>(); }
+		inline const nt_headers_t<x64>* get_nt_headers() const { return dos_header.get_nt_headers<x64>(); }
 
-            // Adjust for the previous .checkum field (=0)
-            //
-            uint16_t* adjust_sum = ( uint16_t* ) &get_nt_headers()->optional_header.checksum;
-            for ( size_t i = 0; i != 2; i++ )
-            {
-                presult -= presult < adjust_sum[ i ];
-                presult -= adjust_sum[ i ];
-            }
-            return presult + ( uint32_t ) file_len;
-        }
-        inline void update_checksum( size_t file_len )
-        {
-            get_nt_headers()->optional_header.checksum = compute_checksum( file_len );
-        }
+		// Calculation of optional header checksum.
+		//
+		inline uint32_t compute_checksum( size_t file_len ) const
+		{
+			// Sum over each word.
+			//
+			uint32_t chksum = 0;
+			const uint16_t* wdata = ( const uint16_t* ) this;
+			for ( size_t n = 0; n != file_len / 2; n++ ) {
+				uint32_t sum = wdata[ n ] + chksum;
+				chksum = ( uint16_t ) sum + ( sum >> 16 );
+			}
 
-        // Directory getter
-        //
-        inline data_directory_t* get_directory( directory_id id )
-        {
-            auto nt_hdrs = get_nt_headers();
-            if ( nt_hdrs->optional_header.num_data_directories <= id ) return nullptr;
-            data_directory_t* dir = &nt_hdrs->optional_header.data_directories.entries[ id ];
-            return dir->present() ? dir : nullptr;
-        }
-        inline const data_directory_t* get_directory( directory_id id ) const { return const_cast< image_t* >( this )->get_directory( id ); }
+			// If there's a byte left append it.
+			//
+			uint16_t presult = chksum + ( chksum >> 16 );
+			if ( file_len & 1 )
+				presult += *( ( ( const char* ) this ) + file_len - 1 );
 
-        // RVA to section mapping
-        //
-        inline section_header_t* rva_to_section( uint32_t rva )
-        {
-            auto nt_hdrs = get_nt_headers();
-            for ( size_t i = 0; i != nt_hdrs->file_header.num_sections; i++ )
-            {
-                auto section = nt_hdrs->get_section( i );
-                if ( section->virtual_address <= rva && rva < ( section->virtual_address + section->virtual_size ) )
-                    return section;
-            }
-            return nullptr;
-        }
-        inline const section_header_t* rva_to_section( uint32_t rva ) const { return const_cast< image_t* >( this )->rva_to_section( rva ); }
+			// Adjust for the previous .checkum field (=0)
+			//
+			uint16_t* adjust_sum = ( uint16_t* ) &get_nt_headers()->optional_header.checksum;
+			for ( size_t i = 0; i != 2; i++ ) {
+				presult -= presult < adjust_sum[ i ];
+				presult -= adjust_sum[ i ];
+			}
+			return presult + ( uint32_t ) file_len;
+		}
+		inline void update_checksum( size_t file_len )
+		{
+			get_nt_headers()->optional_header.checksum = compute_checksum( file_len );
+		}
 
-        // Gets the max raw offset referenced.
-        //
-        inline size_t get_raw_limit() const
-        {
-            // Initialize the length with the header size.
-            //
-            auto* nt_hdrs = get_nt_headers();
-            size_t max_raw = nt_hdrs->optional_header.size_headers;
+		// Directory getter
+		//
+		inline data_directory_t* get_directory( directory_id id )
+		{
+			auto nt_hdrs = get_nt_headers();
+			if ( nt_hdrs->optional_header.num_data_directories <= id ) return nullptr;
+			data_directory_t* dir = &nt_hdrs->optional_header.data_directories.entries[ id ];
+			return dir->present() ? dir : nullptr;
+		}
+		inline const data_directory_t* get_directory( directory_id id ) const { return const_cast< image_t* >( this )->get_directory( id ); }
 
-            // Calculate max length from the sections.
-            //
-            auto* scn = nt_hdrs->get_sections();
-            for ( size_t i = 0; i != nt_hdrs->file_header.num_sections; i++ )
-                max_raw = std::max<size_t>( scn[ i ].ptr_raw_data + scn[ i ].size_raw_data, max_raw );
+		// Gets the max raw offset referenced.
+		//
+		inline size_t get_raw_limit() const
+		{
+			// Initialize the length with the header size.
+			//
+			auto* nt_hdrs = get_nt_headers();
+			size_t max_raw = nt_hdrs->optional_header.size_headers;
 
-            // If there is a security directory, which usually is at the end of the image unmapped, also consider that.
-            //
-            if ( auto dir = get_directory( directory_entry_security ) )
-                max_raw = std::max<size_t>( dir->rva + dir->size, max_raw );
-            return max_raw;
-        }
+			// Calculate max length from the sections.
+			//
+			auto* scn = nt_hdrs->get_sections();
+			for ( size_t i = 0; i != nt_hdrs->file_header.num_sections; i++ )
+				max_raw = std::max<size_t>( scn[ i ].ptr_raw_data + scn[ i ].size_raw_data, max_raw );
 
-        // RVA to raw offset mapping
-        //
-        template<typename T = uint8_t>
-        inline T* rva_to_ptr( uint32_t rva, size_t length = 1 )
-        {
-            // Find the section.
-            //
-            auto scn = rva_to_section( rva );
-            if ( !scn ) return nullptr;
+			// If there is a security directory, which usually is at the end of the image unmapped, also consider that.
+			//
+			if ( auto dir = get_directory( directory_entry_security ) )
+				max_raw = std::max<size_t>( dir->rva + dir->size, max_raw );
+			return max_raw;
+		}
 
-            // Apply the boundary check.
-            //
-            size_t offset = rva - scn->virtual_address;
-            if ( ( offset + length ) > scn->size_raw_data ) 
-                return nullptr;
+		// Section mapping
+		//
+		inline section_header_t* rva_to_section( uint32_t rva )
+		{
+			auto nt_hdrs = get_nt_headers();
+			for ( size_t i = 0; i != nt_hdrs->file_header.num_sections; i++ ) {
+				auto section = nt_hdrs->get_section( i );
+				if ( section->virtual_address <= rva && rva < ( section->virtual_address + section->virtual_size ) )
+					return section;
+			}
+			return nullptr;
+		}
+		inline section_header_t* fo_to_section( uint32_t offset )
+		{
+			auto nt_hdrs = get_nt_headers();
+			for ( size_t i = 0; i != nt_hdrs->file_header.num_sections; i++ ) {
+				auto section = nt_hdrs->get_section( i );
+				if ( section->ptr_raw_data <= offset && offset < ( section->ptr_raw_data + section->size_raw_data ) )
+					return section;
+			}
+			return nullptr;
+		}
+		inline const section_header_t* rva_to_section( uint32_t rva ) const { return const_cast< image_t* >( this )->rva_to_section( rva ); }
+		inline const section_header_t* fo_to_section( uint32_t offset ) const { return const_cast< image_t* >( this )->fo_to_section( offset ); }
 
-            // Return the final pointer.
-            //
-            return ( T* ) ( ( uint8_t* ) &dos_header + scn->ptr_raw_data + offset );
-        }
-        template<typename T = uint8_t>
-        inline const T* rva_to_ptr( uint32_t rva, size_t length = 1 ) const { return const_cast< image_t* >( this )->template rva_to_ptr<const T>( rva, length ); }
-        
-        // Raw offset to pointer mapping, no boundary checks by default so this can
-        // be used to translate RVA as well if image is mapped.
-        // - If length is given, should not be used for RVA translation on mapped images.
-        //
-        template<typename T = uint8_t>
-        inline T* raw_to_ptr( uint32_t offset, size_t length = 0 )
-        {
-            // Do a basic boundary check if length is given.
-            //
-            if ( length != 0 && ( offset + length ) > get_raw_limit() )
-                return nullptr;
+		// RVA mappings.
+		// - Conversions using pointers are only safe on raw views.
+		//
+		template<typename T = uint8_t>
+		inline T* rva_to_ptr( uint32_t rva, size_t length = 1 )
+		{
+			// Find the section, try mapping to header if none found.
+			//
+			auto scn = rva_to_section( rva );
+			if ( !scn ) {
+				uint32_t rva_hdr_end = get_nt_headers()->optional_header.size_headers;
+				if ( rva < rva_hdr_end && ( rva + length ) <= rva_hdr_end )
+					return ( T* ) ( ( uint8_t* ) &dos_header + rva );
+				return nullptr;
+			}
 
-            // Return the final pointer.
-            //
-            return ( T* ) ( ( uint8_t* ) &dos_header + offset );
-        }
-        template<typename T = void>
-        inline const T* raw_to_ptr( uint32_t rva, size_t length = 0 ) const { return const_cast<image_t*>(this)->template raw_to_ptr<const T>( rva, length ); }
-    };
-    using image_x64_t = image_t<true>;
-    using image_x86_t = image_t<false>;
+			// Apply the boundary check.
+			//
+			size_t offset = rva - scn->virtual_address;
+			if ( ( offset + length ) > scn->size_raw_data )
+				return nullptr;
+
+			// Return the final pointer.
+			//
+			return ( T* ) ( ( uint8_t* ) &dos_header + scn->ptr_raw_data + offset );
+		}
+		template<typename T = uint8_t>
+		inline const T* rva_to_ptr( uint32_t rva, size_t length = 1 ) const { return const_cast< image_t* >( this )->template rva_to_ptr<const T>( rva, length ); }
+		inline uint32_t rva_to_fo( uint32_t rva, size_t length = 1 ) const { return ptr_to_raw( rva_to_ptr( rva, length ) ); }
+
+		// RAW offset mappings.
+		// - Conversions using pointers are only safe on mapped views.
+		//
+		template<typename T = uint8_t>
+		inline T* fo_to_ptr( uint32_t offset, size_t length = 1 )
+		{
+			// Find the section, try mapping to header if none found.
+			//
+			auto scn = fo_to_section( offset );
+			if ( !scn ) {
+				uint32_t rva_hdr_end = get_nt_headers()->optional_header.size_headers;
+				if ( offset < rva_hdr_end && ( offset + length ) <= rva_hdr_end )
+					return ( T* ) ( ( uint8_t* ) &dos_header + offset );
+				return nullptr;
+			}
+
+			// Apply the boundary check.
+			//
+			size_t soffset = offset - scn->ptr_raw_data;
+			if ( ( soffset + length ) > scn->virtual_size )
+				return nullptr;
+
+			// Return the final pointer.
+			//
+			return ( T* ) ( ( uint8_t* ) &dos_header + scn->virtual_address + soffset );
+		}
+		template<typename T = uint8_t>
+		inline const T* fo_to_ptr( uint32_t offset, size_t length = 1 ) const { return const_cast< image_t* >( this )->template fo_to_ptr<const T>( offset, length ); }
+		inline uint32_t fo_to_rva( uint32_t offset, size_t length = 1 ) const { return ptr_to_raw( fo_to_ptr( offset, length ) ); }
+
+		// Raw offset to pointer mapping, no boundary checks by default so this can
+		// be used to translate RVA as well if image is mapped.
+		// - If length is given, should not be used for RVA translation on mapped images.
+		//
+		template<typename T = uint8_t>
+		inline T* raw_to_ptr( uint32_t offset, size_t length = 0 )
+		{
+			// Do a basic boundary check if length is given.
+			//
+			if ( length != 0 && ( offset + length ) > get_raw_limit() )
+				return nullptr;
+
+			// Return the final pointer.
+			//
+			return ( T* ) ( ( uint8_t* ) &dos_header + offset );
+		}
+		template<typename T = void>
+		inline const T* raw_to_ptr( uint32_t rva, size_t length = 0 ) const { return const_cast< image_t* >( this )->template raw_to_ptr<const T>( rva, length ); }
+		inline uint32_t ptr_to_raw( const void* ptr ) const { return ptr ? uint32_t( uintptr_t( ptr ) - uintptr_t( &dos_header ) ) : img_npos; }
+	};
+	using image_x64_t = image_t<true>;
+	using image_x86_t = image_t<false>;
 };
