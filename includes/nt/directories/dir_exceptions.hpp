@@ -27,8 +27,9 @@
 //
 #pragma once
 #include <algorithm>
-#include <map>
+#include <array>
 #include <cstring>
+#include <map>
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
 
