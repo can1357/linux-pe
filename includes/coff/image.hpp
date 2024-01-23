@@ -32,6 +32,7 @@
 #include "string.hpp"
 #include "symbol.hpp"
 #include "file_header.hpp"
+#include "import_library.hpp"
 #include "section_header.hpp"
 #include "auxiliaries/aux_file_name.hpp"
 #include "auxiliaries/aux_function.hpp"
