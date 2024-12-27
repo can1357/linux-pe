@@ -40,7 +40,7 @@
 #include "auxiliaries/aux_section.hpp"
 #include "auxiliaries/aux_weak_external.hpp"
 
-#pragma pack(push, COFF_STRUCT_PACKING)
+COFF_STRUCT_PACKING
 namespace coff
 {
     // Optional header and the header collection.

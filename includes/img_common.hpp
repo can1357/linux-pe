@@ -30,8 +30,8 @@
 #include <stdint.h>
 #include <cstddef>
 
-#define WIN_STRUCT_PACKING                4 // Structure packings of the variants.
-#define COFF_STRUCT_PACKING               1 //
+#define WIN_STRUCT_PACKING                _Pragma("pack(push, 4)") // Structure packings of the variants.
+#define COFF_STRUCT_PACKING               _Pragma("pack(push, 1)") //
 #define LEN_SHORT_STR                     8 // Common short string length used in COFF and it's variants.
 
 // If your compiler does not support zero-len arrays, define VAR_LEN as 1 before including linuxpe.

@@ -30,7 +30,7 @@
 #include "file_header.hpp"
 #include <string_view>
 
-#pragma pack(push, COFF_STRUCT_PACKING)
+COFF_STRUCT_PACKING
 namespace coff
 {
 	static constexpr uint32_t import_lib_magic = 0xFFFF0000;

@@ -31,7 +31,7 @@
 #include "../coff/section_header.hpp"
 #include "optional_header.hpp"
 
-#pragma pack(push, WIN_STRUCT_PACKING)
+WIN_STRUCT_PACKING
 namespace win
 {
     // Magic constants

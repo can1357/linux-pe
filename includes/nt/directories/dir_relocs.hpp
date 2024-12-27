@@ -29,7 +29,7 @@
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
 
-#pragma pack(push, WIN_STRUCT_PACKING)
+WIN_STRUCT_PACKING
 namespace win
 {
     enum reloc_type_id : uint16_t

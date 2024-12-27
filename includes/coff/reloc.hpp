@@ -28,7 +28,7 @@
 #pragma once
 #include "../img_common.hpp"
 
-#pragma pack(push, COFF_STRUCT_PACKING)
+COFF_STRUCT_PACKING
 namespace coff
 {
     enum reloc_type : uint16_t

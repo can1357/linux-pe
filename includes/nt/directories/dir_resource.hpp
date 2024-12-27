@@ -33,7 +33,7 @@
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
 
-#pragma pack(push, WIN_STRUCT_PACKING)
+WIN_STRUCT_PACKING
 namespace win
 {
     // Resource type identifiers

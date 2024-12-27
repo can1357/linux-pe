@@ -30,7 +30,7 @@
 #include "../../img_common.hpp"
 #include "../symbol.hpp"
 
-#pragma pack(push, COFF_STRUCT_PACKING)
+COFF_STRUCT_PACKING
 namespace coff
 {
     enum class comdat_select_id : uint8_t

@@ -29,7 +29,7 @@
 #include "../img_common.hpp"
 #include "string.hpp"
 
-#pragma pack(push, WIN_STRUCT_PACKING)
+WIN_STRUCT_PACKING
 namespace coff
 {
     // Section characteristics

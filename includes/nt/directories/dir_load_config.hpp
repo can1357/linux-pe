@@ -30,7 +30,7 @@
 #include "../data_directories.hpp"
 #include "dir_relocs.hpp"
 
-#pragma pack(push, WIN_STRUCT_PACKING)
+WIN_STRUCT_PACKING
 namespace win
 {
     // Enclave configuration
