@@ -29,7 +29,7 @@
 #include "../../img_common.hpp"
 #include "../symbol.hpp"
 
-#pragma pack(push, COFF_STRUCT_PACKING)
+COFF_STRUCT_PACKING
 namespace coff
 {
     // Declare the data type.

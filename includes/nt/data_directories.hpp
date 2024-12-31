@@ -28,7 +28,7 @@
 #pragma once
 #include "../img_common.hpp"
 
-#pragma pack(push, WIN_STRUCT_PACKING)
+WIN_STRUCT_PACKING
 namespace win
 {
     static constexpr uint32_t NUM_DATA_DIRECTORIES =    16;

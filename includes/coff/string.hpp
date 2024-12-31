@@ -31,7 +31,7 @@
 #include <cstring>
 #include "../img_common.hpp"
 
-#pragma pack(push, COFF_STRUCT_PACKING)
+COFF_STRUCT_PACKING
 namespace coff
 {
     // String table.

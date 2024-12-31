@@ -35,7 +35,7 @@
 #include <unordered_map>
 #include "../img_common.hpp"
 
-#pragma pack(push, COFF_STRUCT_PACKING)
+COFF_STRUCT_PACKING
 namespace ar
 {
 	// Magic constants.

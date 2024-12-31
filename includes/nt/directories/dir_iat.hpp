@@ -29,7 +29,7 @@
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
 
-#pragma pack(push, WIN_STRUCT_PACKING)
+WIN_STRUCT_PACKING
 namespace win
 {
     struct image_named_import_t
