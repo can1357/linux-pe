@@ -45,7 +45,7 @@
     #endif
 #endif
 
-#pragma pack(push, 1)
+COFF_STRUCT_PACKING
 namespace win
 {
     // Default image architecture
