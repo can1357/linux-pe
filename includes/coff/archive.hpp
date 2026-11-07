@@ -46,8 +46,8 @@ LINUXPE_EXPORT namespace ar
 {
 	// Magic constants.
 	//
-	constexpr uint64_t format_magic =     0x0A3E686372613C21; // "!<arch>\n"
-	constexpr uint16_t entry_terminator = 0x0A60;             // "`\n"
+	inline constexpr uint64_t format_magic =     0x0A3E686372613C21; // "!<arch>\n"
+	inline constexpr uint16_t entry_terminator = 0x0A60;             // "`\n"
 
 	// Stupid string integers.
 	//
