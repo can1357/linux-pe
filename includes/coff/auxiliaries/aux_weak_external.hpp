@@ -55,16 +55,6 @@ LINUXPE_EXPORT namespace coff
         uint8_t                 _pad[ 10 ];
     };
     static_assert( sizeof( aux_weak_external_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );
-    
-    // Declare the matching logic.
-    //
-    template<>
-    inline bool symbol_t::valid_aux<aux_weak_external_t>() const
-    {
-        return storage_class == storage_class_id::weak_external &&
-               section_index == special_section_id::symbol_undefined &&
-               value == 0;
-    }
 };
 #pragma pack(pop)
 #endif

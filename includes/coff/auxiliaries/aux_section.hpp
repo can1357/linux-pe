@@ -69,19 +69,6 @@ LINUXPE_EXPORT namespace coff
         uint8_t                       _pad[ 3 ];
     };
     static_assert( sizeof( aux_section_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );
-    
-    // Declare the matching logic.
-    //
-    template<>
-    inline bool symbol_t::valid_aux<aux_section_t>() const
-    {
-        // Must also have matching names, but cannot be checked here.
-        //
-        return value == 0 &&
-               storage_class == storage_class_id::private_symbol &&
-               base_type == base_type_id::none &&
-               derived_type == derived_type_id::none;
-    }
 };
 #pragma pack(pop)
 #endif

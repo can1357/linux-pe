@@ -49,15 +49,6 @@ LINUXPE_EXPORT namespace coff
         std::string_view to_string() const { return file_name; }
     };
     static_assert( sizeof( aux_file_name_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );
-    
-    // Declare the matching logic.
-    //
-    template<>
-    inline bool symbol_t::valid_aux<aux_file_name_t>() const
-    {
-        return name.equals_s( ".file" ) &&
-               storage_class == storage_class_id::file_name;
-    }
 };
 #pragma pack(pop)
 #endif

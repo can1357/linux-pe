@@ -50,15 +50,6 @@ LINUXPE_EXPORT namespace coff
         uint16_t                _pad;
     };
     static_assert( sizeof( aux_function_delimiter_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );
-    
-    // Declare the matching logic.
-    //
-    template<>
-    inline bool symbol_t::valid_aux<aux_function_delimiter_t>() const
-    {
-        return ( name.equals_s( ".bf" ) || name.equals_s( ".ef" ) ) &&
-               storage_class == storage_class_id::function_delimiter;
-    }
 };
 #pragma pack(pop)
 #endif
