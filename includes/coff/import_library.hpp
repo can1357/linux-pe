@@ -34,6 +34,7 @@ import linuxpe.coff.import_library;
 #include "../img_common.hpp"
 #include "file_header.hpp"
 #include <string_view>
+#include <cstring>
 #endif
 
 COFF_STRUCT_PACKING
