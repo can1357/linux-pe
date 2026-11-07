@@ -31,7 +31,7 @@ before.
 | Generator | Ninja 1.11+ or Visual Studio 2022+      | Ninja 1.13, MSBuild 18.4 |
 
 The minimum versions are the ones CMake supports for building modules. MSVC was
-tested with [msvc-wine](https://github.com/mstorsjo/msvc-wine).
+tested with [docker-msvc-wine](https://github.com/neonbyte1/docker-msvc-wine).
 
 ## Usage
 
