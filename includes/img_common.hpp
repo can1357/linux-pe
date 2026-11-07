@@ -29,21 +29,7 @@
 #include <type_traits>
 #include <stdint.h>
 #include <cstddef>
-
-#define WIN_STRUCT_PACKING                _Pragma("pack(push, 4)") // Structure packings of the variants.
-#define COFF_STRUCT_PACKING               _Pragma("pack(push, 1)") //
-#define LEN_SHORT_STR                     8 // Common short string length used in COFF and it's variants.
-
-// If your compiler does not support zero-len arrays, define VAR_LEN as 1 before including linuxpe.
-//
-#ifndef VAR_LEN
-    #ifndef _MSC_VER
-        #define VAR_LEN 1
-    #else
-        #pragma warning(disable:4200)
-        #define VAR_LEN
-    #endif
-#endif
+#include "img_macros.hpp"
 
 COFF_STRUCT_PACKING
 namespace win
