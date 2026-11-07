@@ -22,13 +22,13 @@ before.
 
 ## Requirements
 
-|           | Minimum                                 | Tested                   |
-| --------- | --------------------------------------- | ------------------------ |
-| GCC       | 14                                      | 16.2.1                   |
-| Clang     | 16 (with `clang-scan-deps`)             | 23.1.4                   |
-| MSVC      | Visual Studio 2022 17.4 (toolset 14.34) | 19.50 (toolset v145)     |
-| CMake     | 3.28                                    | 4.4                      |
-| Generator | Ninja 1.11+ or Visual Studio 2022+      | Ninja 1.13, MSBuild 18.4 |
+|           | Minimum                                 | Tested                          |
+| --------- | --------------------------------------- | ------------------------------- |
+| GCC       | 14                                      | 16.2.1                          |
+| Clang     | 16 (with `clang-scan-deps`)             | 23.1.4                          |
+| MSVC      | Visual Studio 2022 17.4 (toolset 14.34) | 19.50, 19.51 (toolset v145)     |
+| CMake     | 3.28                                    | 3.28, 4.4                       |
+| Generator | Ninja 1.11+ or Visual Studio 2022+      | Ninja 1.11, 1.13, MSBuild 18.4, 18.11 |
 
 The minimum versions are the ones CMake supports for building modules. MSVC was
 tested with [docker-msvc-wine](https://github.com/neonbyte1/docker-msvc-wine).
