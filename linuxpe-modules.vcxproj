@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- C++20 modules for Visual Studio solutions: add this project to the solution and reference it from the project that imports linuxpe. -->
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{C2BC265E-D1F3-4053-B98B-DF7A631FEBBB}</ProjectGuid>
+    <RootNamespace>linuxpe-modules</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+    <UseDebugLibraries Condition="'$(Configuration)' == 'Debug'">true</UseDebugLibraries>
+    <UseDebugLibraries Condition="'$(Configuration)' == 'Release'">false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup>
+    <!-- Lets projects referencing this one find img_macros.hpp and the headers (LINUXPE_IMPORT_MODULES). -->
+    <PublicIncludeDirectories>$(MSBuildThisFileDirectory)includes</PublicIncludeDirectories>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <!-- Module units with the same file name live in different folders (coff/image.cppm, nt/image.cppm), so keep their outputs apart. -->
+    <ClCompile Include="modules\**\*.cppm">
+      <CompileAs>CompileAsCppModule</CompileAs>
+      <ObjectFileName>$(IntDir)%(RecursiveDir)</ObjectFileName>
+      <ModuleOutputFile>$(IntDir)%(RecursiveDir)</ModuleOutputFile>
+      <ModuleDependenciesFile>$(IntDir)%(RecursiveDir)</ModuleDependenciesFile>
+      <SourceDependenciesFile>$(IntDir)%(RecursiveDir)</SourceDependenciesFile>
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
