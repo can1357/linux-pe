@@ -36,45 +36,47 @@
 #endif
 
 WIN_STRUCT_PACKING
+// Formatting helpers, not exported from the module.
+//
+LINUXPE_INTERNAL namespace win::impl
+{
+	inline constexpr char hexdigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+
+	inline constexpr void fmt_u8_0pad( char*& out, uint8_t value )
+	{
+		*out++ = hexdigits[ value >> 4 ];
+		*out++ = hexdigits[ value & 0xF ];
+	}
+
+	template<typename T>
+	inline constexpr void fmt_uhex_0pad( char*& out, T value )
+	{
+		if constexpr ( sizeof( T ) == 1 )
+			return fmt_u8_0pad( out, value );
+		for ( size_t n = 0; n != sizeof( T ); n++ )
+			fmt_u8_0pad( out, uint8_t( value >> ( ( sizeof( T ) - n - 1 ) * 8 ) ) );
+	}
+
+	inline constexpr void fmt_udec( char*& out, uint32_t value )
+	{
+		size_t idx = 0;
+		do
+		{
+			out[ idx++ ] = ( value % 10 ) + '0';
+			value /= 10;
+		}
+		while ( value );
+
+		size_t swap_count = idx / 2;
+		for ( size_t i = 0; i != swap_count; i++ )
+			std::swap( out[ i ], out[ idx - i - 1 ] );
+
+		out += idx;
+	}
+};
+
 LINUXPE_EXPORT namespace win
 {
-	namespace impl
-	{
-		inline constexpr char hexdigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-
-		inline constexpr void fmt_u8_0pad( char*& out, uint8_t value )
-		{
-			*out++ = hexdigits[ value >> 4 ];
-			*out++ = hexdigits[ value & 0xF ];
-		}
-
-		template<typename T>
-		inline constexpr void fmt_uhex_0pad( char*& out, T value )
-		{
-			if constexpr ( sizeof( T ) == 1 )
-				return fmt_u8_0pad( out, value );
-			for ( size_t n = 0; n != sizeof( T ); n++ )
-				fmt_u8_0pad( out, uint8_t( value >> ( ( sizeof( T ) - n - 1 ) * 8 ) ) );
-		}
-
-		inline constexpr void fmt_udec( char*& out, uint32_t value )
-		{
-			size_t idx = 0;
-			do
-			{
-				out[ idx++ ] = ( value % 10 ) + '0';
-				value /= 10;
-			}
-			while ( value );
-
-			size_t swap_count = idx / 2;
-			for ( size_t i = 0; i != swap_count; i++ )
-				std::swap( out[ i ], out[ idx - i - 1 ] );
-
-			out += idx;
-		}
-	};
-
 	enum class debug_directory_type_id : uint32_t
 	{
 		unknown =       0x00000000,

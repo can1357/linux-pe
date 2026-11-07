@@ -29,8 +29,10 @@
 
 #ifdef LINUXPE_MODULE
     #define LINUXPE_EXPORT                export extern "C++" // Attach to the global module, so header and module users share entities.
+    #define LINUXPE_INTERNAL              extern "C++"        // Same attachment, but not visible to importers.
 #else
     #define LINUXPE_EXPORT
+    #define LINUXPE_INTERNAL
 #endif
 
 #define WIN_STRUCT_PACKING                _Pragma("pack(push, 4)") // Structure packings of the variants.
