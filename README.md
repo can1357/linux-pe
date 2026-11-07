@@ -10,8 +10,20 @@ linux-pe uses C++20 features, so make sure to include `-std=c++20` or equivalent
 - MSVC VS 2022
 
 # C++20 Modules
-Modules are opt-in and require CMake 3.28+ with the Ninja or Visual Studio generator:
+Modules are optional, and using linux-pe as a header-only library works as before.
 
+## Requirements
+| | Minimum | Tested |
+|---|---|---|
+| GCC | 14 | 16.2.1 |
+| Clang | 16 (with `clang-scan-deps`) | 23.1.4 |
+| MSVC | Visual Studio 2022 17.4 (toolset 14.34) | not tested yet |
+| CMake | 3.28 | 4.4 |
+| Generator | Ninja 1.11+ or Visual Studio 2022+ | Ninja 1.13 |
+
+The minimum versions are the ones CMake supports for building modules.
+
+## Usage
 ```cmake
 set(LINUXPE_BUILD_MODULES ON)
 add_subdirectory(linux-pe)
@@ -31,3 +43,4 @@ Every header has its own module, named after its path: `img_common.hpp` is `linu
 - Standard library headers are not re-exported; include what you use.
 - Headers and modules share the same entities, so translation units using `#include` and `import` can be linked together.
 - Define `LINUXPE_IMPORT_MODULES` to turn every `#include` of a linux-pe header into an `import` of its module. This is required when one translation unit both imports a module and includes a header (directly or through another library).
+- With GCC, put your `#include`s before any `import`.
