@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.section_header;
+#else
 #ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "string.hpp"
@@ -113,3 +116,4 @@ LINUXPE_EXPORT namespace win
     using section_characteristics_t =    coff::section_characteristics_t;
 };
 #pragma pack(pop)
+#endif

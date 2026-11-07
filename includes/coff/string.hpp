@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.string;
+#else
 #ifndef LINUXPE_MODULE
 #include <string_view>
 #include <stdlib.h>
@@ -171,3 +174,4 @@ LINUXPE_EXPORT namespace coff
     };
 };
 #pragma pack(pop)
+#endif

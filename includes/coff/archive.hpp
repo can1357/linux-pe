@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.archive;
+#else
 #ifndef LINUXPE_MODULE
 #include <vector>
 #include <iterator>
@@ -349,3 +352,4 @@ LINUXPE_EXPORT namespace ar
 	template<typename T> view( T*, size_t ) -> view<std::is_const_v<T>>;
 };
 #pragma pack(pop)
+#endif

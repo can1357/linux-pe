@@ -27,7 +27,16 @@
 //
 #pragma once
 
+// Macros only: modules cannot export macros, so every header includes this file textually, even
+// when its declarations come from a module.
+//
+// LINUXPE_MODULE:         Defined by the module interface units in modules/ while they include a header.
+// LINUXPE_IMPORT_MODULES: Define it to turn every #include of a linux-pe header into an import of the
+//                         matching module (e.g. "nt/image.hpp" -> import linuxpe.nt.image;), which makes
+//                         #include and import usable within the same translation unit.
+//
 #ifdef LINUXPE_MODULE
+    #undef LINUXPE_IMPORT_MODULES
     #define LINUXPE_EXPORT                export extern "C++" // Attach to the global module, so header and module users share entities.
     #define LINUXPE_INTERNAL              extern "C++"        // Same attachment, but not visible to importers.
 #else

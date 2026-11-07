@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.image;
+#else
 #ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "nt_headers.hpp"
@@ -235,3 +238,4 @@ LINUXPE_EXPORT namespace win {
 	using image_x64_t = image_t<true>;
 	using image_x86_t = image_t<false>;
 };
+#endif

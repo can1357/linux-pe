@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "../../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.directories.resource;
+#else
 #ifndef LINUXPE_MODULE
 #include <type_traits>
 #include <string>
@@ -291,3 +294,4 @@ LINUXPE_EXPORT namespace win
     template<bool x64> struct directory_type<directory_id::directory_entry_resource, x64, void> { using type = resource_directory_t; };
 };
 #pragma pack(pop)
+#endif

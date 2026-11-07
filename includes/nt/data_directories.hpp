@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.data_directories;
+#else
 #ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #endif
@@ -139,3 +142,4 @@ LINUXPE_EXPORT namespace win
     using data_directories_t = std::conditional_t<x64, data_directories_x64_t, data_directories_x86_t>;
 };
 #pragma pack(pop)
+#endif

@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.optional_header;
+#else
 #ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "data_directories.hpp"
@@ -173,3 +176,4 @@ LINUXPE_EXPORT namespace win
     using optional_header_t = std::conditional_t<x64, optional_header_x64_t, optional_header_x86_t>;
 };
 #pragma pack(pop)
+#endif

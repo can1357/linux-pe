@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.symbol;
+#else
 #ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "string.hpp"
@@ -141,3 +144,4 @@ LINUXPE_EXPORT namespace coff
     static_assert( sizeof( symbol_t ) == 18, "Invalid enum bitfield." );
 };
 #pragma pack(pop)
+#endif

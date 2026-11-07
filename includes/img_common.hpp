@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.common;
+#else
 #ifndef LINUXPE_MODULE
 #include <type_traits>
 #include <stdint.h>
@@ -93,3 +96,4 @@ LINUXPE_EXPORT namespace coff
     using ex_version_t =             win::ex_version_t;
 };
 #pragma pack(pop)
+#endif

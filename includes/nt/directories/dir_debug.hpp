@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "../../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.directories.debug;
+#else
 #ifndef LINUXPE_MODULE
 #include <utility>
 #include <string>
@@ -188,3 +191,4 @@ LINUXPE_EXPORT namespace win
 	template<bool x64> struct directory_type<directory_id::directory_entry_debug, x64, void> { using type = debug_directory_t; };
 };
 #pragma pack(pop)
+#endif

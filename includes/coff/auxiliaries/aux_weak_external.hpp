@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "../../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.auxiliaries.weak_external;
+#else
 #ifndef LINUXPE_MODULE
 #include "../../img_common.hpp"
 #include "../symbol.hpp"
@@ -64,3 +67,4 @@ LINUXPE_EXPORT namespace coff
     }
 };
 #pragma pack(pop)
+#endif

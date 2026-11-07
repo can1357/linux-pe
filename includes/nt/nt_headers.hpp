@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.nt_headers;
+#else
 #ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "../coff/file_header.hpp"
@@ -105,3 +108,4 @@ LINUXPE_EXPORT namespace win
     };
 };
 #pragma pack(pop)
+#endif

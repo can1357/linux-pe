@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.file_header;
+#else
 #ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #endif
@@ -118,3 +121,4 @@ LINUXPE_EXPORT namespace coff
     using file_characteristics_t =    win::file_characteristics_t;
 };
 #pragma pack(pop)
+#endif

@@ -27,6 +27,9 @@
 //
 #pragma once
 #include "../../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.directories.tls;
+#else
 #ifndef LINUXPE_MODULE
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
@@ -75,3 +78,4 @@ LINUXPE_EXPORT namespace win
     template<bool x64> struct directory_type<directory_id::directory_entry_tls, x64, void> { using type = tls_directory_t<x64>; };
 };
 #pragma pack(pop)
+#endif
