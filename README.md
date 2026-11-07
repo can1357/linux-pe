@@ -44,3 +44,15 @@ Every header has its own module, named after its path: `img_common.hpp` is `linu
 - Headers and modules share the same entities, so translation units using `#include` and `import` can be linked together.
 - Define `LINUXPE_IMPORT_MODULES` to turn every `#include` of a linux-pe header into an `import` of its module. This is required when one translation unit both imports a module and includes a header (directly or through another library).
 - With GCC, put your `#include`s before any `import`.
+
+## Breaking change: `ar::entry_t::long_string_offset`
+`ar::entry_t::long_string_offset` is now `ar::entry_t::long_string.offset`.
+
+The field used to live in an unnamed struct inside a union. GCC doesn't allow members with constructors there ("member ... with constructor not allowed in anonymous aggregate"), and `string_integer` has one, so `coff/archive.hpp` never compiled with GCC and the `linuxpe.coff.archive` module couldn't be built either. Giving the struct a name fixes that. The layout is unchanged: `sizeof(ar::entry_t)` is still 60 and the offset still starts at byte 1.
+
+```cpp
+// before
+auto offset = entry.long_string_offset.get();
+// after
+auto offset = entry.long_string.offset.get();
+```
