@@ -31,7 +31,7 @@
 WIN_STRUCT_PACKING
 namespace win
 {
-    static constexpr uint32_t NUM_DATA_DIRECTORIES =    16;
+    inline constexpr uint32_t NUM_DATA_DIRECTORIES =    16;
 
     // Directory indices
     //

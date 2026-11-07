@@ -50,7 +50,7 @@ namespace win
 {
     // Default image architecture
     //
-    static constexpr bool default_architecture = sizeof( void* ) == 8;
+    inline constexpr bool default_architecture = sizeof( void* ) == 8;
 
     // NT versioning
     //
@@ -83,7 +83,7 @@ namespace win
     // Common alignment helpers
     // - Both return 0 on failure.
     //
-    static constexpr size_t convert_alignment( uint8_t align_flag /*: 4*/ )
+    inline constexpr size_t convert_alignment( uint8_t align_flag /*: 4*/ )
     {
         if ( align_flag == 0 ) 
             return 16;
@@ -91,7 +91,7 @@ namespace win
             return 0;
         return 1ull << ( align_flag - 1 );
     }
-    static constexpr uint8_t reflect_alignment( size_t alignment )
+    inline constexpr uint8_t reflect_alignment( size_t alignment )
     {
         for ( uint8_t align_flag = 1; align_flag != 0xF; align_flag++ )
             if ( ( 1ull << ( align_flag - 1 ) ) >= alignment )

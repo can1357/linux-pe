@@ -33,7 +33,7 @@
 COFF_STRUCT_PACKING
 namespace coff
 {
-	static constexpr uint32_t import_lib_magic = 0xFFFF0000;
+	inline constexpr uint32_t import_lib_magic = 0xFFFF0000;
 
 	
 	enum class import_type : uint16_t // :2

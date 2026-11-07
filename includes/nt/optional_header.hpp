@@ -34,8 +34,8 @@ namespace win
 {
     // Magic numbers.
     //
-    static constexpr uint16_t OPT_HDR32_MAGIC =            0x010B;
-    static constexpr uint16_t OPT_HDR64_MAGIC =            0x020B;
+    inline constexpr uint16_t OPT_HDR32_MAGIC =            0x010B;
+    inline constexpr uint16_t OPT_HDR64_MAGIC =            0x020B;
 
     // Subsystems
     //

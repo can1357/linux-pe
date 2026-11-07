@@ -36,8 +36,8 @@ namespace win
 {
     // Magic constants
     //
-    static constexpr uint16_t DOS_HDR_MAGIC =           0x5A4D;            // "MZ"
-    static constexpr uint32_t NT_HDR_MAGIC =            0x00004550;        // "PE\x0\x0"
+    inline constexpr uint16_t DOS_HDR_MAGIC =           0x5A4D;            // "MZ"
+    inline constexpr uint32_t NT_HDR_MAGIC =            0x00004550;        // "PE\x0\x0"
 
     // NT headers
     //

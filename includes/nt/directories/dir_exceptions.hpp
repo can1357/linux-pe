@@ -386,7 +386,7 @@ namespace win
 
 	// Special unwind helper for unwinding after the function returns.
 	//
-	static bool amd64_unwind_call( const amd64_unwind_state_t& state )
+	inline bool amd64_unwind_call( const amd64_unwind_state_t& state )
 	{
 		// Read the return pointer.
 		//
@@ -439,7 +439,7 @@ namespace win
 	using amd64_unwind_t = typename amd64_unwind<op>::type;
 
 	template<typename T>
-	static bool visit_amd64_unwind( const unwind_code_t& code, T&& visitor )
+	inline bool visit_amd64_unwind( const unwind_code_t& code, T&& visitor )
 	{
 		switch ( ( unwind_opcode ) code.unwind_op )
 		{

@@ -41,7 +41,7 @@
 #include "directories/dir_delay_load.hpp"
 
 namespace win {
-	static constexpr uint32_t img_npos = 0xFFFFFFFF;
+	inline constexpr uint32_t img_npos = 0xFFFFFFFF;
 
 	// Image wrapper
 	//
