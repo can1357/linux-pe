@@ -31,6 +31,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\section_header.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\uleb128.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)includes\img_common.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\img_macros.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)includes\linuxpe" />
     <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\data_directories.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)includes\nt\directories\dir_debug.hpp" />

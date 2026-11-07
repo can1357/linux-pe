@@ -87,6 +87,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)includes\img_common.hpp">
       <Filter>Includes</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\img_macros.hpp">
+      <Filter>Includes</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)includes\coff\image.hpp">
       <Filter>COFF Types</Filter>
     </ClInclude>
