@@ -38,7 +38,7 @@
 #ifdef LINUXPE_MODULE
     #undef LINUXPE_IMPORT_MODULES
     #define LINUXPE_EXPORT                export extern "C++" // Attach to the global module, so header and module users share entities.
-    #define LINUXPE_INTERNAL              extern "C++"        // Same attachment, but not visible to importers.
+    #define LINUXPE_INTERNAL                                  // Attach to the module, so importers can't see it (MSVC exposes extern "C++" names).
 #else
     #define LINUXPE_EXPORT
     #define LINUXPE_INTERNAL
