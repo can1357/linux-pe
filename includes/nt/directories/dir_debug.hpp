@@ -26,14 +26,17 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../../img_macros.hpp"
+#ifndef LINUXPE_MODULE
 #include <utility>
 #include <string>
 
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
+#endif
 
 WIN_STRUCT_PACKING
-namespace win
+LINUXPE_EXPORT namespace win
 {
 	namespace impl
 	{

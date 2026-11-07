@@ -26,12 +26,15 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "file_header.hpp"
 #include <string_view>
+#endif
 
 COFF_STRUCT_PACKING
-namespace coff
+LINUXPE_EXPORT namespace coff
 {
 	inline constexpr uint32_t import_lib_magic = 0xFFFF0000;
 

@@ -26,6 +26,8 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "nt_headers.hpp"
 #include "directories/dir_debug.hpp"
@@ -39,8 +41,9 @@
 #include "directories/dir_resource.hpp"
 #include "directories/dir_security.hpp"
 #include "directories/dir_delay_load.hpp"
+#endif
 
-namespace win {
+LINUXPE_EXPORT namespace win {
 	inline constexpr uint32_t img_npos = 0xFFFFFFFF;
 
 	// Image wrapper

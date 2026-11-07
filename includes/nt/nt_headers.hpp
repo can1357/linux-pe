@@ -26,13 +26,16 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "../coff/file_header.hpp"
 #include "../coff/section_header.hpp"
 #include "optional_header.hpp"
+#endif
 
 WIN_STRUCT_PACKING
-namespace win
+LINUXPE_EXPORT namespace win
 {
     // Magic constants
     //

@@ -26,15 +26,18 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../../img_macros.hpp"
+#ifndef LINUXPE_MODULE
 #include <algorithm>
 #include <array>
 #include <cstring>
 #include <map>
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
+#endif
 
 WIN_STRUCT_PACKING
-namespace win
+LINUXPE_EXPORT namespace win
 {
 	using xmm_t = std::array<uint64_t, 2>;
 	

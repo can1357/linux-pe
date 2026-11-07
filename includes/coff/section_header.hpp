@@ -26,11 +26,14 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "string.hpp"
+#endif
 
 WIN_STRUCT_PACKING
-namespace coff
+LINUXPE_EXPORT namespace coff
 {
     // Section characteristics
     //
@@ -104,7 +107,7 @@ namespace coff
         }
     };
 };
-namespace win
+LINUXPE_EXPORT namespace win
 { 
     using section_header_t =             coff::section_header_t;
     using section_characteristics_t =    coff::section_characteristics_t;

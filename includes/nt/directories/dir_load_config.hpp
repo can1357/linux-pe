@@ -26,12 +26,15 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../../img_macros.hpp"
+#ifndef LINUXPE_MODULE
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
 #include "dir_relocs.hpp"
+#endif
 
 WIN_STRUCT_PACKING
-namespace win
+LINUXPE_EXPORT namespace win
 {
     // Enclave configuration
     //

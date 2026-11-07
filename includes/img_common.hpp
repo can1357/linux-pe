@@ -26,13 +26,15 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "img_macros.hpp"
+#ifndef LINUXPE_MODULE
 #include <type_traits>
 #include <stdint.h>
 #include <cstddef>
-#include "img_macros.hpp"
+#endif
 
 COFF_STRUCT_PACKING
-namespace win
+LINUXPE_EXPORT namespace win
 {
     // Default image architecture
     //
@@ -85,7 +87,7 @@ namespace win
         return 0;
     }
 };
-namespace coff 
+LINUXPE_EXPORT namespace coff 
 { 
     using version_t =                win::version_t;
     using ex_version_t =             win::ex_version_t;

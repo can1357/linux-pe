@@ -27,6 +27,12 @@
 //
 #pragma once
 
+#ifdef LINUXPE_MODULE
+    #define LINUXPE_EXPORT                export extern "C++" // Attach to the global module, so header and module users share entities.
+#else
+    #define LINUXPE_EXPORT
+#endif
+
 #define WIN_STRUCT_PACKING                _Pragma("pack(push, 4)") // Structure packings of the variants.
 #define COFF_STRUCT_PACKING               _Pragma("pack(push, 1)") //
 #define LEN_SHORT_STR                     8 // Common short string length used in COFF and it's variants.

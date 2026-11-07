@@ -26,6 +26,8 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifndef LINUXPE_MODULE
 #include <vector>
 #include <iterator>
 #include <string_view>
@@ -34,9 +36,10 @@
 #include <type_traits>
 #include <unordered_map>
 #include "../img_common.hpp"
+#endif
 
 COFF_STRUCT_PACKING
-namespace ar
+LINUXPE_EXPORT namespace ar
 {
 	// Magic constants.
 	//

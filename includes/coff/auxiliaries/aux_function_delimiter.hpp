@@ -26,11 +26,14 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../../img_macros.hpp"
+#ifndef LINUXPE_MODULE
 #include "../../img_common.hpp"
 #include "../symbol.hpp"
+#endif
 
 COFF_STRUCT_PACKING
-namespace coff
+LINUXPE_EXPORT namespace coff
 {
     // Declare the data type.
     //
