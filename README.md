@@ -41,6 +41,12 @@ add_subdirectory(linux-pe)
 target_link_libraries(my_target PRIVATE linux-pe::modules)
 ```
 
+For Visual Studio solutions, add `linuxpe-modules.vcxproj` to the solution and
+reference it from your project (Add > Reference). The reference also adds the
+`includes/` directory to your project. The modules are built with the default
+runtime library (`/MD`, `/MDd`), so change it in `linuxpe-modules.vcxproj` if
+your project uses `/MT`.
+
 ```cpp
 import linuxpe;                          // Everything.
 import linuxpe.nt;                       // All NT headers and data directories.
