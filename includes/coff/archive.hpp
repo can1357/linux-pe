@@ -141,8 +141,8 @@ LINUXPE_EXPORT namespace ar
 			struct
 			{
 				char                    _pad;
-				string_integer<10, 15>  long_string_offset;
-			};
+				string_integer<10, 15>  offset;
+			}                           long_string;
 		};
 		string_integer<10, 12>          modify_timestamp;
 		string_integer<10, 6>           owner_id;
@@ -181,7 +181,7 @@ LINUXPE_EXPORT namespace ar
 
 			if ( has_long_name() )
 			{
-				begin = ( const char* ) string_table->begin() + long_string_offset;
+				begin = ( const char* ) string_table->begin() + long_string.offset;
 				end = ( const char* ) string_table->end();
 				terminator = '\n';
 				if ( begin >= end ) return {};
