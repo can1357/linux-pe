@@ -26,14 +26,21 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.import_library;
+#else
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "file_header.hpp"
 #include <string_view>
+#include <cstring>
+#endif
 
 COFF_STRUCT_PACKING
-namespace coff
+LINUXPE_EXPORT namespace coff
 {
-	static constexpr uint32_t import_lib_magic = 0xFFFF0000;
+	inline constexpr uint32_t import_lib_magic = 0xFFFF0000;
 
 	
 	enum class import_type : uint16_t // :2
@@ -76,3 +83,4 @@ namespace coff
 	static_assert( sizeof( import_header_t ) == 20, "Invalid enum bitfield." );
 };
 #pragma pack(pop)
+#endif

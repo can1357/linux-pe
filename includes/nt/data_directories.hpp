@@ -26,12 +26,18 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.data_directories;
+#else
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
+#endif
 
 WIN_STRUCT_PACKING
-namespace win
+LINUXPE_EXPORT namespace win
 {
-    static constexpr uint32_t NUM_DATA_DIRECTORIES =    16;
+    inline constexpr uint32_t NUM_DATA_DIRECTORIES =    16;
 
     // Directory indices
     //
@@ -136,3 +142,4 @@ namespace win
     using data_directories_t = std::conditional_t<x64, data_directories_x64_t, data_directories_x86_t>;
 };
 #pragma pack(pop)
+#endif

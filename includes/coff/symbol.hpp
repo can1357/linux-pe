@@ -26,11 +26,17 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.symbol;
+#else
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "string.hpp"
+#endif
 
 COFF_STRUCT_PACKING
-namespace coff
+LINUXPE_EXPORT namespace coff
 {
     // Special section indices.
     //
@@ -136,5 +142,56 @@ namespace coff
         }
     };
     static_assert( sizeof( symbol_t ) == 18, "Invalid enum bitfield." );
+
+    // Auxiliary symbol types, see auxiliaries/. The matching logic lives here, next to
+    // valid_aux, so every compiler finds the specializations through any module.
+    //
+    struct aux_file_name_t;
+    struct aux_function_t;
+    struct aux_function_delimiter_t;
+    struct aux_section_t;
+    struct aux_weak_external_t;
+
+    template<>
+    inline bool symbol_t::valid_aux<aux_file_name_t>() const
+    {
+        return name.equals_s( ".file" ) &&
+               storage_class == storage_class_id::file_name;
+    }
+
+    template<>
+    inline bool symbol_t::valid_aux<aux_function_t>() const
+    {
+        return storage_class == storage_class_id::public_symbol &&
+               derived_type == derived_type_id::function &&
+               has_section();
+    }
+
+    template<>
+    inline bool symbol_t::valid_aux<aux_function_delimiter_t>() const
+    {
+        return ( name.equals_s( ".bf" ) || name.equals_s( ".ef" ) ) &&
+               storage_class == storage_class_id::function_delimiter;
+    }
+
+    template<>
+    inline bool symbol_t::valid_aux<aux_section_t>() const
+    {
+        // Must also have matching names, but cannot be checked here.
+        //
+        return value == 0 &&
+               storage_class == storage_class_id::private_symbol &&
+               base_type == base_type_id::none &&
+               derived_type == derived_type_id::none;
+    }
+
+    template<>
+    inline bool symbol_t::valid_aux<aux_weak_external_t>() const
+    {
+        return storage_class == storage_class_id::weak_external &&
+               section_index == special_section_id::symbol_undefined &&
+               value == 0;
+    }
 };
 #pragma pack(pop)
+#endif

@@ -26,12 +26,18 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.auxiliaries.file_name;
+#else
+#ifndef LINUXPE_MODULE
 #include <string_view>
 #include "../../img_common.hpp"
 #include "../symbol.hpp"
+#endif
 
 COFF_STRUCT_PACKING
-namespace coff
+LINUXPE_EXPORT namespace coff
 {
     // Declare the data type.
     //
@@ -43,14 +49,6 @@ namespace coff
         std::string_view to_string() const { return file_name; }
     };
     static_assert( sizeof( aux_file_name_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );
-    
-    // Declare the matching logic.
-    //
-    template<>
-    inline bool symbol_t::valid_aux<aux_file_name_t>() const
-    {
-        return name.equals_s( ".file" ) &&
-               storage_class == storage_class_id::file_name;
-    }
 };
 #pragma pack(pop)
+#endif

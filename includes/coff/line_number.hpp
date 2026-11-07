@@ -26,10 +26,16 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.line_number;
+#else
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
+#endif
 
 COFF_STRUCT_PACKING
-namespace coff
+LINUXPE_EXPORT namespace coff
 {
     // Line number entry.
     //
@@ -44,3 +50,4 @@ namespace coff
     };
 };
 #pragma pack(pop)
+#endif

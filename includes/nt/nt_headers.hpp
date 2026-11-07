@@ -26,18 +26,24 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.nt_headers;
+#else
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "../coff/file_header.hpp"
 #include "../coff/section_header.hpp"
 #include "optional_header.hpp"
+#endif
 
 WIN_STRUCT_PACKING
-namespace win
+LINUXPE_EXPORT namespace win
 {
     // Magic constants
     //
-    static constexpr uint16_t DOS_HDR_MAGIC =           0x5A4D;            // "MZ"
-    static constexpr uint32_t NT_HDR_MAGIC =            0x00004550;        // "PE\x0\x0"
+    inline constexpr uint16_t DOS_HDR_MAGIC =           0x5A4D;            // "MZ"
+    inline constexpr uint32_t NT_HDR_MAGIC =            0x00004550;        // "PE\x0\x0"
 
     // NT headers
     //
@@ -102,3 +108,4 @@ namespace win
     };
 };
 #pragma pack(pop)
+#endif

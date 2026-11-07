@@ -26,6 +26,11 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.image;
+#else
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "nt_headers.hpp"
 #include "directories/dir_debug.hpp"
@@ -39,9 +44,10 @@
 #include "directories/dir_resource.hpp"
 #include "directories/dir_security.hpp"
 #include "directories/dir_delay_load.hpp"
+#endif
 
-namespace win {
-	static constexpr uint32_t img_npos = 0xFFFFFFFF;
+LINUXPE_EXPORT namespace win {
+	inline constexpr uint32_t img_npos = 0xFFFFFFFF;
 
 	// Image wrapper
 	//
@@ -232,3 +238,4 @@ namespace win {
 	using image_x64_t = image_t<true>;
 	using image_x86_t = image_t<false>;
 };
+#endif

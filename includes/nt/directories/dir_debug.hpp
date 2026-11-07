@@ -26,52 +26,60 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.directories.debug;
+#else
+#ifndef LINUXPE_MODULE
 #include <utility>
 #include <string>
 
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
+#endif
 
 WIN_STRUCT_PACKING
-namespace win
+// Formatting helpers, not exported from the module.
+//
+LINUXPE_INTERNAL namespace win::impl
 {
-	namespace impl
+	inline constexpr char hexdigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+
+	inline constexpr void fmt_u8_0pad( char*& out, uint8_t value )
 	{
-		inline constexpr char hexdigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+		*out++ = hexdigits[ value >> 4 ];
+		*out++ = hexdigits[ value & 0xF ];
+	}
 
-		inline constexpr void fmt_u8_0pad( char*& out, uint8_t value )
+	template<typename T>
+	inline constexpr void fmt_uhex_0pad( char*& out, T value )
+	{
+		if constexpr ( sizeof( T ) == 1 )
+			return fmt_u8_0pad( out, value );
+		for ( size_t n = 0; n != sizeof( T ); n++ )
+			fmt_u8_0pad( out, uint8_t( value >> ( ( sizeof( T ) - n - 1 ) * 8 ) ) );
+	}
+
+	inline constexpr void fmt_udec( char*& out, uint32_t value )
+	{
+		size_t idx = 0;
+		do
 		{
-			*out++ = hexdigits[ value >> 4 ];
-			*out++ = hexdigits[ value & 0xF ];
+			out[ idx++ ] = ( value % 10 ) + '0';
+			value /= 10;
 		}
+		while ( value );
 
-		template<typename T>
-		inline constexpr void fmt_uhex_0pad( char*& out, T value )
-		{
-			if constexpr ( sizeof( T ) == 1 )
-				return fmt_u8_0pad( out, value );
-			for ( size_t n = 0; n != sizeof( T ); n++ )
-				fmt_u8_0pad( out, uint8_t( value >> ( ( sizeof( T ) - n - 1 ) * 8 ) ) );
-		}
+		size_t swap_count = idx / 2;
+		for ( size_t i = 0; i != swap_count; i++ )
+			std::swap( out[ i ], out[ idx - i - 1 ] );
 
-		inline constexpr void fmt_udec( char*& out, uint32_t value )
-		{
-			size_t idx = 0;
-			do
-			{
-				out[ idx++ ] = ( value % 10 ) + '0';
-				value /= 10;
-			}
-			while ( value );
+		out += idx;
+	}
+};
 
-			size_t swap_count = idx / 2;
-			for ( size_t i = 0; i != swap_count; i++ )
-				std::swap( out[ i ], out[ idx - i - 1 ] );
-
-			out += idx;
-		}
-	};
-
+LINUXPE_EXPORT namespace win
+{
 	enum class debug_directory_type_id : uint32_t
 	{
 		unknown =       0x00000000,
@@ -183,3 +191,4 @@ namespace win
 	template<bool x64> struct directory_type<directory_id::directory_entry_debug, x64, void> { using type = debug_directory_t; };
 };
 #pragma pack(pop)
+#endif

@@ -26,6 +26,11 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.image;
+#else
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "line_number.hpp"
 #include "reloc.hpp"
@@ -39,9 +44,10 @@
 #include "auxiliaries/aux_function_delimiter.hpp"
 #include "auxiliaries/aux_section.hpp"
 #include "auxiliaries/aux_weak_external.hpp"
+#endif
 
 COFF_STRUCT_PACKING
-namespace coff
+LINUXPE_EXPORT namespace coff
 {
     // Optional header and the header collection.
     //
@@ -86,3 +92,4 @@ namespace coff
 	};
 };
 #pragma pack(pop)
+#endif

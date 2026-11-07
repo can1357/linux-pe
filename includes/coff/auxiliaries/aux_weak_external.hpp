@@ -26,11 +26,17 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.auxiliaries.weak_external;
+#else
+#ifndef LINUXPE_MODULE
 #include "../../img_common.hpp"
 #include "../symbol.hpp"
+#endif
 
 COFF_STRUCT_PACKING
-namespace coff
+LINUXPE_EXPORT namespace coff
 {
     enum class weak_external_type : uint32_t
     {
@@ -49,15 +55,6 @@ namespace coff
         uint8_t                 _pad[ 10 ];
     };
     static_assert( sizeof( aux_weak_external_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );
-    
-    // Declare the matching logic.
-    //
-    template<>
-    inline bool symbol_t::valid_aux<aux_weak_external_t>() const
-    {
-        return storage_class == storage_class_id::weak_external &&
-               section_index == special_section_id::symbol_undefined &&
-               value == 0;
-    }
 };
 #pragma pack(pop)
+#endif

@@ -26,15 +26,21 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.directories.exceptions;
+#else
+#ifndef LINUXPE_MODULE
 #include <algorithm>
 #include <array>
 #include <cstring>
 #include <map>
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
+#endif
 
 WIN_STRUCT_PACKING
-namespace win
+LINUXPE_EXPORT namespace win
 {
 	using xmm_t = std::array<uint64_t, 2>;
 	
@@ -386,7 +392,7 @@ namespace win
 
 	// Special unwind helper for unwinding after the function returns.
 	//
-	static bool amd64_unwind_call( const amd64_unwind_state_t& state )
+	inline bool amd64_unwind_call( const amd64_unwind_state_t& state )
 	{
 		// Read the return pointer.
 		//
@@ -439,7 +445,7 @@ namespace win
 	using amd64_unwind_t = typename amd64_unwind<op>::type;
 
 	template<typename T>
-	static bool visit_amd64_unwind( const unwind_code_t& code, T&& visitor )
+	inline bool visit_amd64_unwind( const unwind_code_t& code, T&& visitor )
 	{
 		switch ( ( unwind_opcode ) code.unwind_op )
 		{
@@ -580,3 +586,4 @@ namespace win
 	};
 };
 #pragma pack(pop)
+#endif

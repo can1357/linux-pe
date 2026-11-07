@@ -26,10 +26,16 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.reloc;
+#else
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
+#endif
 
 COFF_STRUCT_PACKING
-namespace coff
+LINUXPE_EXPORT namespace coff
 {
     enum reloc_type : uint16_t
     {
@@ -78,3 +84,4 @@ namespace coff
     };
 };
 #pragma pack(pop)
+#endif

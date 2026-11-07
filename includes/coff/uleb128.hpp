@@ -26,11 +26,17 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.uleb128;
+#else
+#ifndef LINUXPE_MODULE
 #include <vector>
 #include <tuple>
 #include <stdint.h>
+#endif
 
-namespace coff
+LINUXPE_EXPORT namespace coff
 {
     // Utility to encode/decode a ULEB128 value commonly seen in address signifiance tables.
     //
@@ -117,3 +123,4 @@ namespace coff
     }
 
 };
+#endif

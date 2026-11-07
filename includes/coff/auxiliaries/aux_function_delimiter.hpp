@@ -26,11 +26,17 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.auxiliaries.function_delimiter;
+#else
+#ifndef LINUXPE_MODULE
 #include "../../img_common.hpp"
 #include "../symbol.hpp"
+#endif
 
 COFF_STRUCT_PACKING
-namespace coff
+LINUXPE_EXPORT namespace coff
 {
     // Declare the data type.
     //
@@ -44,14 +50,6 @@ namespace coff
         uint16_t                _pad;
     };
     static_assert( sizeof( aux_function_delimiter_t ) == sizeof( symbol_t ), "Invalid auxiliary symbol." );
-    
-    // Declare the matching logic.
-    //
-    template<>
-    inline bool symbol_t::valid_aux<aux_function_delimiter_t>() const
-    {
-        return ( name.equals_s( ".bf" ) || name.equals_s( ".ef" ) ) &&
-               storage_class == storage_class_id::function_delimiter;
-    }
 };
 #pragma pack(pop)
+#endif

@@ -26,11 +26,17 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.directories.security;
+#else
+#ifndef LINUXPE_MODULE
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
+#endif
 
 WIN_STRUCT_PACKING
-namespace win
+LINUXPE_EXPORT namespace win
 {
     enum class certificate_type_id : uint16_t
     {
@@ -53,3 +59,4 @@ namespace win
     template<bool x64> struct directory_type<directory_id::directory_entry_security, x64, void> { using type = security_directory_t; };
 };
 #pragma pack(pop)
+#endif

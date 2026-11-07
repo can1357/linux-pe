@@ -26,6 +26,11 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.archive;
+#else
+#ifndef LINUXPE_MODULE
 #include <vector>
 #include <iterator>
 #include <string_view>
@@ -34,14 +39,15 @@
 #include <type_traits>
 #include <unordered_map>
 #include "../img_common.hpp"
+#endif
 
 COFF_STRUCT_PACKING
-namespace ar
+LINUXPE_EXPORT namespace ar
 {
 	// Magic constants.
 	//
-	constexpr uint64_t format_magic =     0x0A3E686372613C21; // "!<arch>\n"
-	constexpr uint16_t entry_terminator = 0x0A60;             // "`\n"
+	inline constexpr uint64_t format_magic =     0x0A3E686372613C21; // "!<arch>\n"
+	inline constexpr uint16_t entry_terminator = 0x0A60;             // "`\n"
 
 	// Stupid string integers.
 	//
@@ -135,8 +141,8 @@ namespace ar
 			struct
 			{
 				char                    _pad;
-				string_integer<10, 15>  long_string_offset;
-			};
+				string_integer<10, 15>  offset;
+			}                           long_string;
 		};
 		string_integer<10, 12>          modify_timestamp;
 		string_integer<10, 6>           owner_id;
@@ -175,7 +181,7 @@ namespace ar
 
 			if ( has_long_name() )
 			{
-				begin = ( const char* ) string_table->begin() + long_string_offset;
+				begin = ( const char* ) string_table->begin() + long_string.offset;
 				end = ( const char* ) string_table->end();
 				terminator = '\n';
 				if ( begin >= end ) return {};
@@ -346,3 +352,4 @@ namespace ar
 	template<typename T> view( T*, size_t ) -> view<std::is_const_v<T>>;
 };
 #pragma pack(pop)
+#endif

@@ -26,31 +26,22 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.common;
+#else
+#ifndef LINUXPE_MODULE
 #include <type_traits>
 #include <stdint.h>
 #include <cstddef>
-
-#define WIN_STRUCT_PACKING                _Pragma("pack(push, 4)") // Structure packings of the variants.
-#define COFF_STRUCT_PACKING               _Pragma("pack(push, 1)") //
-#define LEN_SHORT_STR                     8 // Common short string length used in COFF and it's variants.
-
-// If your compiler does not support zero-len arrays, define VAR_LEN as 1 before including linuxpe.
-//
-#ifndef VAR_LEN
-    #ifndef _MSC_VER
-        #define VAR_LEN 1
-    #else
-        #pragma warning(disable:4200)
-        #define VAR_LEN
-    #endif
 #endif
 
 COFF_STRUCT_PACKING
-namespace win
+LINUXPE_EXPORT namespace win
 {
     // Default image architecture
     //
-    static constexpr bool default_architecture = sizeof( void* ) == 8;
+    inline constexpr bool default_architecture = sizeof( void* ) == 8;
 
     // NT versioning
     //
@@ -83,7 +74,7 @@ namespace win
     // Common alignment helpers
     // - Both return 0 on failure.
     //
-    static constexpr size_t convert_alignment( uint8_t align_flag /*: 4*/ )
+    inline constexpr size_t convert_alignment( uint8_t align_flag /*: 4*/ )
     {
         if ( align_flag == 0 ) 
             return 16;
@@ -91,7 +82,7 @@ namespace win
             return 0;
         return 1ull << ( align_flag - 1 );
     }
-    static constexpr uint8_t reflect_alignment( size_t alignment )
+    inline constexpr uint8_t reflect_alignment( size_t alignment )
     {
         for ( uint8_t align_flag = 1; align_flag != 0xF; align_flag++ )
             if ( ( 1ull << ( align_flag - 1 ) ) >= alignment )
@@ -99,9 +90,10 @@ namespace win
         return 0;
     }
 };
-namespace coff 
+LINUXPE_EXPORT namespace coff 
 { 
     using version_t =                win::version_t;
     using ex_version_t =             win::ex_version_t;
 };
 #pragma pack(pop)
+#endif

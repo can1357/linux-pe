@@ -26,10 +26,16 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.file_header;
+#else
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
+#endif
 
 WIN_STRUCT_PACKING
-namespace win
+LINUXPE_EXPORT namespace win
 {
     // File target machine
     //
@@ -108,10 +114,11 @@ namespace win
         file_characteristics_t   characteristics;
     };
 };
-namespace coff 
+LINUXPE_EXPORT namespace coff 
 { 
     using machine_id =                win::machine_id;
     using file_header_t =             win::file_header_t; 
     using file_characteristics_t =    win::file_characteristics_t;
 };
 #pragma pack(pop)
+#endif

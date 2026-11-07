@@ -26,13 +26,19 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.coff.string;
+#else
+#ifndef LINUXPE_MODULE
 #include <string_view>
 #include <stdlib.h>
 #include <cstring>
 #include "../img_common.hpp"
+#endif
 
 COFF_STRUCT_PACKING
-namespace coff
+LINUXPE_EXPORT namespace coff
 {
     // String table.
     //
@@ -168,3 +174,4 @@ namespace coff
     };
 };
 #pragma pack(pop)
+#endif

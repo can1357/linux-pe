@@ -26,16 +26,22 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.optional_header;
+#else
+#ifndef LINUXPE_MODULE
 #include "../img_common.hpp"
 #include "data_directories.hpp"
+#endif
 
 WIN_STRUCT_PACKING
-namespace win
+LINUXPE_EXPORT namespace win
 {
     // Magic numbers.
     //
-    static constexpr uint16_t OPT_HDR32_MAGIC =            0x010B;
-    static constexpr uint16_t OPT_HDR64_MAGIC =            0x020B;
+    inline constexpr uint16_t OPT_HDR32_MAGIC =            0x010B;
+    inline constexpr uint16_t OPT_HDR64_MAGIC =            0x020B;
 
     // Subsystems
     //
@@ -170,3 +176,4 @@ namespace win
     using optional_header_t = std::conditional_t<x64, optional_header_x64_t, optional_header_x86_t>;
 };
 #pragma pack(pop)
+#endif

@@ -26,11 +26,17 @@
 // POSSIBILITY OF SUCH DAMAGE.        
 //
 #pragma once
+#include "../../img_macros.hpp"
+#ifdef LINUXPE_IMPORT_MODULES
+import linuxpe.nt.directories.delay_load;
+#else
+#ifndef LINUXPE_MODULE
 #include "../../img_common.hpp"
 #include "../data_directories.hpp"
+#endif
 
 WIN_STRUCT_PACKING
-namespace win
+LINUXPE_EXPORT namespace win
 {
     union delay_load_attributes_t
     {
@@ -57,3 +63,4 @@ namespace win
     template<bool x64> struct directory_type<directory_id::directory_entry_delay_import, x64, void> { using type = delay_load_directory_t; };
 };
 #pragma pack(pop)
+#endif
